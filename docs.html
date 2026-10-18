@@ -42,12 +42,14 @@
         <label for="docs-jump">Jump to section</label>
         <select class="select" id="docs-jump">
           <option value="#quick-start">Quick start</option>
+          <option value="#openbsd">Install on OpenBSD</option>
           <option value="#from-source">Build from source</option>
           <option value="#web-client">Web client</option>
           <option value="#native-clients">Native IRC clients</option>
           <option value="#status">*status commands</option>
           <option value="#networks">Network settings</option>
           <option value="#configuration">Configuration</option>
+          <option value="#tls">HTTPS and certificates</option>
           <option value="#accounts">Accounts and sign-in</option>
           <option value="#server-settings">Server settings</option>
           <option value="#secrets">Saved passwords</option>
@@ -60,6 +62,7 @@
       </div>
       <div class="docs-group"><span class="caps">Get started</span>
         <a class="docs-link" href="#quick-start">Quick start</a>
+        <a class="docs-link" href="#openbsd">Install on OpenBSD</a>
         <a class="docs-link" href="#from-source">Build from source</a>
       </div>
       <div class="docs-group"><span class="caps">Use evrd</span>
@@ -70,6 +73,7 @@
       </div>
       <div class="docs-group"><span class="caps">Operate</span>
         <a class="docs-link" href="#configuration">Configuration</a>
+        <a class="docs-link" href="#tls">HTTPS and certificates</a>
         <a class="docs-link" href="#accounts">Accounts and sign-in</a>
         <a class="docs-link" href="#server-settings">Server settings</a>
         <a class="docs-link" href="#secrets">Saved passwords</a>
@@ -161,6 +165,53 @@
           </div></li>
         </ol>
         <div class="callout" style="margin-top:var(--s6)"><i data-icon="info"></i><p>Passwords need at least 10 characters. A password an admin sets in the web app (Admin → Users) is temporary: the user picks their own at next sign-in. Passwords set with evrctl aren't. Once TLS is in front of the web app, remove <span class="code">cookie_secure no</span> so the session cookie is HTTPS-only. For Postgres and metrics, the repository's <a href="https://github.com/4evrd/evrd/tree/main/deploy/docker"><span class="code">deploy/docker</span></a> setup has them ready.</p></div>
+      </section>
+
+      <section id="openbsd" aria-labelledby="h-obsd">
+        <span class="eyebrow section-kicker">Get started</span>
+        <h2 id="h-obsd">Install on OpenBSD <a class="anchor" href="#openbsd" aria-label="Link to Install on OpenBSD">#</a></h2>
+        <p>evrd runs natively on OpenBSD (amd64 and arm64), without Docker. One script installs it as a confined system daemon, with SQLite and the embedded Pebble history store, so there's no database server to run. As root:</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">shell</span><button class="copy-btn" type="button" data-copy-from="#obsd-cmd" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="obsd-cmd"><b>ftp</b> https://raw.githubusercontent.com/4evrd/evrd/main/deploy/openbsd/install.sh
+<b>sh</b> install.sh</pre>
+        </div>
+        <p>It downloads the latest release for your machine, checks it against the release's <span class="code">SHA256</span> file, and asks:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Question</th><th scope="col">Default</th><th scope="col">Answers</th></tr></thead>
+            <tbody>
+              <tr><td>Host name for the web app</td><td>the machine's name</td><td>e.g. <span class="code">bnc.example.org</span></td></tr>
+              <tr><td>Certificate</td><td><span class="code">letsencrypt</span> for a public name</td><td><span class="code">letsencrypt</span> (automatic, renewed), <span class="code">selfsigned</span>, or <span class="code">none</span> (plain HTTP, for trying it out)</td></tr>
+              <tr><td>Who serves HTTPS</td><td><span class="code">evrd</span></td><td><span class="code">evrd</span> itself on 443 and 80, or <span class="code">relayd</span> in front (with httpd and acme-client)</td></tr>
+              <tr><td>HTTPS port, Let's Encrypt email</td><td><span class="code">443</span>, none</td><td></td></tr>
+              <tr><td>IRC host name and ports</td><td>the web host, <span class="code">6697</span> (TLS), no plain port</td><td></td></tr>
+              <tr><td>Admin username and password</td><td>none</td><td>the first admin account</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Then it starts evrd and prints the address. Open the ports in pf (<span class="code">/usr/local/share/examples/evrd/pf.conf</span> has the rules). For Let's Encrypt, the names must already resolve to the machine, with ports 80 and 443 reachable. Every question has an option (<span class="code">-d</span> host, <span class="code">-c</span> certificate, <span class="code">-w</span> evrd|relayd, <span class="code">-a</span> admin, …) and <span class="code">-y</span> takes the defaults, for provisioning without a terminal. Run it again to upgrade: it keeps the config and the key.</p>
+        <h3 id="obsd-confined">How evrd is confined</h3>
+        <p>rc.d starts evrd as root. It binds its ports and reads <span class="code">/etc/evrd/evrd.conf</span>, the secret key and any certificate files, then:</p>
+        <ol>
+          <li><strong>chroots</strong> to <span class="code">/var/evrd</span>, so the rest of the filesystem is gone;</li>
+          <li>becomes <strong><span class="code">_evrd</span></strong>. The chroot and everything in it but <span class="code">data/</span> belong to root, so evrd can't change its own web app or name resolution;</li>
+          <li><strong>unveils</strong> only its data, the web app and <span class="code">resolv.conf</span> / <span class="code">hosts</span> (read-only);</li>
+          <li><strong>pledges</strong> <span class="code">stdio rpath wpath cpath fattr flock inet dns</span>: it can't execute anything or open other kinds of sockets.</li>
+        </ol>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Path</th><th scope="col">What</th></tr></thead>
+            <tbody>
+              <tr><td><span class="code">/etc/evrd/evrd.conf</span></td><td>the config (<span class="code">root:_evrd</span>, 0640)</td></tr>
+              <tr><td><span class="code">/etc/evrd/secret.key</span></td><td>encrypts saved network passwords and certificate keys. Back it up, apart from the data</td></tr>
+              <tr><td><span class="code">/var/evrd/data/</span></td><td>the database and history (<span class="code">_evrd</span> only)</td></tr>
+              <tr><td><span class="code">/var/evrd/web/</span></td><td>the web app, served by evrd (<span class="code">web_root</span>)</td></tr>
+              <tr><td><span class="code">/etc/rc.d/evrd</span></td><td><span class="code">rcctl start|stop|restart evrd</span>; logs go to <span class="code">/var/log/daemon</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The same confinement works anywhere evrd starts as root, with <span class="code">chroot</span> and <span class="code">user</span> in evrd.conf (unveil and pledge are OpenBSD's). The full guide is in the repository: <a href="https://github.com/4evrd/evrd/blob/main/docs/openbsd.md"><span class="code">docs/openbsd.md</span></a>.</p>
       </section>
 
       <section id="from-source" aria-labelledby="h-src">
@@ -276,7 +327,10 @@
               <tr><td><span class="code">api</span></td><td><span class="code">:8098</span></td><td>HTTP + WebSocket API for the web app</td></tr>
               <tr><td><span class="code">db</span></td><td><span class="code">postgres://…/evrd</span></td><td>Accounts and settings; <span class="code">sqlite:/path</span> for single-file installs</td></tr>
               <tr><td><span class="code">history</span></td><td><span class="code">scylla://h1,h2:9042/evrd</span></td><td>Chat history; <span class="code">pebble:/path</span> for one node</td></tr>
-              <tr><td><span class="code">tls_cert</span> / <span class="code">tls_key</span></td><td><span class="code">/etc/evrd/*.pem</span></td><td>Real certificate for the IRC listener</td></tr>
+              <tr><td><span class="code">tls</span></td><td><span class="code">acme</span></td><td>Where certificates come from: <span class="code">acme</span> (Let's Encrypt), <span class="code">selfsigned</span> or <span class="code">files</span> (<span class="code">tls_cert</span> / <span class="code">tls_key</span>). See <a href="#tls">HTTPS and certificates</a></td></tr>
+              <tr><td><span class="code">https_listen</span></td><td><span class="code">:443</span></td><td>evrd serves the web app over HTTPS itself (with <span class="code">http_listen :80</span> to redirect)</td></tr>
+              <tr><td><span class="code">web_root</span></td><td><span class="code">/var/lib/evrd/web</span></td><td>The built web app, for evrd to serve without nginx</td></tr>
+              <tr><td><span class="code">chroot</span> / <span class="code">user</span></td><td><span class="code">/var/evrd</span> / <span class="code">_evrd</span></td><td>Confine evrd after startup (see <a href="#openbsd">OpenBSD</a>)</td></tr>
               <tr><td><span class="code">public_url</span></td><td><span class="code">https://bnc.example.org</span></td><td>Web app address (and SSO callback)</td></tr>
               <tr><td><span class="code">irc_host</span></td><td><span class="code">bnc.example.org</span></td><td>Hostname shown to users for attaching</td></tr>
               <tr><td><span class="code">max_networks</span></td><td><span class="code">0</span></td><td>Per-user default, 0 = unlimited</td></tr>
@@ -287,6 +341,37 @@
         </div>
         <h3 id="history-backends">History backends</h3>
         <p>Chat history never goes in Postgres. <strong>ScyllaDB</strong> is shared by every node, with one partition per buffer per month and queued writes (up to 16k lines) so a slow database doesn't stall IRC. <strong>Pebble</strong> is an embedded store on local disk for single-node installs. <span class="code">evrctl history copy &lt;from&gt; &lt;to&gt;</span> copies history between them.</p>
+      </section>
+
+      <section id="tls" aria-labelledby="h-tls">
+        <span class="eyebrow section-kicker">Operate</span>
+        <h2 id="h-tls">HTTPS and certificates <a class="anchor" href="#tls" aria-label="Link to HTTPS and certificates">#</a></h2>
+        <p>evrd's own TLS ports (the <span class="code">ircs://</span> IRC listeners, and the web app when evrd serves HTTPS itself) share one certificate source. Set it with <span class="code">tls</span>, or switch it while evrd runs under Admin → Settings → HTTPS &amp; TLS:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col"><span class="code">tls</span></th><th scope="col">Certificate</th></tr></thead>
+            <tbody>
+              <tr><td><span class="code">acme</span></td><td>Let's Encrypt: evrd gets one for each name in <span class="code">acme_hosts</span> (default: <span class="code">public_url</span>'s host and <span class="code">irc_host</span>) on first use, and renews it 30 days before it expires. Picking it accepts the CA's subscriber agreement.</td></tr>
+              <tr><td><span class="code">selfsigned</span></td><td>Made once and kept. Browsers and IRC clients ask you to accept it. The default without <span class="code">tls_cert</span>.</td></tr>
+              <tr><td><span class="code">files</span></td><td><span class="code">tls_cert</span> and <span class="code">tls_key</span> (PEM, with the chain) from certbot, acme-client or your own CA, re-read when the file changes.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Certificates evrd gets or makes, and its ACME account, are kept in the database, encrypted with <span class="code">secret_key</span>. Every node of a cluster serves the same ones, and nothing is written to disk.</p>
+        <h3 id="tls-who">Who serves HTTPS</h3>
+        <p><strong>evrd itself:</strong> set <span class="code">https_listen</span> and <span class="code">http_listen</span>, and <span class="code">web_root</span> to the built web app. No proxy or web server is needed. Port 80 redirects to HTTPS and answers Let's Encrypt's <span class="code">http-01</span> challenge, and 443 answers <span class="code">tls-alpn-01</span>.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">evrd.conf</span><button class="copy-btn" type="button" data-copy-from="#tls-conf" aria-label="Copy config" data-label="Copy config"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="tls-conf"><b>public_url</b>   https://bnc.example.org
+<b>irc_host</b>     bnc.example.org
+<b>https_listen</b> :443
+<b>http_listen</b>  :80                     <span class="c"># redirects, and Let's Encrypt's challenges</span>
+<b>web_root</b>     /var/lib/evrd/web       <span class="c"># the release archive's web/</span>
+<b>tls</b>          acme
+<b>acme_email</b>   ops@example.org         <span class="c"># optional: expiry notices</span></pre>
+        </div>
+        <p><strong>A proxy in front</strong> (nginx, Caddy, Traefik, relayd, a cloud load balancer): leave <span class="code">https_listen</span> unset. The proxy terminates TLS and forwards to <span class="code">api</span>, including the WebSocket, and evrd's certificate is then only for the IRC ports. This is how the Docker images run.</p>
+        <p>The settings page says which of the two is in use, and shows each certificate's issuer, names and expiry, or why getting one failed. Saving a choice that can't work (Let's Encrypt for <span class="code">localhost</span>, say) is refused.</p>
       </section>
 
       <section id="accounts" aria-labelledby="h-acc">
@@ -312,14 +397,14 @@
       <section id="server-settings" aria-labelledby="h-ss">
         <span class="eyebrow section-kicker">Operate</span>
         <h2 id="h-ss">Server settings <a class="anchor" href="#server-settings" aria-label="Link to Server settings">#</a></h2>
-        <p>Admins can change the general, limits, connection (<span class="code">connect_rate</span>, <span class="code">bindhost</span>), sign-in, single sign-on and metrics settings from Admin → Settings. Each value comes from, in order (later wins):</p>
+        <p>Admins can change the general, limits, connection (<span class="code">connect_rate</span>, <span class="code">bindhost</span>), <a href="#tls">HTTPS &amp; TLS</a>, sign-in, single sign-on and metrics settings from Admin → Settings. Each value comes from, in order (later wins):</p>
         <ol>
           <li>built-in defaults</li>
           <li><span class="code">evrd.conf</span></li>
           <li>the database: values set on the Settings page, shared by every node</li>
           <li>the environment on that node (<span class="code">EVRD_OIDC_CLIENT_SECRET</span>, <span class="code">EVRD_METRICS_URL</span>, <span class="code">OTEL_EXPORTER_OTLP_METRICS_ENDPOINT</span>)</li>
         </ol>
-        <p>Most settings apply live on every node within a few seconds. <span class="code">public_url</span>, the SSO provider and metrics export are marked <em>Restart needed</em>. Startup and per-node settings (<span class="code">listen</span>, <span class="code">api</span>, <span class="code">db</span>, <span class="code">history</span>, TLS files, cluster settings, <span class="code">upstream_bind</span> / <span class="code">upstream_prefix6</span>, secret keys, <span class="code">settings_write_conf</span>) stay in the file or environment.</p>
+        <p>Most settings apply live on every node within a few seconds. <span class="code">public_url</span>, the SSO provider, metrics export and the certificate file paths are marked <em>Restart needed</em>. Startup and per-node settings (<span class="code">listen</span>, <span class="code">api</span>, <span class="code">https_listen</span>, <span class="code">http_listen</span>, <span class="code">web_root</span>, <span class="code">chroot</span>, <span class="code">user</span>, <span class="code">db</span>, <span class="code">history</span>, cluster settings, <span class="code">upstream_bind</span> / <span class="code">upstream_prefix6</span>, secret keys, <span class="code">settings_write_conf</span>) stay in the file or environment.</p>
         <div class="callout"><i data-icon="info"></i><p><span class="code">settings_write_conf yes</span> writes values set in the UI back into each node's own config file; the file's directory must be writable by evrd (not a read-only single-file mount). Use it on a single node; in cluster mode, leave it off and let the database be the one place these settings live.</p></div>
       </section>
 

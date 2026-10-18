@@ -370,8 +370,9 @@
 <b>history</b>    pebble:/var/lib/evrd/history
 <b>public_url</b> https://bnc.example.org
 <b>irc_host</b>   bnc.example.org
-<b>tls_cert</b>   /etc/evrd/fullchain.pem
-<b>tls_key</b>    /etc/evrd/privkey.pem
+<b>https_listen</b> :443
+<b>web_root</b>   /var/lib/evrd/web
+<b>tls</b>        acme        <span class="c"># Let's Encrypt, renewed by evrd</span>
 <b>secret_key_file</b> /etc/evrd/secret.key</pre>
       </div>
       <div class="copy">
@@ -381,6 +382,8 @@
         <ul class="checks">
           <li><i data-icon="check" class="i-sm"></i><span>The database backend is picked from the DSN, with no code changes</span></li>
           <li><i data-icon="check" class="i-sm"></i><span>Pure Go, statically built, multi-arch images</span></li>
+          <li><i data-icon="check" class="i-sm"></i><span>HTTPS built in, with Let's Encrypt certificates got and renewed automatically, or behind your own proxy</span></li>
+          <li><i data-icon="check" class="i-sm"></i><span>A native <a href="docs.html#openbsd">OpenBSD install</a>: chrooted, unveiled and pledged</span></li>
           <li><i data-icon="check" class="i-sm"></i><span><span class="code">evrctl</span> for admin from a shell</span></li>
         </ul>
         <div class="od-cluster"><a class="btn btn-primary" href="download.html#install"><i data-icon="download"></i>Install</a><a class="btn" href="docs.html#configuration">Configuration reference</a></div>

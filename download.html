@@ -96,12 +96,13 @@
       <div class="section-intro" style="margin-bottom:0">
         <span class="eyebrow">Install</span>
         <h2 class="h2-site" id="inst-h">Pick how you'll run it</h2>
-        <p>All three methods run the same binary. Once it's up, follow the <a href="docs.html#quick-start">quick start</a> to create an admin and add a network.</p>
+        <p>Every method runs the same binary. Once it's up, follow the <a href="docs.html#quick-start">quick start</a> to create an admin and add a network.</p>
       </div>
 
       <div class="tabs" role="tablist" aria-label="Install method" data-hash>
         <button class="tab" role="tab" id="tab-compose" aria-controls="m-compose" aria-selected="true">Docker Compose</button>
         <button class="tab" role="tab" id="tab-docker" aria-controls="m-docker" aria-selected="false">docker run</button>
+        <button class="tab" role="tab" id="tab-openbsd" aria-controls="m-openbsd" aria-selected="false">OpenBSD</button>
         <button class="tab" role="tab" id="tab-source" aria-controls="m-source" aria-selected="false">From source</button>
       </div>
 
@@ -158,6 +159,16 @@
         <div class="callout"><i data-icon="info"></i><p>Pin a version for production. Use <span class="code">:X.Y</span> to follow patch releases, or <span class="code">:X.Y.Z</span> to stay on one exact build.</p></div>
       </div>
 
+      <div class="install-panel" role="tabpanel" id="m-openbsd" aria-labelledby="tab-openbsd" tabindex="0" hidden>
+        <p>A native install without Docker. The script asks for your host name, the certificate (Let's Encrypt, self-signed or none) and whether evrd or relayd serves HTTPS, then installs evrd chrooted to <span class="code">/var/evrd</span>, running as <span class="code">_evrd</span>, unveiled and pledged. Data stays in SQLite and Pebble, so there's no database server. Run as root:</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">shell</span><button class="copy-btn" type="button" data-copy-from="#c-openbsd" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="c-openbsd"><b>ftp</b> https://raw.githubusercontent.com/4evrd/evrd/main/deploy/openbsd/install.sh
+<b>sh</b> install.sh</pre>
+        </div>
+        <div class="callout"><i data-icon="info"></i><p>It verifies the release against its <span class="code">SHA256</span> file, and running it again upgrades in place. The questions, options and layout are in the <a href="docs.html#openbsd">OpenBSD docs</a>.</p></div>
+      </div>
+
       <div class="install-panel" role="tabpanel" id="m-source" aria-labelledby="tab-source" tabindex="0" hidden>
         <p>Pure Go with no cgo, so it cross-compiles with <span class="code">GOOS</span>/<span class="code">GOARCH</span> (Linux, macOS, Windows and the BSDs; amd64, arm64, 386, arm) and doesn't need a C toolchain.</p>
         <div class="codeblock">
@@ -177,7 +188,7 @@
       <div class="section-intro">
         <span class="eyebrow">Platforms</span>
         <h2 class="h2-site" id="plat-h">What's published</h2>
-        <p>This table lists only what CI publishes today. Standalone binary downloads aren't published yet, so build from source if you need one.</p>
+        <p>This table lists what CI publishes with each release.</p>
       </div>
       <div class="table-wrap">
         <table class="matrix">
@@ -186,7 +197,7 @@
             <tr><td>ghcr.io/4evrd/evrd</td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="mono">latest · X.Y.Z · X.Y · sha-&lt;commit&gt;</span></td></tr>
             <tr><td>ghcr.io/4evrd/evrd-web</td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="mono">latest · X.Y.Z · X.Y · sha-&lt;commit&gt;</span></td></tr>
             <tr><td>Source archive</td><td colspan="2"><span class="chip ok"><i data-icon="check"></i>Common Go 1.26 targets</span></td><td><span class="mono">vX.Y.Z on GitHub Releases</span></td></tr>
-            <tr><td>Prebuilt binaries</td><td><span class="chip">Not yet published</span></td><td><span class="chip">Not yet published</span></td><td><span class="faint">Use <span class="mono">make build</span></span></td></tr>
+            <tr><td>Release archives (evrd, evrctl, web app)</td><td><span class="chip ok"><i data-icon="check"></i>Archive</span></td><td><span class="chip ok"><i data-icon="check"></i>Archive</span></td><td><span class="mono">evrd_&lt;os&gt;_&lt;arch&gt;.tar.gz + SHA256 on GitHub Releases</span> <span class="faint">· also FreeBSD, OpenBSD and macOS, amd64 and arm64</span></td></tr>
           </tbody>
         </table>
       </div>
