@@ -25,7 +25,7 @@
       <span class="eyebrow">Documentation</span>
       <h1 id="docs-h">Run evrd</h1>
       <p class="lead">Install it, attach your clients, and scale from one node to a cluster.</p>
-      <div class="tele-row"><span>15 sections</span><span>source <b>README.md</b></span><span>config <b>evrd.conf</b></span><span>admin <b>evrctl</b></span></div>
+      <div class="tele-row"><span>15 sections</span><span>source <b>evrd/docs</b></span><span>config <b>evrd.conf</b></span><span>admin <b>evrctl</b></span></div>
       <svg class="ribbon" aria-hidden="true"></svg>
     </div>
   </section>
@@ -122,7 +122,7 @@
           </div></li>
           <li><div>
             <strong>Start evrd and the web app</strong>
-            <p>The web image proxies <span class="code">/api</span> and <span class="code">/auth</span> to a host named <span class="code">evrd-api</span> on port 8098, so name the daemon's service that.</p>
+            <p>The web image proxies <span class="code">/api</span> and <span class="code">/auth</span> to <span class="code">evrd-api:8098</span>, so name the daemon's service that (or point the web container at it with <span class="code">EVRD_API=host:port</span>).</p>
             <div class="codeblock">
               <div class="cb-head"><span class="caps">docker-compose.yml</span><button class="copy-btn" type="button" data-copy-from="#qs-compose" aria-label="Copy compose file" data-label="Copy compose file"><i data-icon="copy"></i></button></div>
 <pre class="snippet" id="qs-compose"><b>services:</b>
@@ -424,7 +424,8 @@
       <span class="caps">On this page</span>
       <div class="od-stack" id="docs-toc-list" style="--od-gap:2px"></div>
       <div class="edit">
-        <a href="https://github.com/4evrd/evrd/blob/main/README.md" rel="noopener"><i data-icon="git" class="i-sm"></i>Edit on GitHub</a>
+        <a href="https://github.com/4evrd/4evrd.github.io/blob/main/docs.html" rel="noopener"><i data-icon="git" class="i-sm"></i>Edit this page</a>
+        <a href="https://github.com/4evrd/evrd/tree/main/docs" rel="noopener"><i data-icon="book" class="i-sm"></i>Full docs in the repo</a>
         <a href="https://github.com/4evrd/evrd/blob/main/docs/scaling.md" rel="noopener"><i data-icon="book" class="i-sm"></i>Scaling design notes</a>
       </div>
     </aside>
