@@ -25,7 +25,7 @@
     <div class="wrap enter">
       <span class="eyebrow">Download</span>
       <h1 id="dl-h">Get evrd</h1>
-      <p class="lead">evrd ships as multi-arch container images, built on every release. It's pure Go, so building from source takes one command.</p>
+      <p class="lead">evrd ships as multi-arch container images, built on every push to main, with version tags on each release. It's pure Go, so building from source takes one command.</p>
       <div class="tele-row"><span>registry <b>ghcr.io/4evrd</b></span><span>arch <b>amd64 · arm64</b></span><span>release <b>semantic-release</b></span></div>
       <svg class="ribbon" aria-hidden="true"></svg>
       <div class="release-bar" style="margin-top:var(--s3)">
@@ -76,7 +76,7 @@
           <div class="tile-top"><span class="ic"><i data-icon="code"></i></span><span class="chip">Source</span></div>
           <h3>Source code</h3>
           <p>Go 1.26 for the daemon, Node and pnpm for the web client. Tagged releases include source archives on GitHub.</p>
-          <div class="sig"><span class="plat"><span class="chip nick">any GOOS/GOARCH</span><span class="chip">no cgo</span></span><span class="comb" style="--fill:60%;width:72px" aria-hidden="true"></span></div>
+          <div class="sig"><span class="plat"><span class="chip nick">common Go targets</span><span class="chip">no cgo</span></span><span class="comb" style="--fill:60%;width:72px" aria-hidden="true"></span></div>
           <div class="od-stack">
             <div class="input-group">
               <label class="sr-only" for="src-clone">Clone command</label>
@@ -106,7 +106,16 @@
       </div>
 
       <div class="install-panel" role="tabpanel" id="m-compose" aria-labelledby="tab-compose" tabindex="0">
-        <p>The daemon and the web app together. SQLite and Pebble live in one volume, so there's no external database to run. Put your own TLS-terminating proxy in front of port 8080.</p>
+        <p>The daemon and the web app together. SQLite and Pebble live in one volume, so there's no external database to run. Put your own TLS-terminating proxy in front of port 8080. Start with this <span class="code">evrd.conf</span> next to the compose file (and a key in <span class="code">.env</span>: <span class="code">EVRD_SECRET_KEY=</span> from <span class="code">docker run --rm --entrypoint evrctl ghcr.io/4evrd/evrd genkey</span>):</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">evrd.conf</span><button class="copy-btn" type="button" data-copy-from="#c-conf" aria-label="Copy evrd.conf" data-label="Copy evrd.conf"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="c-conf"><b>listen</b>     ircs://:6697
+<b>api</b>        :8098
+<b>db</b>         sqlite:/var/lib/evrd/evrd.db
+<b>history</b>    pebble:/var/lib/evrd/history
+<b>public_url</b> https://bnc.example.org
+<b>irc_host</b>   bnc.example.org</pre>
+        </div>
         <div class="codeblock">
           <div class="cb-head"><span class="caps">docker-compose.yml</span><button class="copy-btn" type="button" data-copy-from="#c-compose" aria-label="Copy compose file" data-label="Copy compose file"><i data-icon="copy"></i></button></div>
 <pre class="snippet" id="c-compose"><b>services:</b>
@@ -136,7 +145,7 @@
       </div>
 
       <div class="install-panel" role="tabpanel" id="m-docker" aria-labelledby="tab-docker" tabindex="0" hidden>
-        <p>The daemon alone, for native IRC clients only, or behind a web app you host yourself.</p>
+        <p>The daemon alone, for native IRC clients only, or behind a web app you host yourself. Use the same <span class="code">evrd.conf</span> as in the Docker Compose tab.</p>
         <div class="codeblock">
           <div class="cb-head"><span class="caps">shell</span><button class="copy-btn" type="button" data-copy-from="#c-docker" aria-label="Copy command" data-label="Copy command"><i data-icon="copy"></i></button></div>
 <pre class="snippet" id="c-docker"><b>docker run -d</b> --name evrd \
@@ -150,7 +159,7 @@
       </div>
 
       <div class="install-panel" role="tabpanel" id="m-source" aria-labelledby="tab-source" tabindex="0" hidden>
-        <p>Pure Go with no cgo, so it cross-compiles with <span class="code">GOOS</span>/<span class="code">GOARCH</span> and doesn't need a C toolchain.</p>
+        <p>Pure Go with no cgo, so it cross-compiles with <span class="code">GOOS</span>/<span class="code">GOARCH</span> (Linux, macOS, Windows and the BSDs; amd64, arm64, 386, arm) and doesn't need a C toolchain.</p>
         <div class="codeblock">
           <div class="cb-head"><span class="caps">shell</span><button class="copy-btn" type="button" data-copy-from="#c-source" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
 <pre class="snippet" id="c-source"><b>git clone</b> https://github.com/4evrd/evrd.git && cd evrd
@@ -174,9 +183,9 @@
         <table class="matrix">
           <thead><tr><th scope="col">Artifact</th><th scope="col">linux/amd64</th><th scope="col">linux/arm64</th><th scope="col">Tags</th></tr></thead>
           <tbody>
-            <tr><td>ghcr.io/4evrd/evrd</td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="mono">latest · X.Y.Z · X.Y · sha</span></td></tr>
-            <tr><td>ghcr.io/4evrd/evrd-web</td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="mono">latest · X.Y.Z · X.Y · sha</span></td></tr>
-            <tr><td>Source archive</td><td colspan="2"><span class="chip ok"><i data-icon="check"></i>Any Go 1.26 target</span></td><td><span class="mono">vX.Y.Z on GitHub Releases</span></td></tr>
+            <tr><td>ghcr.io/4evrd/evrd</td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="mono">latest · X.Y.Z · X.Y · sha-&lt;commit&gt;</span></td></tr>
+            <tr><td>ghcr.io/4evrd/evrd-web</td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="chip ok"><i data-icon="check"></i>Image</span></td><td><span class="mono">latest · X.Y.Z · X.Y · sha-&lt;commit&gt;</span></td></tr>
+            <tr><td>Source archive</td><td colspan="2"><span class="chip ok"><i data-icon="check"></i>Common Go 1.26 targets</span></td><td><span class="mono">vX.Y.Z on GitHub Releases</span></td></tr>
             <tr><td>Prebuilt binaries</td><td><span class="chip">Not yet published</span></td><td><span class="chip">Not yet published</span></td><td><span class="faint">Use <span class="mono">make build</span></span></td></tr>
           </tbody>
         </table>

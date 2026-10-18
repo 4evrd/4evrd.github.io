@@ -222,7 +222,7 @@
       <div class="section-intro">
         <span class="eyebrow">Observable</span>
         <h2 class="h2-site" id="traffic-h">See what each network is doing.</h2>
-        <p>evrd exports OpenTelemetry metrics and draws them back from VictoriaMetrics: lines per network, lag, disconnects and attached clients. Here's a day where hackint timed out at 03:12 and evrd reconnected on its own.</p>
+        <p>evrd exports OpenTelemetry metrics (lines per network, lag, disconnects and attached clients) and draws traffic and link history back from VictoriaMetrics. Here's a day where hackint timed out at 03:12 and evrd reconnected on its own.</p>
       </div>
       <section class="card" aria-labelledby="chart-h">
         <div class="section-head">
@@ -260,7 +260,7 @@
       <div class="section-intro">
         <span class="eyebrow">Features</span>
         <h2 class="h2-site" id="feat-h">A bouncer for everyone from one person to a whole community.</h2>
-        <p>Run a single node with a file on disk, or a cluster behind a load balancer that serves a whole community. Either way, the settings are the ones ZNC users already know.</p>
+        <p>Run a single node with a file on disk, or a cluster behind a load balancer that serves a whole community. Either way, the per-network settings use the names ZNC users already know.</p>
       </div>
 
       <div class="feature-grid">
@@ -321,8 +321,8 @@
         <article class="feature">
           <span class="ic"><i data-icon="users"></i></span>
           <h3>Built for hosting others</h3>
-          <p>Roles, per-user limits, suspension, bind hosts and per-user IPv6 addresses. Admins can edit most of <span class="code">evrd.conf</span> from the web app.</p>
-          <div class="meta"><div class="od-row"><span>connect_rate (example)</span><span class="v">5 / s</span></div></div>
+          <p>Roles, per-user limits, suspension, bind hosts and per-user IPv6 addresses. Admins change limits, sign-in, SSO, bind hosts and metrics settings from the web app.</p>
+          <div class="meta"><div class="od-row"><span>connect_rate (default)</span><span class="v">5 / s</span></div></div>
         </article>
       </div>
     </div>
@@ -334,7 +334,7 @@
       <div class="copy">
         <span class="eyebrow">Muscle memory included</span>
         <h2 class="h2-site" id="status-h">Talk to the bouncer from any client.</h2>
-        <p>Everything the web app does, <span class="code">*status</span> does too, so a terminal client is all you need. Coming from ZNC? <span class="code">AddTrustedServerFingerprint</span> and friends still work.</p>
+        <p>Day-to-day network management works from <span class="code">*status</span> too, so a terminal client is enough for everyday use. Coming from ZNC? <span class="code">AddTrustedServerFingerprint</span> and friends still work.</p>
         <ul class="checks">
           <li><i data-icon="check" class="i-sm"></i><span>Add, connect and remove networks without leaving your client</span></li>
           <li><i data-icon="check" class="i-sm"></i><span>Replay up to 500 lines of any buffer on demand</span></li>
@@ -345,15 +345,16 @@
       <div class="codeblock">
         <div class="cb-head"><span class="caps">irssi · *status</span><button class="copy-btn" type="button" data-copy="/msg *status addnetwork libera irc.libera.chat +6697 jamesat" aria-label="Copy command" data-label="Copy command"><i data-icon="copy"></i></button></div>
 <pre class="snippet"><b>/msg *status</b> addnetwork libera irc.libera.chat +6697 jamesat
-<span class="c">-*status- Added libera (irc.libera.chat:+6697, nick jamesat). connect libera to bring it online, then jump libera.</span>
+<span class="c">&lt;*status&gt;</span> Added libera (irc.libera.chat:+6697, nick jamesat). connect libera to bring it online, then jump libera.
 <b>/msg *status</b> networks
-<span class="c">-*status- </span>* <em>libera</em>  connected     as jamesat  irc.libera.chat:+6697 · 4 channels
-<span class="c">-*status- </span>  <em>oftc</em>    connected     as jamesat  irc.oftc.net:+6697 · 2 channels
-<span class="c">-*status- </span>  <em>hackint</em> reconnecting  as jamesat  irc.hackint.org:+6697 · 1 channel
+<span class="c">&lt;*status&gt;</span> * <em>libera</em>           connected    as jamesat        irc.libera.chat:+6697 · 4 channels
+<span class="c">&lt;*status&gt;</span>   <em>oftc</em>             connected    as jamesat        irc.oftc.net:+6697 · 2 channels
+<span class="c">&lt;*status&gt;</span>   <em>hackint</em>          reconnecting as jamesat        irc.hackint.org:+6697 · 1 channel
+<span class="c">&lt;*status&gt;</span> 3 networks. * = this client. jump &lt;network&gt; to switch.
 <b>/msg *status</b> jump oftc
-<span class="c">-*status- Jumped from libera to oftc.</span>
+<span class="c">&lt;*status&gt;</span> Jumped from libera to oftc.
 <b>/msg *status</b> playback #debian 100
-<span class="c">-*status- Replayed 100 line(s) of #debian.</span></pre>
+<span class="c">&lt;*status&gt;</span> Replayed 100 line(s) of #debian.</pre>
       </div>
     </div>
   </section>
@@ -393,7 +394,7 @@
       <div class="cta-band">
         <div>
           <h2 class="h2-site" id="cta-h">Close the laptop. Miss nothing.</h2>
-          <p>Pull the image, create an admin account, add a network. Five minutes from now your nick is online for good.</p>
+          <p>Write a short config, start the containers, create an admin account, add a network. A few minutes from now your nick is online for good.</p>
         </div>
         <div class="od-cluster">
           <a class="btn btn-primary btn-lg" href="download.html#install"><i data-icon="download"></i>Get evrd</a>
