@@ -160,13 +160,12 @@
       </div>
 
       <div class="install-panel" role="tabpanel" id="m-openbsd" aria-labelledby="tab-openbsd" tabindex="0" hidden>
-        <p>A native install without Docker. The script asks for your host name, the certificate (Let's Encrypt, self-signed or none) and whether evrd or relayd serves HTTPS, then installs evrd chrooted to <span class="code">/var/evrd</span>, running as <span class="code">_evrd</span>, unveiled and pledged. Data stays in SQLite and Pebble, so there's no database server. Run as root:</p>
+        <p>A native install without Docker, in one command. It asks for your host name, the certificate (Let's Encrypt, self-signed or none), whether evrd or relayd serves HTTPS, and single sign-on (optional), then installs evrd chrooted to <span class="code">/var/evrd</span>, running as <span class="code">_evrd</span>, unveiled and pledged. Data stays in SQLite and Pebble, so there's no database server. Run as root:</p>
         <div class="codeblock">
           <div class="cb-head"><span class="caps">shell</span><button class="copy-btn" type="button" data-copy-from="#c-openbsd" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
-<pre class="snippet" id="c-openbsd"><b>ftp</b> https://raw.githubusercontent.com/4evrd/evrd/main/deploy/openbsd/install.sh
-<b>sh</b> install.sh</pre>
+<pre class="snippet" id="c-openbsd"><b>ftp</b> -o - https://raw.githubusercontent.com/4evrd/evrd/main/deploy/openbsd/install.sh | <b>sh</b></pre>
         </div>
-        <div class="callout"><i data-icon="info"></i><p>It verifies the release against its <span class="code">SHA256</span> file, and running it again upgrades in place. The questions, options and layout are in the <a href="docs.html#openbsd">OpenBSD docs</a>.</p></div>
+        <div class="callout"><i data-icon="info"></i><p>It verifies the release against its <span class="code">SHA256</span> file, and running the same command again upgrades in place. The questions, options and layout are in the <a href="docs.html#openbsd">OpenBSD docs</a>.</p></div>
       </div>
 
       <div class="install-panel" role="tabpanel" id="m-source" aria-labelledby="tab-source" tabindex="0" hidden>

@@ -170,13 +170,12 @@
       <section id="openbsd" aria-labelledby="h-obsd">
         <span class="eyebrow section-kicker">Get started</span>
         <h2 id="h-obsd">Install on OpenBSD <a class="anchor" href="#openbsd" aria-label="Link to Install on OpenBSD">#</a></h2>
-        <p>evrd runs natively on OpenBSD (amd64 and arm64), without Docker. One script installs it as a confined system daemon, with SQLite and the embedded Pebble history store, so there's no database server to run. As root:</p>
+        <p>evrd runs natively on OpenBSD (amd64 and arm64), without Docker. One script installs it as a confined system daemon, with SQLite and the embedded Pebble history store, so there's no database server to run. One command, as root (<span class="code">ftp</span> is OpenBSD's built-in downloader, so no curl is needed):</p>
         <div class="codeblock">
           <div class="cb-head"><span class="caps">shell</span><button class="copy-btn" type="button" data-copy-from="#obsd-cmd" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
-<pre class="snippet" id="obsd-cmd"><b>ftp</b> https://raw.githubusercontent.com/4evrd/evrd/main/deploy/openbsd/install.sh
-<b>sh</b> install.sh</pre>
+<pre class="snippet" id="obsd-cmd"><b>ftp</b> -o - https://raw.githubusercontent.com/4evrd/evrd/main/deploy/openbsd/install.sh | <b>sh</b></pre>
         </div>
-        <p>It downloads the latest release for your machine, checks it against the release's <span class="code">SHA256</span> file, and asks:</p>
+        <p>The questions come up at your terminal even though the script arrives through a pipe. Not root? Use <span class="code">| doas sh</span>. It downloads the latest release for your machine, checks it against the release's <span class="code">SHA256</span> file, and asks:</p>
         <div class="table-wrap">
           <table>
             <thead><tr><th scope="col">Question</th><th scope="col">Default</th><th scope="col">Answers</th></tr></thead>
@@ -186,11 +185,12 @@
               <tr><td>Who serves HTTPS</td><td><span class="code">evrd</span></td><td><span class="code">evrd</span> itself on 443 and 80, or <span class="code">relayd</span> in front (with httpd and acme-client)</td></tr>
               <tr><td>HTTPS port, Let's Encrypt email</td><td><span class="code">443</span>, none</td><td></td></tr>
               <tr><td>IRC host name and ports</td><td>the web host, <span class="code">6697</span> (TLS), no plain port</td><td></td></tr>
+              <tr><td>Single sign-on</td><td>none</td><td>an OpenID Connect issuer (e.g. Logto's <span class="code">https://id.example.org/oidc</span>), client ID, secret (not echoed), button label and admin role. It shows the redirect URI to register: <span class="code">&lt;web app&gt;/auth/callback</span></td></tr>
               <tr><td>Admin username and password</td><td>none</td><td>the first admin account</td></tr>
             </tbody>
           </table>
         </div>
-        <p>Then it starts evrd and prints the address. Open the ports in pf (<span class="code">/usr/local/share/examples/evrd/pf.conf</span> has the rules). For Let's Encrypt, the names must already resolve to the machine, with ports 80 and 443 reachable. Every question has an option (<span class="code">-d</span> host, <span class="code">-c</span> certificate, <span class="code">-w</span> evrd|relayd, <span class="code">-a</span> admin, …) and <span class="code">-y</span> takes the defaults, for provisioning without a terminal. Run it again to upgrade: it keeps the config and the key.</p>
+        <p>Then it starts evrd and prints the address. Open the ports in pf (<span class="code">/usr/local/share/examples/evrd/pf.conf</span> has the rules). For Let's Encrypt, the names must already resolve to the machine, with ports 80 and 443 reachable. Every question has an option (<span class="code">-d</span> host, <span class="code">-c</span> certificate, <span class="code">-w</span> evrd|relayd, <span class="code">-o</span> SSO issuer, <span class="code">-a</span> admin, …), passed as <span class="code">| sh -s -- -y -d bnc.example.org …</span>. <span class="code">-y</span> takes the defaults, for provisioning without a terminal. Run the same command again to upgrade: it keeps the config and the key.</p>
         <h3 id="obsd-confined">How evrd is confined</h3>
         <p>rc.d starts evrd as root. It binds its ports and reads <span class="code">/etc/evrd/evrd.conf</span>, the secret key and any certificate files, then:</p>
         <ol>
