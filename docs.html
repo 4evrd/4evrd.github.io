@@ -190,15 +190,16 @@
             </tbody>
           </table>
         </div>
-        <p>Then it starts evrd and prints the address. Open the ports in pf (<span class="code">/usr/local/share/examples/evrd/pf.conf</span> has the rules). For Let's Encrypt, the names must already resolve to the machine, with ports 80 and 443 reachable. Every question has an option (<span class="code">-d</span> host, <span class="code">-c</span> certificate, <span class="code">-w</span> evrd|relayd, <span class="code">-o</span> SSO issuer, <span class="code">-a</span> admin, …), passed as <span class="code">| sh -s -- -y -d bnc.example.org …</span>. <span class="code">-y</span> takes the defaults, for provisioning without a terminal. Run the same command again to upgrade: it keeps the config and the key.</p>
+        <p>Then it starts evrd and prints the address. Open the ports in pf (<span class="code">/usr/local/share/examples/evrd/pf.conf</span> has the rules). For Let's Encrypt, the names must already resolve to the machine, with ports 80 and 443 reachable. Every question has an option (<span class="code">-d</span> host, <span class="code">-c</span> certificate, <span class="code">-w</span> evrd|relayd, <span class="code">-o</span> SSO issuer, <span class="code">-a</span> admin, …), passed as <span class="code">| sh -s -- -y -d bnc.example.org …</span>. <span class="code">-y</span> takes the defaults, for provisioning without a terminal. Run the same command again to upgrade: it keeps the config and the key. evrd restarts only if its program changed (a release that only touches the web app goes live without one), and even then nobody leaves IRC: the <a href="architecture.html#restarts">connection holder</a>, <span class="code">evrd-links</span>, keeps everyone's connections open while evrd restarts. Certificate renewals reload evrd (<span class="code">rcctl reload evrd</span>) instead of restarting it.</p>
         <h3 id="obsd-confined">How evrd is confined</h3>
         <p>rc.d starts evrd as root. It binds its ports and reads <span class="code">/etc/evrd/evrd.conf</span>, the secret key and any certificate files, then:</p>
         <ol>
           <li><strong>chroots</strong> to <span class="code">/var/evrd</span>, so the rest of the filesystem is gone;</li>
           <li>becomes <strong><span class="code">_evrd</span></strong>. The chroot and everything in it but <span class="code">data/</span> belong to root, so evrd can't change its own web app or name resolution;</li>
           <li><strong>unveils</strong> only its data, the web app and <span class="code">resolv.conf</span> / <span class="code">hosts</span> (read-only);</li>
-          <li><strong>pledges</strong> <span class="code">stdio rpath wpath cpath fattr flock inet dns</span>: it can't execute anything or open other kinds of sockets.</li>
+          <li><strong>pledges</strong> <span class="code">stdio rpath wpath cpath fattr flock inet dns unix sendfd</span>: it can't execute anything or open other kinds of sockets (<span class="code">unix sendfd</span> hands connections to the holder).</li>
         </ol>
+        <p><span class="code">evrd-links</span> is confined the same way but tighter: chrooted to <span class="code">/var/evrd</span> as <span class="code">_evrd</span>, it pledges only <span class="code">stdio inet unix recvfd</span> and can't open any files.</p>
         <div class="table-wrap">
           <table>
             <thead><tr><th scope="col">Path</th><th scope="col">What</th></tr></thead>
@@ -207,7 +208,8 @@
               <tr><td><span class="code">/etc/evrd/secret.key</span></td><td>encrypts saved network passwords and certificate keys. Back it up, apart from the data</td></tr>
               <tr><td><span class="code">/var/evrd/data/</span></td><td>the database and history (<span class="code">_evrd</span> only)</td></tr>
               <tr><td><span class="code">/var/evrd/web/</span></td><td>the web app, served by evrd (<span class="code">web_root</span>)</td></tr>
-              <tr><td><span class="code">/etc/rc.d/evrd</span></td><td><span class="code">rcctl start|stop|restart evrd</span>; logs go to <span class="code">/var/log/daemon</span></td></tr>
+              <tr><td><span class="code">/etc/rc.d/evrd</span></td><td><span class="code">rcctl start|stop|restart|reload evrd</span>; logs go to <span class="code">/var/log/daemon</span></td></tr>
+              <tr><td><span class="code">/etc/rc.d/evrd_links</span></td><td>the connection holder, started before evrd. Its socket is <span class="code">/var/evrd/run/links.sock</span>. Restarting it drops the IRC connections, so the installer only does that when a release changed it</td></tr>
             </tbody>
           </table>
         </div>
@@ -331,6 +333,7 @@
               <tr><td><span class="code">https_listen</span></td><td><span class="code">:443</span></td><td>evrd serves the web app over HTTPS itself (with <span class="code">http_listen :80</span> to redirect)</td></tr>
               <tr><td><span class="code">web_root</span></td><td><span class="code">/var/lib/evrd/web</span></td><td>The built web app, for evrd to serve without nginx</td></tr>
               <tr><td><span class="code">chroot</span> / <span class="code">user</span></td><td><span class="code">/var/evrd</span> / <span class="code">_evrd</span></td><td>Confine evrd after startup (see <a href="#openbsd">OpenBSD</a>)</td></tr>
+              <tr><td><span class="code">links_socket</span></td><td><span class="code">/var/evrd/run/links.sock</span></td><td>The <a href="architecture.html#restarts">connection holder</a>'s socket: IRC connections stay up while evrd restarts (single node)</td></tr>
               <tr><td><span class="code">public_url</span></td><td><span class="code">https://bnc.example.org</span></td><td>Web app address (and SSO callback)</td></tr>
               <tr><td><span class="code">irc_host</span></td><td><span class="code">bnc.example.org</span></td><td>Hostname shown to users for attaching</td></tr>
               <tr><td><span class="code">max_networks</span></td><td><span class="code">0</span></td><td>Per-user default, 0 = unlimited</td></tr>
@@ -353,7 +356,7 @@
             <tbody>
               <tr><td><span class="code">acme</span></td><td>Let's Encrypt: evrd gets one for each name in <span class="code">acme_hosts</span> (default: <span class="code">public_url</span>'s host and <span class="code">irc_host</span>) on first use, and renews it 30 days before it expires. Picking it accepts the CA's subscriber agreement.</td></tr>
               <tr><td><span class="code">selfsigned</span></td><td>Made once and kept. Browsers and IRC clients ask you to accept it. The default without <span class="code">tls_cert</span>.</td></tr>
-              <tr><td><span class="code">files</span></td><td><span class="code">tls_cert</span> and <span class="code">tls_key</span> (PEM, with the chain) from certbot, acme-client or your own CA, re-read when the file changes.</td></tr>
+              <tr><td><span class="code">files</span></td><td><span class="code">tls_cert</span> and <span class="code">tls_key</span> (PEM, with the chain) from certbot, acme-client or your own CA, re-read when the file changes and on <span class="code">SIGHUP</span> (<span class="code">rcctl reload evrd</span>), without a restart.</td></tr>
             </tbody>
           </table>
         </div>
@@ -391,6 +394,17 @@
 <b>oidc_link_existing</b> no
 <b>oidc_admin_role</b>    evrd-admin</pre>
         </div>
+        <h3 id="provisioning">Provisioning API</h3>
+        <p>For tools that bring users in from elsewhere, such as moving ZNC users over, evrd can create an account and its networks before the owner ever signs in. It's off until <span class="code">provision_token</span> is set (or <span class="code">EVRD_PROVISION_TOKEN</span>), and every call sends that token:</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">shell</span><button class="copy-btn" type="button" data-copy-from="#prov-cmd" aria-label="Copy command" data-label="Copy command"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="prov-cmd"><b>curl</b> -X PUT http://127.0.0.1:8098/api/provision/users/alice \
+  -H "Authorization: Bearer $EVRD_PROVISION_TOKEN" \
+  -d '{"email": "alice@example.org", "connect": true,
+       "networks": [{"name": "libera", "host": "irc.libera.chat", "port": 6697,
+                     "tls": true, "nick": "alice", "channels": ["#evrd"]}]}'</pre>
+        </div>
+        <p>Networks take the same fields as the web app's network editor. Each one comes back as <span class="code">created</span>, <span class="code">exists</span> (so a call can be repeated) or <span class="code">failed</span>. <span class="code">connect</span> connects every listed network, so a migration can create everything, take the old bouncer off IRC, then call again to connect. A new account has no password and is <strong>claimable</strong>: the first SSO sign-in with the same username <em>and</em> email links to it. Keep the token secret and the API on a local address.</p>
         <p><strong>Suspending</strong> a user signs them out everywhere, drops their IRC clients and disconnects their networks; lifting the suspension reconnects them. The last active admin can't be demoted, suspended or deleted.</p>
       </section>
 
@@ -404,7 +418,7 @@
           <li>the database: values set on the Settings page, shared by every node</li>
           <li>the environment on that node (<span class="code">EVRD_OIDC_CLIENT_SECRET</span>, <span class="code">EVRD_METRICS_URL</span>, <span class="code">OTEL_EXPORTER_OTLP_METRICS_ENDPOINT</span>)</li>
         </ol>
-        <p>Most settings apply live on every node within a few seconds. <span class="code">public_url</span>, the SSO provider, metrics export and the certificate file paths are marked <em>Restart needed</em>. Startup and per-node settings (<span class="code">listen</span>, <span class="code">api</span>, <span class="code">https_listen</span>, <span class="code">http_listen</span>, <span class="code">web_root</span>, <span class="code">chroot</span>, <span class="code">user</span>, <span class="code">db</span>, <span class="code">history</span>, cluster settings, <span class="code">upstream_bind</span> / <span class="code">upstream_prefix6</span>, secret keys, <span class="code">settings_write_conf</span>) stay in the file or environment.</p>
+        <p>Most settings apply live on every node within a few seconds. <span class="code">public_url</span>, the SSO provider, metrics export and the certificate file paths are marked <em>Restart needed</em>. With the <a href="architecture.html#restarts">connection holder</a> running, that restart doesn't take anyone off IRC. Startup and per-node settings (<span class="code">listen</span>, <span class="code">api</span>, <span class="code">https_listen</span>, <span class="code">http_listen</span>, <span class="code">web_root</span>, <span class="code">chroot</span>, <span class="code">user</span>, <span class="code">db</span>, <span class="code">history</span>, cluster settings, <span class="code">upstream_bind</span> / <span class="code">upstream_prefix6</span>, secret keys, <span class="code">settings_write_conf</span>) stay in the file or environment.</p>
         <div class="callout"><i data-icon="info"></i><p><span class="code">settings_write_conf yes</span> writes values set in the UI back into each node's own config file; the file's directory must be writable by evrd (not a read-only single-file mount). Use it on a single node; in cluster mode, leave it off and let the database be the one place these settings live.</p></div>
       </section>
 
@@ -469,6 +483,7 @@
 <b>metrics_url</b>   http://victoriametrics:8428</pre>
         </div>
         <p>Run VictoriaMetrics with <span class="code">-opentelemetry.usePrometheusNaming</span> to get <span class="code">evrd_irc_lines_total</span>, <span class="code">evrd_upstream_up</span>, <span class="code">evrd_upstream_lag_seconds</span>, <span class="code">evrd_irc_clients</span>, <span class="code">evrd_cluster_users</span>, <span class="code">evrd_history_queue</span> and friends. Without <span class="code">metrics_url</span> the dashboard still works, and the chart says metrics are off.</p>
+        <p>Behind a proxy with basic auth, put the credentials in both URLs (<span class="code">https://user:pass@vm.example.org</span>). evrd sends them as basic auth, and Admin → Settings shows the password masked.</p>
       </section>
 
       <section id="evrctl" aria-labelledby="h-ctl">

@@ -38,7 +38,8 @@
       <a href="#routing"><span class="n">03</span>Request routing</a>
       <a href="#failover"><span class="n">04</span>Failover</a>
       <a href="#outbound"><span class="n">05</span>Outbound addresses</a>
-      <a href="#choose"><span class="n">06</span>Choosing a setup</a>
+      <a href="#restarts"><span class="n">06</span>Restarts</a>
+      <a href="#choose"><span class="n">07</span>Choosing a setup</a>
     </div>
   </nav>
 
@@ -531,11 +532,74 @@ ip -6 route add local 2001:db8:42::/64 dev lo</pre>
     </div>
   </section>
 
-  <!-- ============================================================ 06 choosing -->
+  <!-- ============================================================ 06 restarts -->
+  <section class="arch-section" id="restarts" aria-labelledby="hold-h">
+    <div class="wrap">
+      <div class="arch-intro">
+        <span class="eyebrow">06 · Restarts</span>
+        <h2 class="h2-site" id="hold-h">Upgrade without anyone leaving IRC</h2>
+        <p>A connection to an IRC server lives in the process that opened it, so restarting a bouncer normally makes every user quit and rejoin every channel. On a single node, a second, much smaller process holds those connections instead, and evrd can come and go underneath it.</p>
+      </div>
+
+      <div class="dg-stage">
+        <div class="diagram" data-links="h-irc>h-evrd, h-web>h-evrd, h-evrd>h-links, h-links>h-libera, h-links>h-oftc">
+          <div class="dg-row">
+            <div class="dg-col">
+              <span class="caps">Clients</span>
+              <div class="dg-node" data-node="h-irc" tabindex="0"><span class="ic"><i data-icon="terminal"></i></span><span class="od-field"><span class="nm">IRC clients</span><span class="sub">reconnect by themselves</span></span></div>
+              <div class="dg-node" data-node="h-web" tabindex="0"><span class="ic"><i data-icon="globe"></i></span><span class="od-field"><span class="nm">Browser</span><span class="sub">reconnects by itself</span></span></div>
+            </div>
+            <div class="dg-box" data-node="h-evrd" tabindex="0">
+              <div class="dg-box-head"><span class="brand-mark" aria-hidden="true">#</span><span class="od-field"><span class="nm">evrd</span><span class="sub">restarts, upgrades</span></span></div>
+              <div class="dg-files">
+                <span class="row-f"><i data-icon="refresh" class="i-sm"></i><span class="od-field"><span class="lb">Opens each connection</span><span class="path">bind host, pacing, then hands over the socket</span></span></span>
+                <span class="row-f"><i data-icon="layers" class="i-sm"></i><span class="od-field"><span class="lb">History, clients, the web app</span><span class="path">everything else, as before</span></span></span>
+              </div>
+            </div>
+            <div class="dg-col">
+              <span class="caps">Holder</span>
+              <div class="dg-node" data-node="h-links" tabindex="0"><span class="ic lb"><i data-icon="shield"></i></span><span class="od-field"><span class="nm">evrd-links</span><span class="sub">TLS · PINGs · 4 MB buffer per network</span></span></div>
+            </div>
+            <div class="dg-col">
+              <span class="caps">Networks</span>
+              <div class="dg-node" data-node="h-libera" tabindex="0"><span class="ic"><i data-icon="globe"></i></span><span class="od-field"><span class="nm">Libera.Chat</span><span class="sub">sees one connection</span></span></div>
+              <div class="dg-node" data-node="h-oftc" tabindex="0"><span class="ic"><i data-icon="globe"></i></span><span class="od-field"><span class="nm">OFTC</span><span class="sub">sees one connection</span></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="dg-legend"><span>evrd and evrd-links talk over a unix socket (<span class="code">links_socket</span>); connections are passed between them as file descriptors.</span></div>
+      </div>
+
+      <div class="arch-two">
+        <div>
+          <h3>What happens on a restart</h3>
+          <ol>
+            <li><strong>evrd stops.</strong> It detaches from every connection instead of sending <span class="code">QUIT</span>. The holder keeps them open, answers the servers' <span class="code">PING</span>s and buffers whatever arrives.</li>
+            <li><strong>The new evrd starts</strong> and asks the holder for each network's connection. It gets back the nick, the server's <span class="code">005</span> lines and the buffered lines, so it skips registration and doesn't rejoin anything.</li>
+            <li><strong>It catches up:</strong> buffered messages go into history, and <span class="code">NAMES</span> and <span class="code">TOPIC</span> rebuild each channel. Clients reconnect to evrd and replay what they missed, as usual.</li>
+          </ol>
+          <p style="margin-top:var(--s3)">Switching a network off or deleting it still sends <span class="code">QUIT</span>. If the holder isn't running, evrd connects directly, as it always has.</p>
+        </div>
+        <div>
+          <div class="codeblock">
+            <div class="cb-head"><span class="caps">run the holder first, as root</span><button class="copy-btn" type="button" data-copy-from="#cfg-hold" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="cfg-hold"><b>evrd-links</b> -socket /var/evrd/run/links.sock \
+  -chroot /var/evrd -user _evrd
+
+<span class="c"># evrd.conf</span>
+<b>links_socket</b> /var/evrd/run/links.sock</pre>
+          </div>
+          <div class="callout" style="margin-top:var(--s4)"><i data-icon="info"></i><p>The holder is small and rarely changes, so it rarely needs a restart. Restarting it does drop the connections. The OpenBSD installer sets it up and restarts it only when a release changed it. It's for a single node. A cluster moves users between nodes instead (<a href="#failover">Failover</a>).</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ 07 choosing -->
   <section class="arch-section" id="choose" aria-labelledby="choose-h">
     <div class="wrap">
       <div class="arch-intro">
-        <span class="eyebrow">06 · Choosing a setup</span>
+        <span class="eyebrow">07 · Choosing a setup</span>
         <h2 class="h2-site" id="choose-h">Start small, grow when you need to</h2>
         <p>The shapes differ only in configuration, so you can start with the simplest one and move up when you need to.</p>
       </div>
@@ -549,7 +613,7 @@ ip -6 route add local 2001:db8:42::/64 dev lo</pre>
             <tr><td>History (<span class="code">history</span>)</td><td>Pebble</td><td>ScyllaDB or Pebble</td><td>ScyllaDB, shared</td></tr>
             <tr><td>Load balancer</td><td><span class="chip">None</span></td><td><span class="chip">None</span></td><td><span class="chip nick">nginx or Traefik ≥ 3.7</span></td></tr>
             <tr><td>A node fails</td><td><span class="chip bad">Down until restart</span></td><td><span class="chip bad">Down until restart</span></td><td><span class="chip ok">Users move in ≈ 20 s</span></td></tr>
-            <tr><td>Deploying a new version</td><td>Brief restart</td><td>Brief restart</td><td>Rolling, drain on SIGTERM</td></tr>
+            <tr><td>Deploying a new version</td><td>Restart; with <a href="#restarts">evrd-links</a>, nobody leaves IRC</td><td>Restart; with <a href="#restarts">evrd-links</a>, nobody leaves IRC</td><td>Rolling, drain on SIGTERM</td></tr>
             <tr><td>Good for</td><td>One person, a Pi or a small VPS</td><td>A group on one machine</td><td>A community with no machine to lose</td></tr>
           </tbody>
         </table>
