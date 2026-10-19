@@ -1,7 +1,7 @@
 {
   "$schema": "https://evrd.sh/api/networks/v1.schema.json",
   "version": 1,
-  "updated": "2026-10-19T00:00:00Z",
+  "updated": "2026-10-19T12:00:00Z",
   "networks": [
     {
       "id": "libera",
@@ -203,6 +203,905 @@
       "services": "ergo",
       "tags": ["testing", "ircv3"],
       "region": "global"
+    },
+    {
+      "id": "2600net",
+      "name": "2600net",
+      "description": "IRC network of the 2600 hacker community. Its TLS certificate doesn't match irc.2600.net, so it's listed without TLS.",
+      "servers": [{ "host": "irc.2600.net", "port": 6667, "tls": false }],
+      "tags": ["hacker"]
+    },
+    {
+      "id": "2f30",
+      "name": "2f30",
+      "description": "Small IRC network of the 2f30.org collective.",
+      "homepage": "https://2f30.org",
+      "servers": [{ "host": "irc.2f30.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "afterall",
+      "name": "After-all",
+      "description": "German-language IRC network. No TLS.",
+      "homepage": "https://after-all.org",
+      "servers": [{ "host": "irc.after-all.org", "port": 6667, "tls": false }],
+      "tags": ["german"],
+      "region": "DE"
+    },
+    {
+      "id": "afterx",
+      "name": "AfterX",
+      "description": "IRC network. Its TLS certificate has expired, so it's listed without TLS.",
+      "servers": [{ "host": "irc.afterx.net", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "allnetwork",
+      "name": "AllNetwork",
+      "description": "Indonesian IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://allnetwork.org",
+      "servers": [{ "host": "irc.allnetwork.org", "port": 6667, "tls": false }],
+      "tags": ["indonesian"],
+      "region": "ID"
+    },
+    {
+      "id": "allnightcafe",
+      "name": "AllNightCafe",
+      "description": "General chat network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://allnightcafe.com",
+      "servers": [{ "host": "irc.allnightcafe.com", "port": 6667, "tls": false }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "alphachat",
+      "name": "AlphaChat",
+      "description": "General chat network.",
+      "homepage": "https://alphachat.net",
+      "servers": [{ "host": "irc.alphachat.net", "port": 6697, "tls": true }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "amicachat",
+      "name": "AmicaChat",
+      "description": "Italian chat network.",
+      "homepage": "https://amicachat.net",
+      "servers": [{ "host": "irc.amicachat.net", "port": 6697, "tls": true }],
+      "tags": ["italian"],
+      "region": "IT"
+    },
+    {
+      "id": "atrum",
+      "name": "Atrum",
+      "description": "IRC network. Its TLS certificate doesn't match irc.atrum.org, so it's listed without TLS.",
+      "servers": [{ "host": "irc.atrum.org", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "austnet",
+      "name": "AustNet",
+      "description": "Australian chat network. Its TLS certificate has expired, so it's listed without TLS.",
+      "homepage": "https://austnet.org",
+      "servers": [{ "host": "irc.austnet.org", "port": 6667, "tls": false }],
+      "region": "AU"
+    },
+    {
+      "id": "axon",
+      "name": "Axon",
+      "description": "IRC network.",
+      "servers": [{ "host": "irc.axon.pw", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "ayochat",
+      "name": "AyoChat",
+      "description": "Indonesian chat network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "servers": [{ "host": "irc.ayochat.or.id", "port": 6667, "tls": false }],
+      "tags": ["indonesian"],
+      "region": "ID"
+    },
+    {
+      "id": "azzurra",
+      "name": "Azzurra",
+      "description": "Italian IRC network.",
+      "homepage": "https://azzurra.chat",
+      "servers": [{ "host": "irc.azzurra.chat", "port": 6697, "tls": true }],
+      "tags": ["italian"],
+      "region": "IT"
+    },
+    {
+      "id": "barton",
+      "name": "barton.de",
+      "description": "Small IRC network run by the author of ngIRCd; home of #ngircd.",
+      "servers": [{ "host": "irc.barton.de", "port": 6697, "tls": true }],
+      "tags": ["tech"]
+    },
+    {
+      "id": "bgirc",
+      "name": "BG IRC",
+      "description": "Bulgarian chat network.",
+      "homepage": "https://bgirc.com",
+      "servers": [{ "host": "irc.bgirc.com", "port": 6697, "tls": true }],
+      "tags": ["bulgarian"],
+      "region": "BG"
+    },
+    {
+      "id": "bitreich",
+      "name": "Bitreich",
+      "description": "IRC network of the Bitreich hacker community.",
+      "servers": [{ "host": "irc.bitreich.org", "port": 6697, "tls": true }],
+      "tags": ["hacker", "tech"]
+    },
+    {
+      "id": "bolchat",
+      "name": "BolChat",
+      "description": "Chat network. No TLS.",
+      "servers": [{ "host": "irc.bolchat.com", "port": 6667, "tls": false }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "brasirc",
+      "name": "BrasIRC",
+      "description": "Brazilian IRC network.",
+      "homepage": "https://brasirc.com.br",
+      "servers": [{ "host": "irc.brasirc.com.br", "port": 6697, "tls": true }],
+      "tags": ["portuguese"],
+      "region": "BR"
+    },
+    {
+      "id": "bsdforall",
+      "name": "BSDForAll",
+      "description": "Small IRC network for BSD users.",
+      "servers": [{ "host": "irc.bsdforall.org", "port": 6697, "tls": true }],
+      "tags": ["bsd", "tech"]
+    },
+    {
+      "id": "canternet",
+      "name": "CanterNet",
+      "description": "IRC network of the My Little Pony fan community.",
+      "servers": [{ "host": "irc.canternet.org", "port": 6697, "tls": true }],
+      "tags": ["fandom"]
+    },
+    {
+      "id": "chaat",
+      "name": "Chaat",
+      "description": "French chat network.",
+      "homepage": "https://chaat.fr",
+      "servers": [{ "host": "irc.chaat.fr", "port": 6697, "tls": true }],
+      "tags": ["french"],
+      "region": "FR"
+    },
+    {
+      "id": "chat4all",
+      "name": "Chat4All",
+      "description": "Chat network. Its server doesn't send a complete TLS certificate chain, so it's listed without TLS.",
+      "servers": [{ "host": "irc.chat4all.org", "port": 6667, "tls": false }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "chathispano",
+      "name": "ChatHispano",
+      "description": "Spanish-language chat network.",
+      "homepage": "https://chathispano.com",
+      "servers": [{ "host": "irc.chathispano.com", "port": 6697, "tls": true }],
+      "tags": ["spanish"],
+      "region": "ES"
+    },
+    {
+      "id": "chatjunkies",
+      "name": "ChatJunkies",
+      "description": "General chat network.",
+      "homepage": "https://chatjunkies.org",
+      "servers": [{ "host": "irc.chatjunkies.org", "port": 6697, "tls": true }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "chatlatino",
+      "name": "ChatLatino",
+      "description": "Chilean Spanish-language chat network. No TLS; port 9090.",
+      "homepage": "https://chatlatinos.cl",
+      "servers": [{ "host": "irc.chatlatinos.cl", "port": 9090, "tls": false }],
+      "tags": ["spanish"],
+      "region": "CL"
+    },
+    {
+      "id": "chatlounge",
+      "name": "ChatLounge",
+      "description": "General chat network.",
+      "servers": [{ "host": "irc.chatlounge.net", "port": 6697, "tls": true }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "chatopia",
+      "name": "Chatopia",
+      "description": "General chat network.",
+      "homepage": "https://chatopia.net",
+      "servers": [{ "host": "irc.chatopia.net", "port": 6697, "tls": true }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "chatplezier",
+      "name": "Chatplezier",
+      "description": "Dutch chat network.",
+      "homepage": "https://chatplezier.com",
+      "servers": [{ "host": "irc.chatplezier.com", "port": 6697, "tls": true }],
+      "tags": ["dutch"],
+      "region": "NL"
+    },
+    {
+      "id": "chatspike",
+      "name": "ChatSpike",
+      "description": "General chat network. Its TLS certificate has expired, so it's listed without TLS.",
+      "homepage": "https://chatspike.net",
+      "servers": [{ "host": "irc.chatspike.net", "port": 6667, "tls": false }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "chatzona",
+      "name": "ChatZona",
+      "description": "Spanish-language chat network. Its TLS certificate doesn't match irc.chatzona.org, so it's listed without TLS.",
+      "homepage": "https://chatzona.org",
+      "servers": [{ "host": "irc.chatzona.org", "port": 6667, "tls": false }],
+      "tags": ["spanish"],
+      "region": "ES"
+    },
+    {
+      "id": "cloud9p",
+      "name": "cloud9p",
+      "description": "Small IRC network.",
+      "servers": [{ "host": "irc.cloud9p.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "darkfasel",
+      "name": "DarkFasel",
+      "description": "IRC network.",
+      "homepage": "https://darkfasel.net",
+      "servers": [{ "host": "irc.darkfasel.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "darkmyst",
+      "name": "DarkMyst",
+      "description": "IRC network for roleplaying and fantasy communities.",
+      "homepage": "https://darkmyst.org",
+      "servers": [{ "host": "irc.darkmyst.org", "port": 6697, "tls": true }],
+      "tags": ["roleplay"]
+    },
+    {
+      "id": "darkscience",
+      "name": "DarkScience",
+      "description": "IRC network.",
+      "servers": [{ "host": "irc.darkscience.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "dataswamp",
+      "name": "dataswamp",
+      "description": "Small IRC network of the dataswamp.org community.",
+      "homepage": "https://dataswamp.org",
+      "servers": [{ "host": "irc.dataswamp.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "desirenet",
+      "name": "DesireNET",
+      "description": "Romanian chat network. No TLS.",
+      "servers": [{ "host": "irc.desirenet.org", "port": 6667, "tls": false }],
+      "tags": ["romanian"],
+      "region": "RO"
+    },
+    {
+      "id": "digitalirc",
+      "name": "DigitalIRC",
+      "description": "IRC network.",
+      "homepage": "https://digitalirc.org",
+      "servers": [{ "host": "irc.digitalirc.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "epiknet",
+      "name": "EpiKnet",
+      "description": "French-language chat network.",
+      "homepage": "https://epiknet.org",
+      "servers": [{ "host": "irc.epiknet.org", "port": 6697, "tls": true }],
+      "tags": ["french"],
+      "region": "FR"
+    },
+    {
+      "id": "euirc",
+      "name": "euIRC",
+      "description": "European IRC network.",
+      "homepage": "https://euirc.net",
+      "servers": [{ "host": "irc.euirc.net", "port": 6697, "tls": true }],
+      "region": "eu"
+    },
+    {
+      "id": "europnet",
+      "name": "EuropNet",
+      "description": "French-language chat network.",
+      "homepage": "https://www.europnet.org",
+      "servers": [{ "host": "irc.europnet.org", "port": 6697, "tls": true }],
+      "tags": ["french"],
+      "region": "FR"
+    },
+    {
+      "id": "evilnet",
+      "name": "EvilNET",
+      "description": "IRC network.",
+      "homepage": "https://evilnet.org",
+      "servers": [{ "host": "irc.evilnet.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "evolu",
+      "name": "Evolu",
+      "description": "IRC network. Its TLS handshake fails with current clients, so it's listed without TLS.",
+      "servers": [{ "host": "irc.evolu.net", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "exchat",
+      "name": "ExChat",
+      "description": "IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "servers": [{ "host": "irc.exchat.net", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "explosionirc",
+      "name": "ExplosionIRC",
+      "description": "IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://explosionirc.net",
+      "servers": [{ "host": "irc.explosionirc.net", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "forumcerdas",
+      "name": "ForumCerdas",
+      "description": "Indonesian chat network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "servers": [{ "host": "irc.forumcerdas.net", "port": 6667, "tls": false }],
+      "tags": ["indonesian"],
+      "region": "ID"
+    },
+    {
+      "id": "freeirc",
+      "name": "FreeIRC",
+      "description": "IRC network.",
+      "homepage": "https://freeirc.org",
+      "servers": [{ "host": "irc.freeirc.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "freeunibg",
+      "name": "FreeUniBG",
+      "description": "Bulgarian chat network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://freeunibg.eu",
+      "servers": [{ "host": "irc.freeunibg.eu", "port": 6667, "tls": false }],
+      "tags": ["bulgarian"],
+      "region": "BG"
+    },
+    {
+      "id": "freshchat",
+      "name": "FreshChat",
+      "description": "General chat network.",
+      "servers": [{ "host": "irc.freshchat.org", "port": 6697, "tls": true }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "geeknode",
+      "name": "Geeknode",
+      "description": "French-language network for tech enthusiasts.",
+      "homepage": "https://geeknode.org",
+      "servers": [{ "host": "irc.geeknode.org", "port": 6697, "tls": true }],
+      "tags": ["french", "tech"],
+      "region": "FR"
+    },
+    {
+      "id": "geekshed",
+      "name": "GeekShed",
+      "description": "IRC network. Its TLS handshake fails with current clients, so it's listed without TLS.",
+      "homepage": "https://geekshed.net",
+      "servers": [{ "host": "irc.geekshed.net", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "german-elite",
+      "name": "German-Elite",
+      "description": "German-language IRC network.",
+      "homepage": "https://german-elite.net",
+      "servers": [{ "host": "irc.german-elite.net", "port": 6697, "tls": true }],
+      "tags": ["german"],
+      "region": "DE"
+    },
+    {
+      "id": "geveze",
+      "name": "Geveze",
+      "description": "Turkish chat (sohbet) network. No TLS.",
+      "homepage": "https://geveze.org",
+      "servers": [{ "host": "irc.geveze.org", "port": 6667, "tls": false }],
+      "tags": ["turkish"],
+      "region": "TR"
+    },
+    {
+      "id": "gigairc",
+      "name": "GigaIRC",
+      "description": "IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://gigairc.net",
+      "servers": [{ "host": "irc.gigairc.net", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "gimpnet",
+      "name": "GIMPnet",
+      "description": "The GIMP project's IRC network. Its server doesn't send a complete TLS certificate chain, so it's listed without TLS.",
+      "servers": [{ "host": "irc.gimp.org", "port": 6667, "tls": false }],
+      "tags": ["foss"]
+    },
+    {
+      "id": "globalirc-it",
+      "name": "GlobalIRC",
+      "description": "Italian IRC network. No TLS.",
+      "servers": [{ "host": "irc.globalirc.it", "port": 6667, "tls": false }],
+      "tags": ["italian"],
+      "region": "IT"
+    },
+    {
+      "id": "hackthissite",
+      "name": "HackThisSite",
+      "description": "IRC network of the HackThisSite security training community.",
+      "homepage": "https://hackthissite.org",
+      "servers": [{ "host": "irc.hackthissite.org", "port": 7000, "tls": true }],
+      "tags": ["hacker", "security"]
+    },
+    {
+      "id": "hybridirc",
+      "name": "HybridIRC",
+      "description": "IRC network.",
+      "homepage": "https://hybridirc.com",
+      "servers": [{ "host": "irc.hybridirc.com", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "icq-chat",
+      "name": "ICQ-Chat",
+      "description": "General chat network. Its TLS certificate doesn't match irc.icq-chat.com, so it's listed without TLS.",
+      "homepage": "https://icq-chat.com",
+      "servers": [{ "host": "irc.icq-chat.com", "port": 6667, "tls": false }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "insomnia247",
+      "name": "Insomnia 24/7",
+      "description": "IRC network of the Insomnia 24/7 free shell provider.",
+      "homepage": "https://insomnia247.nl",
+      "servers": [{ "host": "irc.insomnia247.nl", "port": 6697, "tls": true }],
+      "tags": ["shells"]
+    },
+    {
+      "id": "inspirenet",
+      "name": "InspireNET",
+      "description": "IRC network.",
+      "homepage": "https://inspirenet.org",
+      "servers": [{ "host": "irc.inspirenet.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "irc4fun",
+      "name": "IRC4Fun",
+      "description": "General chat network.",
+      "homepage": "https://irc4fun.net",
+      "servers": [{ "host": "irc.irc4fun.net", "port": 6697, "tls": true }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "irccloud",
+      "name": "IRCCloud",
+      "description": "Small IRC network run by IRCCloud.",
+      "homepage": "https://irccloud.com",
+      "servers": [{ "host": "irc.irccloud.com", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "ircd-hybrid",
+      "name": "ircd-hybrid",
+      "description": "The ircd-hybrid project's IRC server. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://ircd-hybrid.org",
+      "servers": [{ "host": "irc.ircd-hybrid.org", "port": 6667, "tls": false }],
+      "tags": ["tech"]
+    },
+    {
+      "id": "ircgate",
+      "name": "IRCGate",
+      "description": "Italian IRC network. No TLS.",
+      "servers": [{ "host": "irc.ircgate.it", "port": 6667, "tls": false }],
+      "tags": ["italian"],
+      "region": "IT"
+    },
+    {
+      "id": "irchighway",
+      "name": "IRCHighWay",
+      "description": "IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "servers": [{ "host": "irc.irchighway.net", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "ircnow",
+      "name": "IRCNow",
+      "description": "IRC network of the IRCNow community, which offers free shells and bouncers.",
+      "homepage": "https://ircnow.org",
+      "servers": [{ "host": "irc.ircnow.org", "port": 6697, "tls": true }],
+      "tags": ["shells"]
+    },
+    {
+      "id": "ircsource",
+      "name": "IRCSource",
+      "description": "IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "servers": [{ "host": "ircsource.quoservers.net", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "irctl",
+      "name": "IRC.TL",
+      "description": "IRC network. Its TLS certificate has expired, so it's listed without TLS.",
+      "homepage": "https://irc.tl",
+      "servers": [{ "host": "chat.irc.tl", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "irczone",
+      "name": "IRCzone",
+      "description": "IRC network. No TLS.",
+      "servers": [{ "host": "irc.irczone.net", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "kalbim",
+      "name": "Kalbim",
+      "description": "Turkish chat (sohbet) network. No TLS.",
+      "homepage": "https://kalbim.net",
+      "servers": [{ "host": "irc.kalbim.net", "port": 6667, "tls": false }],
+      "tags": ["turkish"],
+      "region": "TR"
+    },
+    {
+      "id": "kampungchat",
+      "name": "KampungChat",
+      "description": "Malaysian chat network.",
+      "homepage": "https://kampungchat.org",
+      "servers": [{ "host": "irc.kampungchat.org", "port": 6697, "tls": true }],
+      "tags": ["malay"],
+      "region": "MY"
+    },
+    {
+      "id": "lecturify",
+      "name": "Lecturify",
+      "description": "Small IRC network.",
+      "servers": [{ "host": "irc.lecturify.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "librairc",
+      "name": "LibraIRC",
+      "description": "IRC network.",
+      "homepage": "https://librairc.net",
+      "servers": [{ "host": "irc.librairc.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "luatic",
+      "name": "Luatic",
+      "description": "Korean IRC network. Its TLS certificate has expired, so it's listed without TLS.",
+      "homepage": "https://luatic.net",
+      "servers": [{ "host": "irc.luatic.net", "port": 6667, "tls": false }],
+      "tags": ["korean"],
+      "region": "KR"
+    },
+    {
+      "id": "magnet",
+      "name": "MAGNet",
+      "description": "The Perl community's network (irc.perl.org). No TLS.",
+      "homepage": "https://www.irc.perl.org",
+      "servers": [{ "host": "irc.perl.org", "port": 6667, "tls": false }],
+      "tags": ["perl", "tech"]
+    },
+    {
+      "id": "mindforge",
+      "name": "MindForge",
+      "description": "IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://mindforge.org",
+      "servers": [{ "host": "irc.mindforge.org", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "morphie",
+      "name": "Morphie",
+      "description": "Chat network; also reached as irc.zairc.net and irc.italian-amici.org.",
+      "homepage": "https://morphie.com",
+      "servers": [{ "host": "irc.morphie.net", "port": 6697, "tls": true }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "nastycode",
+      "name": "NastyCode",
+      "description": "Small IRC network for Unix users.",
+      "homepage": "https://nastycode.com",
+      "servers": [{ "host": "irc.nastycode.com", "port": 6697, "tls": true }],
+      "tags": ["tech"]
+    },
+    {
+      "id": "nationchat",
+      "name": "NationCHAT",
+      "description": "IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://nationchat.org",
+      "servers": [{ "host": "irc.nationchat.org", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "netchat",
+      "name": "NetChat",
+      "description": "Chilean Spanish-language chat network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "servers": [{ "host": "irc.netchat.cl", "port": 6667, "tls": false }],
+      "tags": ["spanish"],
+      "region": "CL"
+    },
+    {
+      "id": "oddprotocol",
+      "name": "OddProtocol",
+      "description": "Small IRC network.",
+      "homepage": "https://oddprotocol.org",
+      "servers": [{ "host": "irc.oddprotocol.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "openjoke",
+      "name": "OpenJoke",
+      "description": "IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "servers": [{ "host": "irc.openjoke.org", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "overthewire",
+      "name": "OverTheWire",
+      "description": "IRC network of the OverTheWire wargames community.",
+      "homepage": "https://overthewire.org",
+      "servers": [{ "host": "ircs.overthewire.org", "port": 6697, "tls": true }],
+      "tags": ["security", "hacker"]
+    },
+    {
+      "id": "pirc",
+      "name": "PIRC.PL",
+      "description": "Polish IRC network.",
+      "homepage": "https://pirc.pl",
+      "servers": [{ "host": "irc.pirc.pl", "port": 6697, "tls": true }],
+      "tags": ["polish"],
+      "region": "PL"
+    },
+    {
+      "id": "planetofnix",
+      "name": "PlanetOfNix",
+      "description": "Small IRC network for Unix users.",
+      "homepage": "https://www.planetofnix.com",
+      "servers": [{ "host": "irc.planetofnix.com", "port": 6697, "tls": true }],
+      "tags": ["tech"]
+    },
+    {
+      "id": "ptnet",
+      "name": "PTnet",
+      "description": "Portuguese IRC network.",
+      "homepage": "https://ptnet.org",
+      "servers": [{ "host": "irc.ptnet.org", "port": 6697, "tls": true }],
+      "tags": ["portuguese"],
+      "region": "PT"
+    },
+    {
+      "id": "rezosup",
+      "name": "RezoSup",
+      "description": "IRC network.",
+      "servers": [{ "host": "irc.rezosup.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "rpblc",
+      "name": "rpblc",
+      "description": "Small IRC network.",
+      "servers": [{ "host": "irc.rpblc.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "shadowfire",
+      "name": "Shadowfire",
+      "description": "IRC network.",
+      "homepage": "https://shadowfire.org",
+      "servers": [{ "host": "irc.shadowfire.org", "port": 7000, "tls": true }]
+    },
+    {
+      "id": "shelltalk",
+      "name": "ShellTalk",
+      "description": "Small IRC network.",
+      "homepage": "https://shelltalk.net",
+      "servers": [{ "host": "irc.shelltalk.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "simosnap",
+      "name": "SimosNap",
+      "description": "Italian IRC network.",
+      "homepage": "https://www.simosnap.org",
+      "servers": [{ "host": "irc.simosnap.com", "port": 6697, "tls": true }],
+      "tags": ["italian"],
+      "region": "IT"
+    },
+    {
+      "id": "skychatz",
+      "name": "SkyChatz",
+      "description": "General chat network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://skychatz.org",
+      "servers": [{ "host": "irc.skychatz.org", "port": 6667, "tls": false }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "slashnet",
+      "name": "SlashNET",
+      "description": "IRC network. Its TLS handshake fails with current clients, so it's listed without TLS.",
+      "servers": [{ "host": "irc.slashnet.org", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "smurfnet",
+      "name": "Smurfnet",
+      "description": "Dutch-language IRC network. Its server doesn't send a complete TLS certificate chain, so it's listed without TLS.",
+      "homepage": "https://www.smurfnet.ch",
+      "servers": [{ "host": "irc.smurfnet.ch", "port": 6667, "tls": false }],
+      "tags": ["dutch"]
+    },
+    {
+      "id": "sohbet",
+      "name": "Sohbet.Net",
+      "description": "Turkish chat (sohbet) network. No TLS.",
+      "homepage": "https://sohbet.net",
+      "servers": [{ "host": "irc.sohbet.net", "port": 6667, "tls": false }],
+      "tags": ["turkish"],
+      "region": "TR"
+    },
+    {
+      "id": "sorcery",
+      "name": "SorceryNet",
+      "description": "Roleplaying network. Its TLS certificate doesn't match irc.sorcery.net, so it's listed without TLS.",
+      "homepage": "https://sorcery.net",
+      "servers": [{ "host": "irc.sorcery.net", "port": 6667, "tls": false }],
+      "tags": ["roleplay"]
+    },
+    {
+      "id": "spotchat",
+      "name": "SpotChat",
+      "description": "General chat network.",
+      "servers": [{ "host": "irc.spotchat.org", "port": 6697, "tls": true }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "svipchat",
+      "name": "SvipChat",
+      "description": "Chat network.",
+      "servers": [{ "host": "irc.svipchat.org", "port": 6697, "tls": true }],
+      "tags": ["chat"]
+    },
+    {
+      "id": "swiftirc",
+      "name": "SwiftIRC",
+      "description": "IRC network.",
+      "homepage": "https://swiftirc.net",
+      "servers": [{ "host": "irc.swiftirc.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "swissirc",
+      "name": "swissIRC",
+      "description": "Swiss IRC network. Its server doesn't send a complete TLS certificate chain, so it's listed without TLS.",
+      "homepage": "https://swissirc.net",
+      "servers": [{ "host": "irc.swissirc.net", "port": 6667, "tls": false }],
+      "tags": ["german"],
+      "region": "CH"
+    },
+    {
+      "id": "synirc",
+      "name": "synIRC",
+      "description": "IRC network.",
+      "homepage": "https://synirc.net",
+      "servers": [{ "host": "irc.synirc.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "teranova",
+      "name": "Teranova",
+      "description": "IRC network; home of the Anope IRC services project (irc.anope.org points here).",
+      "homepage": "https://www.teranova.net",
+      "servers": [{ "host": "irc.teranova.net", "port": 6697, "tls": true }],
+      "tags": ["tech"]
+    },
+    {
+      "id": "thaiirc",
+      "name": "ThaiIRC",
+      "description": "Thai IRC network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "servers": [{ "host": "irc.thaiirc.com", "port": 6667, "tls": false }],
+      "tags": ["thai"],
+      "region": "TH"
+    },
+    {
+      "id": "thunderirc",
+      "name": "ThunderIRC",
+      "description": "Small IRC network for OpenBSD users.",
+      "homepage": "https://thunderirc.net",
+      "servers": [{ "host": "irc.thunderirc.net", "port": 6697, "tls": true }],
+      "tags": ["bsd", "tech"]
+    },
+    {
+      "id": "trendsohbet",
+      "name": "TrendSohbet",
+      "description": "Turkish chat (sohbet) network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://trendsohbet.com",
+      "servers": [{ "host": "irc.trendsohbet.com", "port": 6667, "tls": false }],
+      "tags": ["turkish"],
+      "region": "TR"
+    },
+    {
+      "id": "trsohbet",
+      "name": "TRSohbet",
+      "description": "Turkish chat (sohbet) network. No TLS.",
+      "homepage": "https://trsohbet.com",
+      "servers": [{ "host": "irc.trsohbet.com", "port": 6667, "tls": false }],
+      "tags": ["turkish"],
+      "region": "TR"
+    },
+    {
+      "id": "twistednet",
+      "name": "TwistedNET",
+      "description": "IRC network.",
+      "homepage": "https://twistednet.org",
+      "servers": [{ "host": "irc.twistednet.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "umbrellanet",
+      "name": "UmbrellaNet",
+      "description": "IRC network. Its TLS certificate doesn't match irc.umbrellanet.org, so it's listed without TLS.",
+      "servers": [{ "host": "irc.umbrellanet.org", "port": 6667, "tls": false }]
+    },
+    {
+      "id": "uugrn",
+      "name": "UUGRN",
+      "description": "IRC server of the Unix User Group Rhein-Neckar. TLS on port 6670.",
+      "homepage": "https://uugrn.org",
+      "servers": [{ "host": "irc.uugrn.org", "port": 6670, "tls": true }],
+      "tags": ["german", "tech"],
+      "region": "DE"
+    },
+    {
+      "id": "virtualife",
+      "name": "VirtuaLife",
+      "description": "IRC network.",
+      "servers": [{ "host": "irc.virtualife.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "w3c",
+      "name": "W3C",
+      "description": "The World Wide Web Consortium's IRC server, used by its groups.",
+      "homepage": "https://www.w3.org",
+      "servers": [{ "host": "irc.w3.org", "port": 6697, "tls": true }],
+      "tags": ["tech", "web"]
+    },
+    {
+      "id": "wenet",
+      "name": "WeNet",
+      "description": "Russian IRC network. No TLS.",
+      "servers": [{ "host": "irc.wenet.ru", "port": 6667, "tls": false }],
+      "tags": ["russian"],
+      "region": "RU"
+    },
+    {
+      "id": "xertion",
+      "name": "Xertion",
+      "description": "IRC network.",
+      "servers": [{ "host": "irc.xertion.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "zemra",
+      "name": "Zemra",
+      "description": "Albanian chat network. Its TLS certificate is self-signed, so it's listed without TLS.",
+      "homepage": "https://zemra.org",
+      "servers": [{ "host": "irc.zemra.org", "port": 6667, "tls": false }],
+      "tags": ["albanian"]
+    },
+    {
+      "id": "zenet",
+      "name": "ZEnet",
+      "description": "IRC network.",
+      "homepage": "https://zenet.org",
+      "servers": [{ "host": "irc.zenet.org", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "zeronode",
+      "name": "Zeronode",
+      "description": "IRC network.",
+      "servers": [{ "host": "irc.zeronode.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "zoite",
+      "name": "Zoite",
+      "description": "IRC network.",
+      "homepage": "https://zoite.net",
+      "servers": [{ "host": "irc.zoite.net", "port": 6697, "tls": true }]
+    },
+    {
+      "id": "zurna",
+      "name": "Zurna",
+      "description": "Turkish chat (sohbet) network. No TLS.",
+      "homepage": "https://zurna.net",
+      "servers": [{ "host": "irc.zurna.net", "port": 6667, "tls": false }],
+      "tags": ["turkish"],
+      "region": "TR"
     }
   ]
 }
