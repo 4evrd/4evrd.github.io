@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://evrd.sh/api/networks/v1.schema.json",
+  "title": "evrd network directory, version 1",
+  "description": "Public IRC networks evrd offers when a user adds a network. Readers ignore fields they don't know, so new optional fields can be added without a new version; a breaking change gets a new path (v2.json).",
+  "type": "object",
+  "required": ["version", "networks"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 1 },
+    "updated": { "type": "string", "format": "date-time", "description": "When the list last changed." },
+    "networks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/network" }
+    }
+  },
+  "$defs": {
+    "network": {
+      "type": "object",
+      "required": ["id", "name", "servers"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,31}$",
+          "description": "Short and stable; unique. The name a picked network gets, and what *status addnetwork <id> takes."
+        },
+        "name": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "description": { "type": "string", "maxLength": 500 },
+        "homepage": { "type": "string", "pattern": "^https?://" },
+        "servers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "description": "In order of preference. evrd saves the TLS ones when there are any, otherwise all.",
+          "items": { "$ref": "#/$defs/server" }
+        },
+        "sasl": { "type": "boolean", "description": "The network's services accept SASL logins." },
+        "services": {
+          "type": "string",
+          "description": "Which services run there, for login hints: atheme, anope, ergo, x (Undernet), q (QuakeNet), none…"
+        },
+        "channels": {
+          "type": "array",
+          "maxItems": 16,
+          "description": "Channels to suggest joining, like the help channel.",
+          "items": { "type": "string", "pattern": "^[#&+!][^\\s,]{1,49}$" }
+        },
+        "tags": { "type": "array", "maxItems": 16, "items": { "type": "string" } },
+        "region": { "type": "string", "description": "global, eu, us…" }
+      }
+    },
+    "server": {
+      "type": "object",
+      "required": ["host", "port"],
+      "properties": {
+        "host": { "type": "string", "pattern": "^[A-Za-z0-9]([A-Za-z0-9.-]{0,251}[A-Za-z0-9])?$" },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "tls": { "type": "boolean", "default": false }
+      }
+    }
+  }
+}
