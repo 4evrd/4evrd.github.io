@@ -1,0 +1,40 @@
+name: check
+
+# The network directory (api/networks/) is read by every evrd instance:
+# check it against its schema before it's published. evrd also refuses a
+# bad document, keeping its last good copy, but users then miss the change.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  directory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install jsonschema==4.23.0
+      - name: Validate api/networks/v1.json
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+          from jsonschema import Draft202012Validator
+          schema = json.load(open("api/networks/v1.schema.json"))
+          doc = json.load(open("api/networks/v1.json"))
+          errors = list(Draft202012Validator(schema).iter_errors(doc))
+          for e in errors:
+              print(f"::error::{'/'.join(map(str, e.path))}: {e.message}")
+          ids = [n["id"] for n in doc["networks"]]
+          for d in sorted({i for i in ids if ids.count(i) > 1}):
+              print(f"::error::id {d} is used twice")
+          if errors or len(ids) != len(set(ids)):
+              sys.exit(1)
+          print(f"{len(ids)} networks OK")
+          EOF

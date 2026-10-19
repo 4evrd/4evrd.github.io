@@ -1,0 +1,208 @@
+{
+  "$schema": "https://evrd.sh/api/networks/v1.schema.json",
+  "version": 1,
+  "updated": "2026-10-19T00:00:00Z",
+  "networks": [
+    {
+      "id": "libera",
+      "name": "Libera.Chat",
+      "description": "Free and open-source software projects and their communities; the largest network of its kind.",
+      "homepage": "https://libera.chat",
+      "servers": [
+        { "host": "irc.libera.chat", "port": 6697, "tls": true },
+        { "host": "irc.libera.chat", "port": 6667, "tls": false }
+      ],
+      "sasl": true,
+      "services": "atheme",
+      "channels": ["#libera"],
+      "tags": ["foss", "community", "tech"],
+      "region": "global"
+    },
+    {
+      "id": "oftc",
+      "name": "OFTC",
+      "description": "The Open and Free Technology Community: Debian, Tor, the Linux kernel and other free software projects.",
+      "homepage": "https://www.oftc.net",
+      "servers": [
+        { "host": "irc.oftc.net", "port": 6697, "tls": true },
+        { "host": "irc.oftc.net", "port": 6667, "tls": false }
+      ],
+      "services": "oftc",
+      "channels": ["#oftc"],
+      "tags": ["foss", "tech"],
+      "region": "global"
+    },
+    {
+      "id": "hackint",
+      "name": "hackint",
+      "description": "A network for the hacker community. TLS only.",
+      "homepage": "https://hackint.org",
+      "servers": [{ "host": "irc.hackint.org", "port": 6697, "tls": true }],
+      "sasl": true,
+      "tags": ["hacker", "tech"],
+      "region": "eu"
+    },
+    {
+      "id": "efnet",
+      "name": "EFnet",
+      "description": "The original IRC network (1990), with no nickname or channel services. Its servers' TLS certificates are self-signed, so it's listed without TLS.",
+      "homepage": "https://www.efnet.org",
+      "servers": [{ "host": "irc.efnet.org", "port": 6667, "tls": false }],
+      "services": "none",
+      "channels": ["#efnet"],
+      "tags": ["classic"],
+      "region": "global"
+    },
+    {
+      "id": "ircnet",
+      "name": "IRCnet",
+      "description": "The classic European network, with no nickname services. Many servers only accept clients from their own country; TLS certificates are per server, so it's listed without TLS.",
+      "homepage": "https://www.ircnet.com",
+      "servers": [{ "host": "open.ircnet.net", "port": 6667, "tls": false }],
+      "services": "none",
+      "channels": ["#ircnet"],
+      "tags": ["classic"],
+      "region": "eu"
+    },
+    {
+      "id": "undernet",
+      "name": "Undernet",
+      "description": "A classic network (1992) known for its X channel service. No TLS.",
+      "homepage": "https://www.undernet.org",
+      "servers": [{ "host": "irc.undernet.org", "port": 6667, "tls": false }],
+      "services": "x",
+      "channels": ["#cservice"],
+      "tags": ["classic"],
+      "region": "global"
+    },
+    {
+      "id": "dalnet",
+      "name": "DALnet",
+      "description": "A large classic network, the original home of NickServ and ChanServ.",
+      "homepage": "https://www.dal.net",
+      "servers": [
+        { "host": "irc.dal.net", "port": 6697, "tls": true },
+        { "host": "irc.dal.net", "port": 6667, "tls": false }
+      ],
+      "services": "dalnet",
+      "tags": ["classic", "chat"],
+      "region": "global"
+    },
+    {
+      "id": "quakenet",
+      "name": "QuakeNet",
+      "description": "The gaming network, long Europe's largest, with the Q account and channel bot. No TLS.",
+      "homepage": "https://www.quakenet.org",
+      "servers": [{ "host": "irc.quakenet.org", "port": 6667, "tls": false }],
+      "services": "q",
+      "tags": ["gaming"],
+      "region": "eu"
+    },
+    {
+      "id": "rizon",
+      "name": "Rizon",
+      "description": "A large network popular with anime and gaming communities.",
+      "homepage": "https://rizon.net",
+      "servers": [
+        { "host": "irc.rizon.net", "port": 6697, "tls": true },
+        { "host": "irc.rizon.net", "port": 6667, "tls": false }
+      ],
+      "sasl": true,
+      "services": "anope",
+      "tags": ["anime", "gaming"],
+      "region": "global"
+    },
+    {
+      "id": "snoonet",
+      "name": "Snoonet",
+      "description": "A network started for Reddit communities.",
+      "homepage": "https://snoonet.org",
+      "servers": [
+        { "host": "irc.snoonet.org", "port": 6697, "tls": true },
+        { "host": "irc.snoonet.org", "port": 6667, "tls": false }
+      ],
+      "sasl": true,
+      "services": "anope",
+      "channels": ["#help"],
+      "tags": ["reddit", "community"],
+      "region": "global"
+    },
+    {
+      "id": "esper",
+      "name": "EsperNet",
+      "description": "A community network, popular with Minecraft modding and game development.",
+      "homepage": "https://www.esper.net",
+      "servers": [
+        { "host": "irc.esper.net", "port": 6697, "tls": true },
+        { "host": "irc.esper.net", "port": 6667, "tls": false }
+      ],
+      "sasl": true,
+      "services": "atheme",
+      "channels": ["#esper"],
+      "tags": ["gaming", "minecraft", "dev"],
+      "region": "global"
+    },
+    {
+      "id": "gamesurge",
+      "name": "GameSurge",
+      "description": "A gaming community network, with AuthServ accounts. No trusted TLS.",
+      "homepage": "https://gamesurge.net",
+      "servers": [{ "host": "irc.gamesurge.net", "port": 6667, "tls": false }],
+      "services": "srvx",
+      "channels": ["#support"],
+      "tags": ["gaming"],
+      "region": "global"
+    },
+    {
+      "id": "ircforever",
+      "name": "IRCForever",
+      "description": "A free, volunteer-run network with bouncers, shells and bots, and no ads.",
+      "homepage": "https://ircforever.org",
+      "servers": [{ "host": "irc.ircforever.org", "port": 6697, "tls": true }],
+      "channels": ["#ircforever"],
+      "tags": ["community", "shells", "bouncers"],
+      "region": "global"
+    },
+    {
+      "id": "afternet",
+      "name": "AfterNET",
+      "description": "A long-running general chat network.",
+      "homepage": "https://afternet.org",
+      "servers": [
+        { "host": "irc.afternet.org", "port": 6697, "tls": true },
+        { "host": "irc.afternet.org", "port": 6667, "tls": false }
+      ],
+      "sasl": true,
+      "tags": ["chat"],
+      "region": "global"
+    },
+    {
+      "id": "freenode",
+      "name": "freenode",
+      "description": "The network that runs as freenode today (since 2021; most projects moved to Libera.Chat).",
+      "homepage": "https://freenode.net",
+      "servers": [
+        { "host": "irc.freenode.net", "port": 6697, "tls": true },
+        { "host": "irc.freenode.net", "port": 6667, "tls": false }
+      ],
+      "sasl": true,
+      "channels": ["#help"],
+      "tags": ["chat"],
+      "region": "global"
+    },
+    {
+      "id": "ergo-testnet",
+      "name": "Ergo testnet",
+      "description": "The shared test instance of the Ergo IRCv3 server: try new IRC features. Not for keeps.",
+      "homepage": "https://ergo.chat",
+      "servers": [
+        { "host": "testnet.ergo.chat", "port": 6697, "tls": true },
+        { "host": "testnet.ergo.chat", "port": 6667, "tls": false }
+      ],
+      "sasl": true,
+      "services": "ergo",
+      "tags": ["testing", "ircv3"],
+      "region": "global"
+    }
+  ]
+}
