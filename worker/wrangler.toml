@@ -1,5 +1,5 @@
 # The evrd.sh/api/* Worker: counts evrd installs, passes everything on to
-# GitHub Pages. Deploy steps: README.md in this folder.
+# GitHub Pages. Deployed by .github/workflows/worker.yml; setup: README.md.
 name = "evrd-installs"
 main = "src/index.js"
 compatibility_date = "2026-10-01"

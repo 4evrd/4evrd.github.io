@@ -9,19 +9,32 @@ address (never the address) and the version. Rows are kept 90 days.
 `https://evrd.sh/api/stats?key=<STATS_KEY>` shows installs per day and the
 version mix (`&format=json` for JSON). Without the right key it's a 404.
 
-Everything here fits Cloudflare's free plan (Workers, D1, cron triggers).
+It fits Cloudflare's free plan: 100,000 Worker requests and 100,000 D1 row
+writes a day (about one write per install per day), cron triggers included.
+Past the free limits nothing is billed; the Worker just doesn't run — and with
+the route set to fail open (below), requests then go straight to GitHub Pages.
 
-## Deploy (once, after evrd.sh is on Cloudflare)
+## Deploys
 
-```sh
-cd worker
-npx wrangler login
-npx wrangler d1 create evrd-installs          # copy the database_id into wrangler.toml
-npx wrangler d1 execute evrd-installs --remote --file schema.sql
-npx wrangler secret put SALT                  # any long random string; keep it secret
-npx wrangler secret put STATS_KEY             # the key for /api/stats
-npx wrangler deploy
-```
+`.github/workflows/worker.yml` deploys on every push to `main` that changes
+`worker/` (or by hand: Actions → worker → Run workflow). It creates the table
+if it's missing, deploys the Worker and sets its secrets.
+
+## One-time setup (after evrd.sh is on Cloudflare)
+
+1. **Database.** Cloudflare dashboard → *Storage & databases → D1* → *Create*,
+   name `evrd-installs`. Put its ID in `wrangler.toml` (`database_id`); the ID
+   isn't secret.
+2. **API token.** *My profile → API tokens → Create token* → the *Edit
+   Cloudflare Workers* template, then add the permission *Account → D1 →
+   Edit*; zone resources: `evrd.sh`. Copy the token.
+3. **GitHub secrets** (repository → Settings → Secrets and variables →
+   Actions): `CLOUDFLARE_API_TOKEN` (step 2), `CLOUDFLARE_ACCOUNT_ID` (the
+   dashboard's account overview), `SALT` and `STATS_KEY` (long random
+   strings of your own; STATS_KEY is the key for the stats page).
+4. **Deploy:** merge to `main`, or run the workflow by hand.
+5. **Fail open:** dashboard → `evrd.sh` → *Workers routes* → the
+   `evrd.sh/api/*` route → *Request limit failure mode: Fail open (proceed)*.
 
 Check it:
 
