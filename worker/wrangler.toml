@@ -1,0 +1,16 @@
+# The evrd.sh/api/* Worker: counts evrd installs, passes everything on to
+# GitHub Pages. Deployed by .github/workflows/worker.yml; setup: README.md.
+name = "evrd-installs"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+routes = [{ pattern = "evrd.sh/api/*", zone_name = "evrd.sh" }]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "evrd-installs"
+database_id = "69aad229-4814-4fbd-907b-c5e9d6fe3f24"
+
+# daily clean-up of rows older than 90 days
+[triggers]
+crons = ["17 3 * * *"]
