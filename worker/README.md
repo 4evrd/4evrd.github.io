@@ -22,9 +22,8 @@ if it's missing, deploys the Worker and sets its secrets.
 
 ## One-time setup (after evrd.sh is on Cloudflare)
 
-1. **Database.** Cloudflare dashboard → *Storage & databases → D1* → *Create*,
-   name `evrd-installs`. Put its ID in `wrangler.toml` (`database_id`); the ID
-   isn't secret.
+1. **Database.** `evrd-installs` exists (its ID is in `wrangler.toml`; it
+   isn't secret). The workflow creates the table if it's missing.
 2. **API token.** *My profile → API tokens → Create token* → the *Edit
    Cloudflare Workers* template, then add the permission *Account → D1 →
    Edit*; zone resources: `evrd.sh`. Copy the token.
