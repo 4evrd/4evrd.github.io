@@ -286,9 +286,15 @@
           <div class="meta"><div class="od-row"><span>Mentions badge</span><span class="count mention">3</span></div></div>
         </article>
         <article class="feature">
+          <span class="ic"><i data-icon="message"></i></span>
+          <h3>In your language</h3>
+          <p>The web app speaks English, Italiano, Español, Türkçe, Deutsch, Bahasa Indonesia and 日本語. Admins and users can upload their own translations: PO from Poedit, CSV, XLIFF, JSON or YAML.</p>
+          <div class="meta"><div class="od-row"><span>Languages built in</span><span class="v">7</span></div></div>
+        </article>
+        <article class="feature">
           <span class="ic"><i data-icon="terminal"></i></span>
           <h3>ZNC-style <span class="mono">*status</span></h3>
-          <p><span class="code">/msg *status help</span> to add networks, jump between them, play back a buffer or change settings. ZNC's command names work too.</p>
+          <p><span class="code">/msg *status help</span> to add networks, jump between them, play back a buffer or change settings. ZNC's command names work too, and so does <span class="code">/znc ListNetworks</span>.</p>
           <div class="meta"><div class="od-row"><span>playback default / max</span><span class="v">50 / 500 lines</span></div></div>
         </article>
         <article class="feature">
@@ -317,6 +323,12 @@
           <h3>Observable</h3>
           <p>Exports OpenTelemetry metrics over OTLP, covering lines, lag, disconnects and clients, and draws the dashboard traffic chart from VictoriaMetrics.</p>
           <div class="meta"><div class="od-row"><span>otel_interval</span><span class="v">15 s</span></div></div>
+        </article>
+        <article class="feature">
+          <span class="ic"><i data-icon="shield"></i></span>
+          <h3>Polite to networks</h3>
+          <p>Answers ident itself, paces connects, and rests a server that refuses it while it tries the network's others, so a ban never turns into a reconnect storm.</p>
+          <div class="meta"><div class="od-row"><span>A refusing server rests</span><span class="v">30 min → 4 h</span></div></div>
         </article>
         <article class="feature">
           <span class="ic"><i data-icon="users"></i></span>

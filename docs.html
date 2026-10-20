@@ -45,6 +45,7 @@
           <option value="#openbsd">Install on OpenBSD</option>
           <option value="#from-source">Build from source</option>
           <option value="#web-client">Web client</option>
+          <option value="#languages">Languages and translations</option>
           <option value="#native-clients">Native IRC clients</option>
           <option value="#status">*status commands</option>
           <option value="#networks">Network settings</option>
@@ -67,6 +68,7 @@
       </div>
       <div class="docs-group"><span class="caps">Use evrd</span>
         <a class="docs-link" href="#web-client">Web client</a>
+        <a class="docs-link" href="#languages">Languages and translations</a>
         <a class="docs-link" href="#native-clients">Native IRC clients</a>
         <a class="docs-link" href="#status">*status commands</a>
         <a class="docs-link" href="#networks">Network settings</a>
@@ -239,6 +241,25 @@
         <p>The chat input understands <span class="code">/join</span>, <span class="code">/part</span>, <span class="code">/msg</span>, <span class="code">/query</span>, <span class="code">/me</span>, <span class="code">/notice</span>, <span class="code">/nick</span>, <span class="code">/topic</span>, <span class="code">/mode</span>, <span class="code">/kick</span>, <span class="code">/close</span>, <span class="code">/quote</span> and <span class="code">/help</span>, and runs <span class="code">*status</span> commands with <span class="code">/status help</span> (all but <span class="code">jump</span>, <span class="code">playback</span> and <span class="code">detach</span>, which are for IRC clients).</p>
       </section>
 
+      <section id="languages" aria-labelledby="h-lang">
+        <span class="eyebrow section-kicker">Use evrd</span>
+        <h2 id="h-lang">Languages and translations <a class="anchor" href="#languages" aria-label="Link to Languages and translations">#</a></h2>
+        <p>The web app comes in English, Italian, Spanish, Turkish, German, Indonesian and Japanese. It follows the browser's language until you pick one under <em>Account → Profile → Language</em>; dates, times and numbers follow it too. What IRC networks and evrd's server send (connection logs, errors) stays as it is.</p>
+        <p>Translations can be uploaded. Admins publish them for everyone under <em>Admin → Settings → Languages</em>; anyone can upload one for themselves under <em>Account</em>. An upload either changes a language on offer (only the texts it has; the rest stay) or adds a new one. When a text is missing, evrd uses your own file, then the admin's, then the built-in translation, then English.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Format</th><th scope="col">Files</th><th scope="col">Notes</th></tr></thead>
+            <tbody>
+              <tr><td>gettext PO</td><td><span class="code">.po</span>, <span class="code">.pot</span></td><td>For Poedit: the <span class="code">.po</span> template opens as is; the language and plural forms come from its header. Entries marked fuzzy are skipped.</td></tr>
+              <tr><td>CSV</td><td><span class="code">.csv</span></td><td>Columns <span class="code">key, english, translation</span>, for spreadsheets.</td></tr>
+              <tr><td>XLIFF</td><td><span class="code">.xlf</span></td><td>1.2 and 2.0, for translation tools.</td></tr>
+              <tr><td>JSON, YAML</td><td><span class="code">.json</span>, <span class="code">.yaml</span></td><td>evrd's own format, flat or nested keys.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Download a template (every English text, nothing translated) or any language as it is now, in each format, from the same pages. Before saving, the upload shows what's in the file; a <span class="code">{placeholder}</span> that differs from English blocks it. Uploaded text is always shown as text, never as HTML. More in <a href="https://github.com/4evrd/evrd/blob/main/docs/translations.md">Translating evrd</a>.</p>
+      </section>
+
       <section id="native-clients" aria-labelledby="h-native">
         <span class="eyebrow section-kicker">Use evrd</span>
         <h2 id="h-native">Native IRC clients <a class="anchor" href="#native-clients" aria-label="Link to Native IRC clients">#</a></h2>
@@ -272,7 +293,7 @@
       <section id="status" aria-labelledby="h-status">
         <span class="eyebrow section-kicker">Use evrd</span>
         <h2 id="h-status">*status commands <a class="anchor" href="#status" aria-label="Link to *status commands">#</a></h2>
-        <p><span class="code">/msg *status help</span> lists the bouncer's own commands. ZNC's names work too: <span class="code">listnetworks</span>, <span class="code">jumpnetwork</span>, <span class="code">addnet</span>, <span class="code">delnet</span>, <span class="code">listchans</span>, <span class="code">shownetwork</span>, <span class="code">setnetwork</span> and the <span class="code">…TrustedServerFingerprint</span> commands.</p>
+        <p><span class="code">/msg *status help</span> lists the bouncer's own commands. ZNC's names work too: <span class="code">listnetworks</span>, <span class="code">jumpnetwork</span>, <span class="code">addnet</span>, <span class="code">delnet</span>, <span class="code">listchans</span>, <span class="code">shownetwork</span>, <span class="code">setnetwork</span> and the <span class="code">…TrustedServerFingerprint</span> commands. So does ZNC's raw command: <span class="code">/znc ListNetworks</span> (or <span class="code">/quote znc …</span>) is <span class="code">/msg *status ListNetworks</span>.</p>
         <div class="table-wrap">
           <table class="cmd-table">
             <thead><tr><th scope="col">Command</th><th scope="col">Does</th></tr></thead>
@@ -474,6 +495,16 @@
 <b>bindhost</b>         192.0.2.20 vhost.example.org</pre>
         </div>
         <p>A prefix needs Linux and a local route: <span class="code">ip -6 route add local 2001:db8:42::/64 dev lo</span>. <span class="code">bindhost</span> lists addresses users may pick to connect from, like ZNC's BindHost. Admins can use any address and can lock a user's choice.</p>
+        <h3 id="refusals">When a server refuses</h3>
+        <p>A link that drops after working for a while reconnects at once. One cut off soon after connecting keeps backing off, up to five minutes. A server that refuses this address (a K-line, <em>banned</em>, <em>not authorised to use this server</em>) rests for half an hour, doubling to four hours while it keeps refusing, and one that says you reconnect too fast rests two minutes. Meanwhile evrd tries the network's other servers; only when every one is resting does it wait.</p>
+        <h3 id="ident">Ident</h3>
+        <p>Some networks want an ident answer (EFnet servers refuse "No Ident response"). evrd can answer for its own connections, matching each query to the user's connection even behind NAT or Docker, or keep an oidentd file from users' bind hosts:</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">evrd.conf</span><button class="copy-btn" type="button" data-copy-from="#ident-conf" aria-label="Copy config" data-label="Copy config"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="ident-conf"><b>identd_listen</b>    :1113                   <span class="c"># evrd answers ident (map public port 113 here)</span>
+<b>ident_file</b>       /var/evrd/ident/.oidentd.conf   <span class="c"># or: an oidentd user config, kept up to date</span></pre>
+        </div>
+        <p>In Docker, publish <span class="code">113:1113</span> on the container that owns evrd's network and forward TCP 113 to the host. On OpenBSD with oidentd, use <span class="code">ident_file</span> (the setup is in <a href="https://github.com/4evrd/evrd/blob/main/docs/openbsd.md">docs/openbsd.md</a>).</p>
       </section>
 
       <section id="metrics" aria-labelledby="h-met">
