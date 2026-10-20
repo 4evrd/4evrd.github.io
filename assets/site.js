@@ -72,7 +72,7 @@ function shell() {
       <nav class="site-nav" id="site-nav" aria-label="Main">
         ${nav.map((n) => `<a class="nav-a" href="${n.href}"${n.id === page && n.id !== 'home' ? ' aria-current="page"' : ''}>${n.label}</a>`).join('')}
         <a class="nav-a" href="${REPO}" rel="noopener">GitHub</a>
-        <a class="btn btn-primary" href="download.html#install">${icon('download')}Get evrd</a>
+        <a class="btn${page === 'home' ? '' : ' btn-primary'}" href="download.html#install">${icon('download')}Get evrd</a>
       </nav>
     </div>`
   document.body.prepend(head)
@@ -83,7 +83,7 @@ function shell() {
     <div class="wrap">
       <div class="about">
         <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">#</span><span class="brand-text"><b>evrd</b><span>IRC bouncer</span></span></a>
-        <p>The IRCForever bouncer — stay connected, forever. Written in Go, with a Svelte web client.</p>
+        <p>Stay on IRC, forever. An independent, open-source bouncer written in Go, with a Svelte web client.</p>
       </div>
       <div class="foot-col"><span class="caps">Product</span><a href="index.html#features">Features</a><a href="index.html#how">How it works</a><a href="architecture.html">Architecture</a><a href="download.html">Download</a></div>
       <div class="foot-col"><span class="caps">Docs</span><a href="docs.html#quick-start">Quick start</a><a href="docs.html#native-clients">Native clients</a><a href="docs.html#status">*status commands</a><a href="docs.html#clustering">Clustering</a></div>
@@ -165,21 +165,24 @@ function wireTerm() {
   const items = [...body.children]
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
   const status = document.getElementById('term-status')
+  const replay = document.getElementById('term-replay')
   const show = () => { items.forEach((el) => el.classList.add('on')); if (status) status.textContent = 'Attached · live' }
-  if (reduce) return show()
-  let i = 0
+  // nothing to replay without motion: show the session and drop the button
+  if (reduce) { if (replay) replay.hidden = true; return show() }
+  let i = 0, timer
   const step = () => {
     if (i >= items.length) { if (status) status.textContent = 'Attached · live'; return }
     items[i].classList.add('on')
     const wait = items[i].classList.contains('term-sep') ? 420 : items[i].dataset.live ? 900 : 130
     i++
-    setTimeout(step, wait)
+    timer = setTimeout(step, wait)
   }
-  setTimeout(step, 400)
-  document.getElementById('term-replay')?.addEventListener('click', () => {
+  timer = setTimeout(step, 400)
+  replay?.addEventListener('click', () => {
+    clearTimeout(timer) // a second press restarts the replay instead of running two at once
     items.forEach((el) => el.classList.remove('on'))
     if (status) status.textContent = 'Replaying backlog…'
-    i = 0; setTimeout(step, 200)
+    i = 0; timer = setTimeout(step, 200)
   })
 }
 
@@ -356,6 +359,8 @@ function wireTopo() {
     nets.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.net === focusNet)))
     document.getElementById('topo-scope').textContent = focusNet ? `Showing ${n.dataset.name} only — select it again to show every network.` : 'Select a network to show only its channels.'
     draw()
+    // stacked on phones, the channel list sits below the networks: bring the result into view
+    if (SMALL()) (chans.find((c) => !c.hidden) || empty).scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
   }))
   // hovering or focusing a network brightens its links and dims the rest
   const hl = (id) => svg.querySelectorAll('[data-net]').forEach((p) => {
@@ -373,6 +378,84 @@ function wireTopo() {
   document.fonts?.ready.then(draw); draw()
 }
 
+// Failover replay: node-a dies, its users move to node-b and node-c (sample data,
+// timed from docs/scaling.md: 15 s to stop counting as live, 20 s leases, 5 connects/s)
+function wireFailover() {
+  const fig = document.getElementById('failover'); if (!fig) return
+  const map = document.getElementById('fo-map'), svg = map.querySelector('svg')
+  const src = map.querySelector('[data-fo-src]')
+  const nodes = [...map.querySelectorAll('[data-fo]')]
+  const lines = [...fig.querySelectorAll('.fo-log li')]
+  const status = document.getElementById('fo-status'), replay = document.getElementById('fo-replay')
+  // per phase: 0 normal, 1 node-a down, 2 leases taken over, 3 settled
+  const STATE = { a: ['owner', 'down', 'down', 'down'], b: ['owner', 'owner', 'taking', 'owner'], c: ['owner', 'owner', 'taking', 'owner'] }
+  const USERS = { a: [68, 68, 0, 0], b: [71, 71, 105, 105], c: [66, 66, 100, 100] }
+  const SUB = { a: ['68 users', '68 users', '68 → 0 users', '0 users'], b: ['71 users', '71 users', '71 → 105 users', '105 users'], c: ['66 users', '66 users', '66 → 100 users', '100 users'] }
+  const LABEL = { owner: 'Owner', down: 'Down', taking: 'Taking over' }
+  const PHASE_AT = { 0: 1, 4: 2, 6: 3 } // log line → phase it starts
+  const WAIT = [500, 700, 1000, 2600, 1700, 400, 2600] // ms before each line: the real gaps, about 3× faster
+  const DONE = 'Back on node-b and node-c'
+  let phase = 3, i = 0, timer
+
+  const draw = (fresh) => {
+    svg.replaceChildren()
+    if (SMALL()) return
+    svg.setAttribute('viewBox', `0 0 ${map.offsetWidth} ${map.offsetHeight}`)
+    const defs = el('defs', {}, svg)
+    const a = anchorOf(src, map, 'right'), grown = []
+    nodes.forEach((n, k) => {
+      const id = n.dataset.fo, st = STATE[id][phase], users = USERS[id][phase]
+      if (!users) return
+      const b = anchorOf(n, map, 'left')
+      const hot = st === 'taking', dead = st === 'down'
+      const stroke = dead ? 'var(--faint)' : linearGrad(defs, `fo-${id}-${phase}`, a.x, 0, b.x, 0, hot
+        ? [[0, 'oklch(70% 0.16 45)'], [0.5, 'oklch(90% 0.03 215)', 0.8], [1, 'oklch(80% 0.10 205)']]
+        : [[0, 'oklch(80% 0.10 205)'], [0.6, 'oklch(90% 0.03 215)', 0.8], [1, 'oklch(80% 0.10 205)']])
+      const out = bundle(svg, a, b, { n: Math.round(users / 12), spread: 12 + users / 5, stroke, seed: 31 + k, op: dead ? [0.08, 0.16] : [0.2, 0.55], core: !dead })
+      if (dead) out.forEach((p) => p.setAttribute('stroke-dasharray', '2 6'))
+      if (fresh && hot) grown.push(...out)
+    })
+    drawIn(grown)
+  }
+  const set = (p, fresh) => {
+    phase = p
+    nodes.forEach((n) => {
+      const id = n.dataset.fo, st = STATE[id][p]
+      n.dataset.state = st
+      n.querySelector('.st-chip').textContent = LABEL[st]
+      n.querySelector('.sub').textContent = SUB[id][p]
+    })
+    draw(fresh)
+  }
+  const step = () => {
+    if (i >= lines.length) { status.textContent = DONE; return }
+    lines[i].classList.add('on')
+    if (PHASE_AT[i] != null) set(PHASE_AT[i], true)
+    i++
+    timer = setTimeout(step, WAIT[i] ?? 0)
+  }
+  const start = () => {
+    clearTimeout(timer) // a second press restarts the replay instead of running two at once
+    lines.forEach((l) => l.classList.remove('on'))
+    set(0)
+    status.textContent = 'Replaying…'
+    i = 0; timer = setTimeout(step, WAIT[0])
+  }
+
+  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => draw(false), 120) })
+  document.fonts?.ready.then(() => draw(false))
+  // without motion (or JS) the figure shows how it ends, with the whole log and no Replay button
+  if (REDUCE) return draw(false)
+  replay.hidden = false
+  fig.classList.add('armed')
+  set(0)
+  status.textContent = 'Starts when in view'
+  const seen = (e) => e.intersectionRatio >= 0.5 || (e.rootBounds && e.intersectionRect.height >= 0.5 * e.rootBounds.height)
+  const io = new IntersectionObserver((es) => { if (es.some(seen)) { io.disconnect(); start() } }, { threshold: Array.from({ length: 11 }, (_, k) => k / 10) })
+  io.observe(fig)
+  replay.addEventListener('click', () => { io.disconnect(); start() })
+}
+
 // Traffic: lines per hour as layered strands (sample data)
 function wireTraffic() {
   const plot = document.getElementById('traffic-plot'); if (!plot) return
@@ -380,11 +463,12 @@ function wireTraffic() {
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: 'none', 'aria-hidden': 'true' })
   plot.prepend(svg)
   const defs = el('defs', {}, svg)
-  // 24 hourly samples, 00:00 → 23:00, shaped to match the console prototype's story
+  // 24 hourly samples for one sample day, 00:00 → 23:00: hackint times out at 03:12 and is back by 07:00
   const SERIES = [
-    { id: 'libera', c: ['oklch(70% 0.16 45)', 'oklch(90% 0.03 215)', 'oklch(80% 0.10 205)'], d: [380, 300, 240, 210, 190, 200, 260, 420, 640, 820, 960, 1040, 1120, 1210, 1330, 1400, 1360, 1240, 1080, 920, 760, 620, 520, 440] },
-    { id: 'oftc', c: ['oklch(80% 0.07 240)', 'oklch(90% 0.03 215)', 'oklch(80% 0.07 240)'], d: [220, 200, 170, 150, 140, 150, 190, 280, 380, 470, 520, 560, 600, 640, 660, 700, 690, 650, 600, 540, 470, 400, 330, 270] },
-    { id: 'hackint', c: ['oklch(82% 0.13 80)', 'oklch(70% 0.16 45)', 'oklch(68% 0.18 27)'], d: [160, 150, 130, 40, 0, 0, 0, 90, 180, 240, 300, 320, 340, 360, 380, 400, 390, 360, 330, 300, 260, 230, 200, 180] },
+    { id: 'libera', c: [[0, 'oklch(80% 0.10 205)'], [1, 'oklch(80% 0.10 205)']], d: [380, 300, 240, 210, 190, 200, 260, 420, 640, 820, 960, 1040, 1120, 1210, 1330, 1400, 1360, 1240, 1080, 920, 760, 620, 520, 440] },
+    { id: 'oftc', c: [[0, 'oklch(80% 0.07 240)'], [1, 'oklch(80% 0.07 240)']], d: [220, 200, 170, 150, 140, 150, 190, 280, 380, 470, 520, 560, 600, 640, 660, 700, 690, 650, 600, 540, 470, 400, 330, 270] },
+    // hackint is muted except across its outage (03:12 → 07:00), where it runs ember: colour marks state, not the series
+    { id: 'hackint', c: [[0, 'oklch(76% 0.015 215)'], [0.11, 'oklch(76% 0.015 215)'], [0.14, 'oklch(70% 0.16 45)'], [0.29, 'oklch(70% 0.16 45)'], [0.33, 'oklch(76% 0.015 215)'], [1, 'oklch(76% 0.015 215)']], d: [160, 150, 130, 40, 0, 0, 0, 90, 180, 240, 300, 320, 340, 360, 380, 400, 390, 360, 330, 300, 260, 230, 200, 180] },
   ]
   const x = (i) => (i / 23) * W, y = (v) => H - (v / MAX) * H
   const path = (pts) => pts.map((p, i) => {
@@ -394,7 +478,7 @@ function wireTraffic() {
   }).join('')
   const all = []
   SERIES.forEach((s, si) => {
-    const stroke = linearGrad(defs, 'tr' + si, 0, 0, W, 0, [[0, s.c[0]], [0.5, s.c[1]], [1, s.c[2]]])
+    const stroke = linearGrad(defs, 'tr' + si, 0, 0, W, 0, s.c)
     const r = rng(101 + si)
     const line = s.d.map((v, i) => ({ x: x(i), y: y(v) }))
     el('path', { class: 'bloom', d: path(line), stroke }, svg)
@@ -403,7 +487,7 @@ function wireTraffic() {
       const pts = s.d.map((v, i) => ({ x: x(i), y: y(Math.max(0, v + (r() - 0.5) * amp * (v ? 4 : 0.5))) }))
       all.push(el('path', { class: 'strand', d: path(pts), stroke, opacity: (0.25 + r() * 0.45).toFixed(2) }, svg))
     }
-    all.push(el('path', { class: 'core', d: path(line), stroke: s.id === 'libera' ? 'var(--ice)' : stroke, opacity: 0.9 }, svg))
+    all.push(el('path', { class: 'core', d: path(line), stroke, opacity: 0.9 }, svg))
   })
   drawIn(all)
 }
@@ -577,6 +661,7 @@ wireTerm()
 wireDocs()
 wireMap()
 wireTopo()
+wireFailover()
 wireTraffic()
 wireRibbons()
 wireDiagrams()
