@@ -25,6 +25,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.151.3'
           workingDirectory: worker
           # the table (idempotent), then the Worker with its secrets
           preCommands: npx wrangler d1 execute evrd-installs --remote --file schema.sql
@@ -35,3 +36,21 @@ jobs:
         env:
           SALT: ${{ secrets.SALT }}
           STATS_KEY: ${{ secrets.STATS_KEY }}
+      # Fail open: past the free plan's daily request limit the route skips
+      # the Worker and goes straight to GitHub Pages (only counting pauses).
+      # Set after every deploy, as a deploy can recreate the route.
+      - name: route fails open
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -eu
+          api() { curl -fsS -H "Authorization: Bearer $CF_API_TOKEN" -H 'Content-Type: application/json' "$@"; }
+          zone=$(api 'https://api.cloudflare.com/client/v4/zones?name=evrd.sh' | jq -r '.result[0].id')
+          [ -n "$zone" ] && [ "$zone" != null ] || { echo "can't see the evrd.sh zone with this token"; exit 1; }
+          route=$(api "https://api.cloudflare.com/client/v4/zones/$zone/workers/routes" | jq -c '.result[] | select(.pattern == "evrd.sh/api/*")')
+          [ -n "$route" ] || { echo "no evrd.sh/api/* route"; exit 1; }
+          id=$(echo "$route" | jq -r .id)
+          echo "$route" | jq '{pattern, script} + {request_limit_fail_open: true}' |
+            api -X PUT "https://api.cloudflare.com/client/v4/zones/$zone/workers/routes/$id" --data @- |
+            jq -e '.success and .result.request_limit_fail_open' >/dev/null
+          echo "evrd.sh/api/* fails open"

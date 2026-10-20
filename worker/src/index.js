@@ -11,6 +11,7 @@ const KEEP_DAYS = 90
 
 export default {
   async fetch(request, env, ctx) {
+    ctx.passThroughOnException() // a bug here never takes the directory down
     const url = new URL(request.url)
     if (url.pathname === '/api/stats') return stats(url, env)
 
