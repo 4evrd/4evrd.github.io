@@ -1,0 +1,690 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-20T23:31:45+00:00",
+  "title": "Design System: evrd",
+  "extensions": {
+    "colorMeta": {
+      "graphite-teal": {
+        "role": "neutral",
+        "displayName": "Graphite Teal",
+        "canonical": "oklch(17% 0.012 215)",
+        "tonalRamp": [
+          "oklch(15% 0.012 215)",
+          "oklch(26% 0.012 215)",
+          "oklch(37% 0.012 215)",
+          "oklch(48% 0.012 215)",
+          "oklch(60% 0.012 215)",
+          "oklch(72% 0.012 215)",
+          "oklch(84% 0.012 215)",
+          "oklch(95% 0.012 215)"
+        ]
+      },
+      "graphite-raised": {
+        "role": "neutral",
+        "displayName": "Graphite Raised",
+        "canonical": "oklch(21% 0.014 215)",
+        "tonalRamp": [
+          "oklch(15% 0.014 215)",
+          "oklch(26% 0.014 215)",
+          "oklch(37% 0.014 215)",
+          "oklch(48% 0.014 215)",
+          "oklch(60% 0.014 215)",
+          "oklch(72% 0.014 215)",
+          "oklch(84% 0.014 215)",
+          "oklch(95% 0.014 215)"
+        ]
+      },
+      "graphite-deep": {
+        "role": "neutral",
+        "displayName": "Graphite Deep",
+        "canonical": "oklch(14% 0.011 215)",
+        "tonalRamp": [
+          "oklch(15% 0.011 215)",
+          "oklch(26% 0.011 215)",
+          "oklch(37% 0.011 215)",
+          "oklch(48% 0.011 215)",
+          "oklch(60% 0.011 215)",
+          "oklch(72% 0.011 215)",
+          "oklch(84% 0.011 215)",
+          "oklch(95% 0.011 215)"
+        ]
+      },
+      "glass": {
+        "role": "neutral",
+        "displayName": "Glass",
+        "canonical": "oklch(25% 0.015 215 / 0.62)",
+        "tonalRamp": [
+          "oklch(15% 0.015 215)",
+          "oklch(26% 0.015 215)",
+          "oklch(37% 0.015 215)",
+          "oklch(48% 0.015 215)",
+          "oklch(60% 0.015 215)",
+          "oklch(72% 0.015 215)",
+          "oklch(84% 0.015 215)",
+          "oklch(95% 0.015 215)"
+        ]
+      },
+      "glass-raised": {
+        "role": "neutral",
+        "displayName": "Glass Raised",
+        "canonical": "oklch(29% 0.017 215 / 0.88)",
+        "tonalRamp": [
+          "oklch(15% 0.017 215)",
+          "oklch(26% 0.017 215)",
+          "oklch(37% 0.017 215)",
+          "oklch(48% 0.017 215)",
+          "oklch(60% 0.017 215)",
+          "oklch(72% 0.017 215)",
+          "oklch(84% 0.017 215)",
+          "oklch(95% 0.017 215)"
+        ]
+      },
+      "row-tint": {
+        "role": "neutral",
+        "displayName": "Row Tint",
+        "canonical": "oklch(100% 0 0 / 0.035)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(60% 0 0)",
+          "oklch(72% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "row-tint-hover": {
+        "role": "neutral",
+        "displayName": "Row Tint Hover",
+        "canonical": "oklch(100% 0 0 / 0.07)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(60% 0 0)",
+          "oklch(72% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(100% 0 0 / 0.10)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(60% 0 0)",
+          "oklch(72% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "hairline-strong": {
+        "role": "neutral",
+        "displayName": "Hairline Strong",
+        "canonical": "oklch(100% 0 0 / 0.18)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(60% 0 0)",
+          "oklch(72% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "hairline-soft": {
+        "role": "neutral",
+        "displayName": "Hairline Soft",
+        "canonical": "oklch(100% 0 0 / 0.07)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(37% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(60% 0 0)",
+          "oklch(72% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "frost-text": {
+        "role": "neutral",
+        "displayName": "Frost Text",
+        "canonical": "oklch(95% 0.005 215)",
+        "tonalRamp": [
+          "oklch(15% 0.005 215)",
+          "oklch(26% 0.005 215)",
+          "oklch(37% 0.005 215)",
+          "oklch(48% 0.005 215)",
+          "oklch(60% 0.005 215)",
+          "oklch(72% 0.005 215)",
+          "oklch(84% 0.005 215)",
+          "oklch(95% 0.005 215)"
+        ]
+      },
+      "slate-muted": {
+        "role": "neutral",
+        "displayName": "Slate Muted",
+        "canonical": "oklch(76% 0.015 215)",
+        "tonalRamp": [
+          "oklch(15% 0.015 215)",
+          "oklch(26% 0.015 215)",
+          "oklch(37% 0.015 215)",
+          "oklch(48% 0.015 215)",
+          "oklch(60% 0.015 215)",
+          "oklch(72% 0.015 215)",
+          "oklch(84% 0.015 215)",
+          "oklch(95% 0.015 215)"
+        ]
+      },
+      "slate-faint": {
+        "role": "neutral",
+        "displayName": "Slate Faint",
+        "canonical": "oklch(66% 0.016 215)",
+        "tonalRamp": [
+          "oklch(15% 0.016 215)",
+          "oklch(26% 0.016 215)",
+          "oklch(37% 0.016 215)",
+          "oklch(48% 0.016 215)",
+          "oklch(60% 0.016 215)",
+          "oklch(72% 0.016 215)",
+          "oklch(84% 0.016 215)",
+          "oklch(95% 0.016 215)"
+        ]
+      },
+      "fibre-cyan": {
+        "role": "primary",
+        "displayName": "Fibre Cyan",
+        "canonical": "oklch(80% 0.10 205)",
+        "tonalRamp": [
+          "oklch(15% 0.10 205)",
+          "oklch(26% 0.10 205)",
+          "oklch(37% 0.10 205)",
+          "oklch(48% 0.10 205)",
+          "oklch(60% 0.10 205)",
+          "oklch(72% 0.10 205)",
+          "oklch(84% 0.10 205)",
+          "oklch(95% 0.10 205)"
+        ]
+      },
+      "fibre-cyan-bright": {
+        "role": "primary",
+        "displayName": "Fibre Cyan Bright",
+        "canonical": "oklch(86% 0.09 205)",
+        "tonalRamp": [
+          "oklch(15% 0.09 205)",
+          "oklch(26% 0.09 205)",
+          "oklch(37% 0.09 205)",
+          "oklch(48% 0.09 205)",
+          "oklch(60% 0.09 205)",
+          "oklch(72% 0.09 205)",
+          "oklch(84% 0.09 205)",
+          "oklch(95% 0.09 205)"
+        ]
+      },
+      "fibre-cyan-dim": {
+        "role": "primary",
+        "displayName": "Fibre Cyan Dim",
+        "canonical": "oklch(66% 0.09 210)",
+        "tonalRamp": [
+          "oklch(15% 0.09 210)",
+          "oklch(26% 0.09 210)",
+          "oklch(37% 0.09 210)",
+          "oklch(48% 0.09 210)",
+          "oklch(60% 0.09 210)",
+          "oklch(72% 0.09 210)",
+          "oklch(84% 0.09 210)",
+          "oklch(95% 0.09 210)"
+        ]
+      },
+      "fibre-cyan-wash": {
+        "role": "primary",
+        "displayName": "Fibre Cyan Wash",
+        "canonical": "oklch(80% 0.10 205 / 0.13)",
+        "tonalRamp": [
+          "oklch(15% 0.10 205)",
+          "oklch(26% 0.10 205)",
+          "oklch(37% 0.10 205)",
+          "oklch(48% 0.10 205)",
+          "oklch(60% 0.10 205)",
+          "oklch(72% 0.10 205)",
+          "oklch(84% 0.10 205)",
+          "oklch(95% 0.10 205)"
+        ]
+      },
+      "ink-on-cyan": {
+        "role": "primary",
+        "displayName": "Ink On Cyan",
+        "canonical": "oklch(20% 0.04 215)",
+        "tonalRamp": [
+          "oklch(15% 0.04 215)",
+          "oklch(26% 0.04 215)",
+          "oklch(37% 0.04 215)",
+          "oklch(48% 0.04 215)",
+          "oklch(60% 0.04 215)",
+          "oklch(72% 0.04 215)",
+          "oklch(84% 0.04 215)",
+          "oklch(95% 0.04 215)"
+        ]
+      },
+      "ice": {
+        "role": "secondary",
+        "displayName": "Ice",
+        "canonical": "oklch(90% 0.03 215)",
+        "tonalRamp": [
+          "oklch(15% 0.03 215)",
+          "oklch(26% 0.03 215)",
+          "oklch(37% 0.03 215)",
+          "oklch(48% 0.03 215)",
+          "oklch(60% 0.03 215)",
+          "oklch(72% 0.03 215)",
+          "oklch(84% 0.03 215)",
+          "oklch(95% 0.03 215)"
+        ]
+      },
+      "nick-periwinkle": {
+        "role": "tertiary",
+        "displayName": "Nick Periwinkle",
+        "canonical": "oklch(80% 0.07 240)",
+        "tonalRamp": [
+          "oklch(15% 0.07 240)",
+          "oklch(26% 0.07 240)",
+          "oklch(37% 0.07 240)",
+          "oklch(48% 0.07 240)",
+          "oklch(60% 0.07 240)",
+          "oklch(72% 0.07 240)",
+          "oklch(84% 0.07 240)",
+          "oklch(95% 0.07 240)"
+        ]
+      },
+      "link-mint": {
+        "role": "status",
+        "displayName": "Link Mint",
+        "canonical": "oklch(80% 0.11 170)",
+        "tonalRamp": [
+          "oklch(15% 0.11 170)",
+          "oklch(26% 0.11 170)",
+          "oklch(37% 0.11 170)",
+          "oklch(48% 0.11 170)",
+          "oklch(60% 0.11 170)",
+          "oklch(72% 0.11 170)",
+          "oklch(84% 0.11 170)",
+          "oklch(95% 0.11 170)"
+        ]
+      },
+      "amber-warn": {
+        "role": "status",
+        "displayName": "Amber Warn",
+        "canonical": "oklch(82% 0.13 80)",
+        "tonalRamp": [
+          "oklch(15% 0.13 80)",
+          "oklch(26% 0.13 80)",
+          "oklch(37% 0.13 80)",
+          "oklch(48% 0.13 80)",
+          "oklch(60% 0.13 80)",
+          "oklch(72% 0.13 80)",
+          "oklch(84% 0.13 80)",
+          "oklch(95% 0.13 80)"
+        ]
+      },
+      "mention-red": {
+        "role": "status",
+        "displayName": "Mention Red",
+        "canonical": "oklch(68% 0.18 27)",
+        "tonalRamp": [
+          "oklch(15% 0.18 27)",
+          "oklch(26% 0.18 27)",
+          "oklch(37% 0.18 27)",
+          "oklch(48% 0.18 27)",
+          "oklch(60% 0.18 27)",
+          "oklch(72% 0.18 27)",
+          "oklch(84% 0.18 27)",
+          "oklch(95% 0.18 27)"
+        ]
+      },
+      "ink-on-red": {
+        "role": "status",
+        "displayName": "Ink On Red",
+        "canonical": "oklch(18% 0.04 27)",
+        "tonalRamp": [
+          "oklch(15% 0.04 27)",
+          "oklch(26% 0.04 27)",
+          "oklch(37% 0.04 27)",
+          "oklch(48% 0.04 27)",
+          "oklch(60% 0.04 27)",
+          "oklch(72% 0.04 27)",
+          "oklch(84% 0.04 27)",
+          "oklch(95% 0.04 27)"
+        ]
+      },
+      "ember": {
+        "role": "secondary",
+        "displayName": "Ember",
+        "canonical": "oklch(70% 0.16 45)",
+        "tonalRamp": [
+          "oklch(15% 0.16 45)",
+          "oklch(26% 0.16 45)",
+          "oklch(37% 0.16 45)",
+          "oklch(48% 0.16 45)",
+          "oklch(60% 0.16 45)",
+          "oklch(72% 0.16 45)",
+          "oklch(84% 0.16 45)",
+          "oklch(95% 0.16 45)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Home hero line only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Site section headings."
+      },
+      "section-title": {
+        "displayName": "Section title",
+        "purpose": "Headings inside a section (.h3-site) and the connection map heading."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Panel and card headings, prose h3."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Paragraph under a hero or section headline, max 56ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default text; prose at 1.7 line-height, max 72ch."
+      },
+      "body-sm": {
+        "displayName": "Body small",
+        "purpose": "Card, panel and spec-list copy."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase column captions, table headers and map row labels; never above a heading."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Anything a machine printed: commands, config, hosts, nicks, timestamps."
+      }
+    },
+    "shadows": [
+      {
+        "name": "panel-lift",
+        "value": "0 30px 70px oklch(0% 0 0 / 0.45)",
+        "purpose": "Showpiece panels only: connection map stage, client terminal, failover replay."
+      },
+      {
+        "name": "card-lift",
+        "value": "0 12px 32px oklch(0% 0 0 / 0.32)",
+        "purpose": "Cards, flow hub, CTA band."
+      },
+      {
+        "name": "lit-edge",
+        "value": "inset 0 1px 0 oklch(100% 0 0 / 0.08)",
+        "purpose": "Every glass surface."
+      },
+      {
+        "name": "brand-glow",
+        "value": "0 0 24px oklch(80% 0.10 205 / 0.35)",
+        "purpose": "Brand mark; active status dots use 0 0 8px in Fibre Cyan. The only glows."
+      },
+      {
+        "name": "focus",
+        "value": "0 0 0 2px var(--bg), 0 0 0 4px var(--primary)",
+        "purpose": "Keyboard focus ring."
+      }
+    ],
+    "motion": [
+      {
+        "name": "t-fast",
+        "value": "150ms",
+        "purpose": "Hover and colour changes."
+      },
+      {
+        "name": "t-med",
+        "value": "220ms",
+        "purpose": "Entrances, sheet and drawer opens, terminal lines."
+      },
+      {
+        "name": "t-exit",
+        "value": "140ms",
+        "purpose": "Exits."
+      },
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.2, 0.7, 0.2, 1)",
+        "purpose": "Default easing for entrances and state changes."
+      },
+      {
+        "name": "ease-in",
+        "value": "cubic-bezier(0.5, 0, 0.75, 0)",
+        "purpose": "Exits only."
+      },
+      {
+        "name": "strand-draw",
+        "value": "400ms",
+        "purpose": "Drawing topology strands."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide",
+        "value": "1600px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "lg",
+        "value": "1200px"
+      },
+      {
+        "name": "md",
+        "value": "1024px"
+      },
+      {
+        "name": "app-md",
+        "value": "960px"
+      },
+      {
+        "name": "sm",
+        "value": "768px"
+      },
+      {
+        "name": "xs",
+        "value": "640px"
+      }
+    ],
+    "effects": [
+      {
+        "name": "glass-blur",
+        "value": "blur(20px) saturate(130%)",
+        "purpose": "Backdrop filter on glass panels and the header; removed under prefers-reduced-transparency."
+      },
+      {
+        "name": "grad-fiber",
+        "value": "linear-gradient(90deg, var(--signal), var(--ice) 45%, var(--cyan))",
+        "purpose": "Strands and wires that are landing (takeovers, reconnects)."
+      },
+      {
+        "name": "grad-heat",
+        "value": "linear-gradient(90deg, var(--signal), var(--warn) 55%, var(--cyan))",
+        "purpose": "Heat comb ticks, only where they show a real quantity."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one cyan action per view.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Get evrd</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: var(--r-field); background: var(--row); color: var(--fg); border: 1px solid var(--line); font-family: var(--font-ui); font-size: var(--fs-sm); font-weight: 500; white-space: nowrap; cursor: pointer; transition: background var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out); } .ds-btn:hover { background: var(--row-hover); border-color: var(--line-2); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: none; box-shadow: var(--focus); } .ds-btn-primary { background: var(--primary); color: var(--on-primary); border-color: transparent; font-weight: 600; } .ds-btn-primary:hover { background: var(--primary-hover); border-color: transparent; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Default button: tinted row fill with a hairline.",
+      "html": "<button class=\"ds-btn\">Read the quick start</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: var(--r-field); background: var(--row); color: var(--fg); border: 1px solid var(--line); font-family: var(--font-ui); font-size: var(--fs-sm); font-weight: 500; white-space: nowrap; cursor: pointer; transition: background var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out); } .ds-btn:hover { background: var(--row-hover); border-color: var(--line-2); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: none; box-shadow: var(--focus); }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Low-emphasis action, muted until hovered.",
+      "html": "<button class=\"ds-btn ds-btn-ghost\">View source</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: var(--r-field); background: var(--row); color: var(--fg); border: 1px solid var(--line); font-family: var(--font-ui); font-size: var(--fs-sm); font-weight: 500; white-space: nowrap; cursor: pointer; transition: background var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out); } .ds-btn:hover { background: var(--row-hover); border-color: var(--line-2); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: none; box-shadow: var(--focus); } .ds-btn-ghost { background: none; border-color: transparent; color: var(--muted); } .ds-btn-ghost:hover { color: var(--fg); background: var(--row-hover); border-color: transparent; }"
+    },
+    {
+      "name": "Status Chips",
+      "kind": "chip",
+      "refersTo": "chip-ok",
+      "description": "State pills: connected, reconnecting, mention.",
+      "html": "<div class=\"ds-chips\"><span class=\"ds-chip ds-ok\"><span class=\"ds-dot\"></span>Connected</span><span class=\"ds-chip ds-warn\"><span class=\"ds-dot\"></span>Reconnecting</span><span class=\"ds-chip ds-bad\"><span class=\"ds-dot\"></span>2 mentions</span></div>",
+      "css": ".ds-chips { display: flex; gap: 8px; flex-wrap: wrap; } .ds-chip { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: var(--r-pill); font-family: var(--font-ui); font-size: var(--fs-xs); font-weight: 500; white-space: nowrap; } .ds-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; } .ds-ok { background: var(--ok-soft); color: var(--ok); } .ds-warn { background: var(--warn-soft); color: var(--warn); } .ds-bad { background: var(--bad-soft); color: var(--bad); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Field with label, help and cyan focus halo.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-label\">Host name</span><input class=\"ds-input\" placeholder=\"bnc.example.org\"><span class=\"ds-help\">Used for certificates and the IRC address.</span></label>",
+      "css": ".ds-field { display: grid; gap: 6px; font-family: var(--font-ui); } .ds-label { font-size: var(--fs-sm); font-weight: 500; color: var(--fg); } .ds-help { font-size: var(--fs-xs); color: var(--muted); } .ds-input { width: 100%; min-height: 44px; padding: 0 12px; border-radius: var(--r-field); background: oklch(14% 0.011 215 / 0.7); border: 1px solid var(--line); color: var(--fg); font: inherit; font-size: var(--fs-sm); transition: border-color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out); } .ds-input::placeholder { color: var(--faint); } .ds-input:hover { border-color: var(--line-2); } .ds-input:focus { outline: none; border-color: var(--primary-dim); box-shadow: 0 0 0 3px var(--primary-soft); }"
+    },
+    {
+      "name": "Segmented Tabs",
+      "kind": "nav",
+      "refersTo": "tabs",
+      "description": "Pill track for install methods and filters.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button class=\"ds-tab\" aria-selected=\"true\">Docker Compose</button><button class=\"ds-tab\" aria-selected=\"false\">docker run</button><button class=\"ds-tab\" aria-selected=\"false\">OpenBSD</button></div>",
+      "css": ".ds-tabs { display: inline-flex; gap: 2px; padding: 4px; border-radius: var(--r-pill); background: oklch(14% 0.011 215 / 0.6); border: 1px solid var(--line-soft); } .ds-tab { min-height: 36px; padding: 0 20px; border-radius: var(--r-pill); border: 0; background: none; color: var(--muted); font-family: var(--font-ui); font-size: var(--fs-sm); font-weight: 500; cursor: pointer; transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out); } .ds-tab:hover { color: var(--fg); } .ds-tab:focus-visible { outline: none; box-shadow: var(--focus); } .ds-tab[aria-selected=\"true\"] { background: var(--glass-2); color: var(--fg); box-shadow: inset 0 1px 0 var(--hilite), 0 1px 3px oklch(0% 0 0 / 0.3); }"
+    },
+    {
+      "name": "Spec List",
+      "kind": "list",
+      "refersTo": "spec-list",
+      "description": "Grouped specs: term, a sentence or two and the real setting name in mono; hairline rules, no card.",
+      "html": "<dl class=\"ds-specs\"><div><dt>Limits per user</dt><dd>Networks, attached clients and backlog, from server defaults you override per user.</dd><dd class=\"ds-set\">max_networks · max_clients · backlog_lines</dd></div><div><dt>Polite reconnects</dt><dd>Each node paces its connects to every server.</dd><dd class=\"ds-set\">connect_rate 5</dd></div></dl>",
+      "css": ".ds-specs { display: grid; gap: 20px; max-width: 520px; margin: 0; font-family: var(--font-ui); } .ds-specs > div { display: grid; gap: 4px; padding-top: 16px; border-top: 1px solid var(--line-soft); } .ds-specs dt { font-weight: 500; color: var(--fg); } .ds-specs dd { margin: 0; color: var(--muted); font-size: var(--fs-sm); line-height: 1.6; } .ds-specs dd.ds-set { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--nick); }"
+    },
+    {
+      "name": "Sample Chip",
+      "kind": "chip",
+      "refersTo": "chip-sample",
+      "description": "Neutral chip beside the heading of every illustrative visual.",
+      "html": "<div class=\"ds-chips\"><span class=\"ds-chip ds-sample\">Sample data</span></div>",
+      "css": ".ds-chips { display: flex; gap: 8px; } .ds-chip { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: var(--r-pill); font-family: var(--font-ui); font-size: var(--fs-xs); font-weight: 500; white-space: nowrap; } .ds-sample { background: var(--row-hover); color: var(--muted); }"
+    },
+    {
+      "name": "Code Snippet",
+      "kind": "custom",
+      "refersTo": "snippet",
+      "description": "Config and commands in a deep well; directives cyan, values periwinkle.",
+      "html": "<pre class=\"ds-snippet\"><b>listen</b> ircs://:6697\n<b>db</b>     <em>sqlite:/var/lib/evrd/evrd.db</em>\n<b>tls</b>    acme  <span class=\"ds-c\"># Let's Encrypt</span></pre>",
+      "css": ".ds-snippet { margin: 0; padding: 16px; border-radius: var(--r-row); background: var(--bg-deep); border: 1px solid var(--line-soft); font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: var(--muted); overflow-x: auto; } .ds-snippet b { color: var(--primary); font-weight: 500; } .ds-snippet em { color: var(--nick); font-style: normal; } .ds-c { color: var(--faint); }"
+    },
+    {
+      "name": "Terminal Replay",
+      "kind": "custom",
+      "refersTo": "snippet",
+      "description": "Signature: a client attach replayed with backlog and live lines.",
+      "html": "<div class=\"ds-term\"><div class=\"ds-term-head\">HexChat · #evrd</div><div class=\"ds-term-body\"><div class=\"ds-l\"><time>09:14</time><span class=\"ds-sys\">-!- Joined #evrd · topic restored</span></div><div class=\"ds-sep\">Backlog · 412 lines</div><div class=\"ds-l\"><time>07:58</time><span><i>&lt;robert&gt;</i> <span class=\"ds-hl\">jamesat:</span> merged your PR</span></div><div class=\"ds-sep\">Live</div><div class=\"ds-l\"><time>09:15</time><span><i class=\"ds-me\">&lt;jamesat&gt;</i> morning, just caught up</span></div></div></div>",
+      "css": ".ds-term { max-width: 520px; border-radius: var(--r-panel); background: var(--bg-deep); border: 1px solid var(--line); box-shadow: var(--shadow-sm), inset 0 1px 0 var(--hilite); overflow: hidden; } .ds-term-head { padding: 12px 16px; border-bottom: 1px solid var(--line-soft); background: var(--glass); font-family: var(--font-ui); font-size: var(--fs-sm); color: var(--muted); } .ds-term-body { padding: 16px; font-family: var(--font-mono); font-size: 13px; line-height: 1.75; color: var(--muted); } .ds-l { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; } .ds-l time { color: var(--faint); } .ds-l i { color: var(--nick); font-style: normal; } .ds-l i.ds-me { color: var(--primary); } .ds-sys { color: var(--faint); } .ds-hl { color: var(--bad); } .ds-sep { display: flex; align-items: center; gap: 12px; margin: 8px 0; color: var(--signal); font-size: var(--fs-2xs); letter-spacing: var(--track-caps); text-transform: uppercase; } .ds-sep::before, .ds-sep::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--signal-soft), transparent); }"
+    },
+    {
+      "name": "Callout",
+      "kind": "custom",
+      "refersTo": "callout",
+      "description": "Info note in cyan wash; amber variant for warnings.",
+      "html": "<div class=\"ds-callout\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M12 11v5M12 8h.01\"/></svg><p>Running the same command again upgrades in place.</p></div>",
+      "css": ".ds-callout { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 12px; padding: 16px; border-radius: var(--r-row); background: var(--primary-soft); border: 1px solid oklch(80% 0.10 205 / 0.28); font-family: var(--font-ui); } .ds-callout svg { color: var(--primary); margin-top: 2px; } .ds-callout p { margin: 0; color: var(--fg); font-size: var(--fs-sm); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lit Fibre",
+    "overview": "evrd is drawn as light travelling through dark glass. Every connection the product keeps open (client to bouncer, bouncer to network) is a strand: ember where traffic runs hot, ice in the core, cyan where it lands. The grounds are a deep graphite-teal that reads like a powered-down room. The light shows what's alive and connected, and nothing else gets it.\n\nThe public site and the evrd web app are one system. `assets/evrd.css` is the web app's own design system, and `assets/site.css` adds only page structure and a few site-only sizes on top. A screenshot of the console and a section of the site should be indistinguishable in material, type and colour. The site is dark only (`color-scheme: dark`); there is no light theme.\n\nDensity is calm. Large light-weight Outfit headlines sit over muted body copy, while the data (lag, line counts, channels, timestamps) is set in Geist Mono and given the brightest colours. Panels are layered glass over an ambient haze, and controls stay quiet and exact: hairline borders, muted at rest, one cyan action per view.",
+    "keyCharacteristics": [
+      "Graphite-teal grounds with one cyan haze top-right and a faint ember glow low-left.",
+      "Cyan is data light and the single action colour; status colours (mint, amber, red, ember) carry state only.",
+      "Layered translucent glass with a 1px top highlight; big shadows only for showpiece panels.",
+      "Light (300) Outfit for display, Geist Mono for anything a machine produced.",
+      "Real, labelled sample data as illustration: terminals, connection and topology maps, the failover replay, strand charts."
+    ],
+    "rules": [
+      {
+        "name": "The One Light Rule",
+        "body": "Fibre Cyan is the only colour that means \"act here\". A view has one solid cyan button; everything else is secondary or ghost.",
+        "section": "colors"
+      },
+      {
+        "name": "The Status Means State Rule",
+        "body": "Mint, amber, red and ember appear only where they describe a real state (up, retrying, mention, hot). Never use them for decoration or variety, or as a chart series colour: series are cyan, periwinkle, then Slate Muted, and a series turns ember only across the span it was actually down.",
+        "section": "colors"
+      },
+      {
+        "name": "The Strand Order Rule",
+        "body": "Gradients run ember → ice/amber → cyan, left to right, hot to landed. They appear only on strands, wires and heat combs, never on text or buttons. A strand that is steady holds its own colour with an ice core; a strand that is landing (a takeover, a reconnect) warms ember → ice → cyan; a strand to something down is faint Slate and dashed. Chart lines hold one series colour each.",
+        "section": "colors"
+      },
+      {
+        "name": "The Light Headline Rule",
+        "body": "Headlines are weight 300 with negative tracking. Weight comes from size, not boldness; 500 is the heaviest used for titles and 600 only for labels and primary buttons.",
+        "section": "typography"
+      },
+      {
+        "name": "The Machine Voice Rule",
+        "body": "If a computer printed it (a command, directive, host, port, nick, metric or timestamp), it's set in Geist Mono. Human prose never is.",
+        "section": "typography"
+      },
+      {
+        "name": "The Heading Stands Alone Rule",
+        "body": "No eyebrow or kicker above a heading. A heading carries its own weight; if the visual is a sample, a Sample data chip sits beside the heading instead. On desktop each size step between roles is at least 1.25× (14px body, 18px title, 22–28px section title, 28–40px headline).",
+        "section": "typography"
+      },
+      {
+        "name": "The Lit Edge Rule",
+        "body": "Every glass surface gets the 1px inset top highlight. A panel without it looks pasted on.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Glass Has a Floor Rule",
+        "body": "Under `prefers-reduced-transparency: reduce`, blur is removed and glass becomes opaque Graphite Raised. New translucent surfaces must be added to that fallback.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do take every colour, size, radius and duration from the `:root` tokens in `assets/evrd.css`; add site-only sizes to `site.css`'s `:root`, never inline values.",
+      "Do keep one solid Fibre Cyan action per view; pair it with a secondary or ghost button.",
+      "Do set commands, config, hosts, nicks, timestamps and metric names in Geist Mono.",
+      "Do give every glass surface the 1px lit edge and a reduced-transparency fallback.",
+      "Do label illustrative data with a Sample data chip beside its heading.",
+      "Do keep transitions at 150ms (fast) or 220ms (medium) on `cubic-bezier(0.2, 0.7, 0.2, 1)`, with exits at 140ms ease-in, and honour `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "Don't add a light theme or light sections; the system is dark only.",
+      "Don't use mint, amber, red or ember for decoration; they mean state.",
+      "Don't put gradients on text or buttons; gradients belong to strands.",
+      "Don't add glows beyond the brand mark and status dots.",
+      "Don't put an eyebrow or kicker above a heading.",
+      "Don't build a section from same-size icon cards; group specs in a spec list.",
+      "Don't dim text with opacity to show something is off; dim the line or value and keep text at 4.5:1.",
+      "Don't set headlines heavier than 300 or add new typefaces.",
+      "Don't let the site drift from the web app: a new component starts from an `evrd.css` primitive, not a new look."
+    ]
+  }
+}
