@@ -18,7 +18,8 @@ the route set to fail open (below), requests then go straight to GitHub Pages.
 
 `.github/workflows/worker.yml` deploys on every push to `main` that changes
 `worker/` (or by hand: Actions → worker → Run workflow). It creates the table
-if it's missing, deploys the Worker and sets its secrets.
+if it's missing, deploys the Worker, sets its secrets and makes its route
+fail open (past the daily limit, requests go straight to GitHub Pages).
 
 ## One-time setup (after evrd.sh is on Cloudflare)
 
@@ -32,8 +33,6 @@ if it's missing, deploys the Worker and sets its secrets.
    dashboard's account overview), `SALT` and `STATS_KEY` (long random
    strings of your own; STATS_KEY is the key for the stats page).
 4. **Deploy:** merge to `main`, or run the workflow by hand.
-5. **Fail open:** dashboard → `evrd.sh` → *Workers routes* → the
-   `evrd.sh/api/*` route → *Request limit failure mode: Fail open (proceed)*.
 
 Check it:
 
