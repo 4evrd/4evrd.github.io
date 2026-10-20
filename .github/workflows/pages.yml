@@ -26,6 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      # the install-count Worker deploys to Cloudflare, not as part of the site
+      - run: rm -rf worker
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .

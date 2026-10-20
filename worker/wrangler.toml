@@ -1,0 +1,16 @@
+# The evrd.sh/api/* Worker: counts evrd installs, passes everything on to
+# GitHub Pages. Deploy steps: README.md in this folder.
+name = "evrd-installs"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+routes = [{ pattern = "evrd.sh/api/*", zone_name = "evrd.sh" }]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "evrd-installs"
+database_id = "REPLACE_WITH_THE_ID_FROM_wrangler_d1_create"
+
+# daily clean-up of rows older than 90 days
+[triggers]
+crons = ["17 3 * * *"]
