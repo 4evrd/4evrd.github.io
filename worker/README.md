@@ -4,10 +4,12 @@ A Cloudflare Worker on `evrd.sh/api/*`. Every request goes on to GitHub Pages
 as before; requests from evrd itself (User-Agent `evrd/<version>`, the network
 directory fetch every install makes twice a day) are counted: one row per
 install per day in a D1 database, holding the day, a salted per-day hash of the
-address (never the address) and the version. Rows are kept 90 days.
+address (never the address) and the version. Each finished day is rolled up
+into daily totals (day, version, count), kept for good; the per-install rows
+are kept 90 days.
 
-`https://evrd.sh/api/stats?key=<STATS_KEY>` shows installs per day and the
-version mix (`&format=json` for JSON). Without the right key it's a 404.
+`https://evrd.sh/api/stats?key=<STATS_KEY>` charts installs per day (`&range=7`,
+`14`, `30`, `90` or `all`) and the version mix (`&format=json` for JSON). Without the right key it's a 404.
 
 It fits Cloudflare's free plan: 100,000 Worker requests and 100,000 D1 row
 writes a day (about one write per install per day), cron triggers included.
