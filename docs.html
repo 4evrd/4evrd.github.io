@@ -25,7 +25,7 @@
       <span class="eyebrow">Documentation</span>
       <h1 id="docs-h">Run evrd</h1>
       <p class="lead">Install it, attach your clients, and scale from one node to a cluster.</p>
-      <div class="tele-row"><span>15 sections</span><span>source <b>evrd/docs</b></span><span>config <b>evrd.conf</b></span><span>admin <b>evrctl</b></span></div>
+      <div class="tele-row"><span>24 sections</span><span>source <b>evrd/docs</b></span><span>config <b>evrd.conf</b></span><span>admin <b>evrctl</b></span></div>
       <svg class="ribbon" aria-hidden="true"></svg>
     </div>
   </section>
@@ -47,13 +47,19 @@
           <option value="#web-client">Web client</option>
           <option value="#languages">Languages and translations</option>
           <option value="#native-clients">Native IRC clients</option>
+          <option value="#irc-sign-in">Signing in from IRC clients</option>
+          <option value="#ircv3">IRCv3</option>
           <option value="#status">*status commands</option>
+          <option value="#playback">Playback buffers</option>
           <option value="#networks">Network settings</option>
+          <option value="#services">Logging in to services</option>
+          <option value="#modules">Modules</option>
           <option value="#configuration">Configuration</option>
           <option value="#tls">HTTPS and certificates</option>
           <option value="#accounts">Accounts and sign-in</option>
           <option value="#server-settings">Server settings</option>
           <option value="#secrets">Saved passwords</option>
+          <option value="#holder">Connection holder</option>
           <option value="#clustering">Running several nodes</option>
           <option value="#upstream">Connections to networks</option>
           <option value="#metrics">Metrics</option>
@@ -70,8 +76,13 @@
         <a class="docs-link" href="#web-client">Web client</a>
         <a class="docs-link" href="#languages">Languages and translations</a>
         <a class="docs-link" href="#native-clients">Native IRC clients</a>
+        <a class="docs-link" href="#irc-sign-in">Signing in from IRC clients</a>
+        <a class="docs-link" href="#ircv3">IRCv3</a>
         <a class="docs-link" href="#status">*status commands</a>
+        <a class="docs-link" href="#playback">Playback buffers</a>
         <a class="docs-link" href="#networks">Network settings</a>
+        <a class="docs-link" href="#services">Logging in to services</a>
+        <a class="docs-link" href="#modules">Modules</a>
       </div>
       <div class="docs-group"><span class="caps">Operate</span>
         <a class="docs-link" href="#configuration">Configuration</a>
@@ -79,6 +90,7 @@
         <a class="docs-link" href="#accounts">Accounts and sign-in</a>
         <a class="docs-link" href="#server-settings">Server settings</a>
         <a class="docs-link" href="#secrets">Saved passwords</a>
+        <a class="docs-link" href="#holder">Connection holder</a>
         <a class="docs-link" href="#clustering">Running several nodes</a>
         <a class="docs-link" href="architecture.html">Architecture and diagrams ↗</a>
         <a class="docs-link" href="#upstream">Connections to networks</a>
@@ -215,7 +227,31 @@
             </tbody>
           </table>
         </div>
-        <p>The same confinement works anywhere evrd starts as root, with <span class="code">chroot</span> and <span class="code">user</span> in evrd.conf (unveil and pledge are OpenBSD's). The full guide is in the repository: <a href="https://github.com/4evrd/evrd/blob/main/docs/openbsd.md"><span class="code">docs/openbsd.md</span></a>.</p>
+        <p>The same confinement works anywhere evrd starts as root, with <span class="code">chroot</span> and <span class="code">user</span> in evrd.conf (unveil and pledge are OpenBSD's).</p>
+        <h3 id="openbsd-unattended">Without questions, and upgrading</h3>
+        <p>Every answer has an option, and <span class="code">-y</span> takes the defaults for the rest, for provisioning scripts:</p>
+        <div class="table-wrap">
+          <table class="cmd-table">
+            <thead><tr><th scope="col">Option</th><th scope="col">Sets</th></tr></thead>
+            <tbody>
+              <tr><td><span class="code">-d host</span></td><td>the web app's host name</td></tr>
+              <tr><td><span class="code">-c letsencrypt|selfsigned|none</span></td><td>the certificate</td></tr>
+              <tr><td><span class="code">-w evrd|relayd</span></td><td>who serves HTTPS</td></tr>
+              <tr><td><span class="code">-s port</span></td><td>evrd's HTTPS port (default 443)</td></tr>
+              <tr><td><span class="code">-p port</span></td><td>evrd's plain-HTTP port: the web app with <span class="code">-c none</span>, else local only (default 8098)</td></tr>
+              <tr><td><span class="code">-e email</span></td><td>Let's Encrypt contact</td></tr>
+              <tr><td><span class="code">-o issuer</span>, <span class="code">-O client-id</span>, <span class="code">-L label</span>, <span class="code">-R role</span></td><td>single sign-on (the secret from <span class="code">$EVRD_OIDC_CLIENT_SECRET</span>, or asked)</td></tr>
+              <tr><td><span class="code">-i host</span>, <span class="code">-t port</span>, <span class="code">-P port</span></td><td>IRC host name, TLS port, plain port</td></tr>
+              <tr><td><span class="code">-a name</span></td><td>create an admin (password from <span class="code">$EVRD_ADMIN_PASSWORD</span>, or asked)</td></tr>
+              <tr><td><span class="code">-v version</span></td><td>a specific release instead of the latest</td></tr>
+              <tr><td><span class="code">-f archive</span></td><td>install from a downloaded <span class="code">evrd_openbsd_&lt;arch&gt;.tar.gz</span> (with its <span class="code">SHA256</span> next to it)</td></tr>
+              <tr><td><span class="code">-r</span></td><td>write a new config (the old one is kept as <span class="code">evrd.conf.bak</span>)</td></tr>
+              <tr><td><span class="code">-n</span></td><td>install but don't start</td></tr>
+              <tr><td><span class="code">-H</span></td><td>restart the connection holder at once when it changed</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>To upgrade, run the same command again. It keeps <span class="code">evrd.conf</span> and the key (it asks; <span class="code">-y</span> keeps them) and replaces the programs and the web app. evrd restarts only when its program actually changed, and the <a href="#holder">connection holder</a> keeps everyone on IRC while it does; the holder itself is restarted only when the new evrd can't talk to the old one (or at the next reboot). Database changes are applied at startup. To back up, stop evrd, copy <span class="code">/var/evrd/data/</span>, start it again, and keep <span class="code">/etc/evrd/secret.key</span> somewhere else. For oidentd, see <a href="#oidentd">oidentd</a>.</p>
       </section>
 
       <section id="from-source" aria-labelledby="h-src">
@@ -257,7 +293,21 @@
             </tbody>
           </table>
         </div>
-        <p>Download a template (every English text, nothing translated) or any language as it is now, in each format, from the same pages. Before saving, the upload shows what's in the file; a <span class="code">{placeholder}</span> that differs from English blocks it. Uploaded text is always shown as text, never as HTML. More in <a href="https://github.com/4evrd/evrd/blob/main/docs/translations.md">Translating evrd</a>.</p>
+        <p>Download a template (every English text, nothing translated) or any language as it is now, in each format, from the same pages. Before saving, the upload shows what's in the file; a <span class="code">{placeholder}</span> that differs from English blocks it. Uploaded text is always shown as text, never as HTML.</p>
+        <h3 id="own-messages">evrd's own words</h3>
+        <p>What evrd itself says is translated too: <span class="code">*status</span>'s replies and its <span class="code">help</span>, the welcome lines and PART reasons IRC clients see, errors over IRC and on the website, a network's connection log (why a connection failed or dropped, and what to do about it), the activity feed and notifications, the admin overview's "needs attention", and the modules' and Admin → Settings' labels and help. They're the keys starting with <span class="code">irc.</span> in the same language files; a file can have only those, only the web app's, or both.</p>
+        <p>Over IRC, evrd answers in the language picked under <em>Account → Profile → Language</em> (with <em>the browser's language</em> picked, IRC replies are in English). On the website these messages follow the language the app shows. The connection log and the activity feed keep what evrd said, not the sentence, so they read in each viewer's language: an admin helping a user sees the user's log in their own. What IRC servers and services say is shown as they sent it.</p>
+        <p>Command names, settings and their values (<span class="code">connect</span>, <span class="code">set nick …</span>, <span class="code">on</span>, <span class="code">off</span>) stay the same in every language. Lines before an IRC client has signed in, IRC protocol replies (numerics, <span class="code">FAIL</span>, <span class="code">BOUNCER</span> errors), the server log, and errors in <span class="code">evrd.conf</span> or the network directory's file are in English. IRC clients get <span class="code">…</span>, <span class="code">—</span>, <span class="code">·</span> and curly quotes as plain ASCII; letters in any script pass through as written.</p>
+        <h3 id="translation-uploads">Uploading a translation</h3>
+        <p><strong>Admins</strong> upload one for everyone under <em>Admin → Settings → Languages</em>: a new language (<span class="code">de</span>) or changes to a built-in one (<span class="code">it</span>). It's kept in the database, so every node of a cluster has it within 30 seconds. <strong>Every user</strong> can upload one for themselves under <em>Account → Profile → Your own translation</em>; it shows up in their <em>Language</em> menu. For each text the app uses the first of: your own translation (when its language is the one you picked), the admin's, the built-in language, English. So a file doesn't have to be complete: to fix one Italian string for yourself, upload a file for <span class="code">it</span> with only that string.</p>
+        <p>The file is converted to evrd's JSON in your browser before it's uploaded. Before saving, the upload shows what's in it. These stop it:</p>
+        <ul>
+          <li>a bad language code (2 or 3 lowercase letters, with a region like <span class="code">pt-BR</span>) or name, or a bad key;</li>
+          <li>a text over 2,000 characters, or a file over 512 KiB;</li>
+          <li>placeholders such as <span class="code">{count}</span> that differ from English (they may move within the sentence);</li>
+          <li>a plural without <span class="code">other</span>. Plurals have a form per <a href="https://cldr.unicode.org/index/cldr-spec/plural-rules" rel="noopener">CLDR</a> category (<span class="code">zero</span>, <span class="code">one</span>, <span class="code">two</span>, <span class="code">few</span>, <span class="code">many</span>, <span class="code">other</span>); in PO they follow the file's <span class="code">Plural-Forms</span>.</li>
+        </ul>
+        <p>Keys English doesn't have are a warning and ignored. The upload also says how many texts are still untranslated, and how many fuzzy PO entries were skipped. When the file doesn't name its language (CSV, a flat JSON file), the upload asks for the code and the name in the language itself.</p>
       </section>
 
       <section id="native-clients" aria-labelledby="h-native">
@@ -273,7 +323,7 @@
             </tbody>
           </table>
         </div>
-        <p>The password is either your account password or an <strong>IRC client password</strong> made on the web app's <em>IRC clients</em> page. Client passwords are the only option for accounts that sign in with SSO, and you can revoke them one client at a time.</p>
+        <p>The password is either your account password or an <strong>IRC client password</strong> made on the web app's <em>IRC clients</em> page, revocable one client at a time. Accounts that sign in with SSO use a client password, <a href="#sign-in-by-link">sign in by link</a>, or their SSO password where the admin turned that on. Clients that do SASL can sign in with SASL PLAIN instead (user name <span class="code">user</span> or <span class="code">user/network</span>). All the ways are under <a href="#irc-sign-in">Signing in from IRC clients</a>.</p>
         <div class="codeblock">
           <div class="cb-head"><span class="caps">irssi</span><button class="copy-btn" type="button" data-copy="/connect -tls bnc.example.org 6697 james/libera:a-long-password" aria-label="Copy command" data-label="Copy command"><i data-icon="copy"></i></button></div>
 <pre class="snippet"><b>/connect</b> -tls bnc.example.org 6697 <em>james/libera:a-long-password</em></pre>
@@ -283,44 +333,193 @@
           <li>The welcome burst, your channels with names and topic, backlog replay, then live traffic.</li>
           <li><span class="code">/join</span> and <span class="code">/part</span> update the network's saved channel list, and <span class="code">/nick</span> changes your nick upstream.</li>
           <li>Your own notices and <span class="code">/me</span> actions are saved and shown on your other clients.</li>
-          <li>Capabilities <span class="code">echo-message</span> and <span class="code">server-time</span>.</li>
+          <li><a href="#ircv3">IRCv3</a> capabilities for clients that ask for them; a client that asks for none gets plain IRC.</li>
         </ul>
-        <h3 id="buffextras">Channel events in backlog</h3>
-        <p>Joins, parts, quits, kicks, nick changes, topics and modes are saved alongside messages. On replay they come from <span class="code">*buffextras</span> as plain text, for example <span class="code">bob is now known as robert</span>, the same way ZNC's buffextras module does it, so they never confuse a client's nick list.</p>
+        <h3 id="channel-events">Channel events in backlog</h3>
+        <p>Joins, parts, quits, kicks, nick changes, topics and modes are saved with the messages, and the web chat shows them. Backlog replays them only to a client that asks for <span class="code">draft/event-playback</span>, as the real lines in a history batch (see <a href="#ircv3-backlog">IRCv3</a>). Other clients get just the chat, so replay never confuses their nick lists. Either way the backlog's line count counts only what's replayed. (Before v0.32.0 events were replayed from <span class="code">*buffextras</span>; that's gone.)</p>
         <div class="callout warn"><i data-icon="alert"></i><p>Port 6667 is plaintext. Use 6697 with TLS anywhere outside a private network, and set <span class="code">tls_cert</span> / <span class="code">tls_key</span> for a real certificate.</p></div>
+      </section>
+
+      <section id="irc-sign-in" aria-labelledby="h-ircsign">
+        <span class="eyebrow section-kicker">Use evrd</span>
+        <h2 id="h-ircsign">Signing in from IRC clients <a class="anchor" href="#irc-sign-in" aria-label="Link to Signing in from IRC clients">#</a></h2>
+        <p>An IRC client signs in with a server password of <span class="code">user:password</span> or <span class="code">user/network:password</span>. The password can be:</p>
+        <ul>
+          <li><strong>the account password</strong>, for accounts that have one;</li>
+          <li><strong>an IRC client password</strong>, made for one device on the web app's <em>IRC clients</em> page and revocable on its own;</li>
+          <li><strong>the SSO password</strong>, for accounts that sign in with SSO, where the admin turned that on (<a href="#sso-irc-passwords"><span class="code">sso_irc_password</span></a>; the <em>IRC clients</em> page says so).</li>
+        </ul>
+        <p>Clients that do SASL can sign in with <strong>SASL PLAIN</strong> instead, with the user name <span class="code">user</span> or <span class="code">user/network</span>. Any account, SSO or not, can also <strong>sign in by link</strong>.</p>
+        <h3 id="sign-in-by-link">Signing in by link</h3>
+        <p>Connect <strong>without a password</strong>: server password <span class="code">mira</span>, <span class="code">mira/libera</span>, or none at all. evrd registers the client on no network and <span class="code">*status</span> sends a link:</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">*status</span><button class="copy-btn" type="button" data-copy-from="#link-msg" aria-label="Copy message" data-label="Copy message"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="link-msg"><span class="c">&lt;*status&gt;</span> Sign in on the website to connect: https://bnc.example.org/irc/approve/… (the link works once, for 5 minutes).</pre>
+        </div>
+        <p>Open it, sign in the way you do on the website (your identity provider and its MFA included), check the client it shows (nick, network, address, time) and <strong>Allow</strong> it: the client is put on its network. <strong>Turn away</strong> closes it.</p>
+        <div class="callout warn"><i data-icon="alert"></i><p>Allow only a client you just connected yourself. Someone who sends you a link would get into your account. The page says so, and points out when the client connects from another address than yours.</p></div>
+        <p>Allowing can <strong>remember the device</strong> for <span class="code">irc_remember_days</span> (30 by default), either with a new IRC client password, shown once on the page, to put in the client's server password; or with the password the client sent, if it was a long one (24 characters or more) evrd didn't know. Put a long random string in the client's server password, connect, allow it with "the password the client sent", and from then on it signs in by itself. Remembered devices are listed on the <em>IRC clients</em> page with their end date and revoked there like any client password.</p>
+        <p>A link is good for one connection: it goes when the client disconnects, and a client waits five minutes at most. At most three links are open per address and five per account. It's on by default when <span class="code">public_url</span> is set; <span class="code">irc_link_signin no</span> turns it off.</p>
+        <h3 id="second-factor">A second factor</h3>
+        <p>With an authenticator app set up on <em>Account → Security</em>, IRC sign-ins with your password can also ask for a code from it: when you turn on <em>Require a second factor for IRC</em>, or always if the admin requires it. Either send the code after the password:</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">server password</span><button class="copy-btn" type="button" data-copy="mira/libera:&lt;password&gt;:123456" aria-label="Copy server password" data-label="Copy server password"><i data-icon="copy"></i></button></div>
+<pre class="snippet"><em>mira/libera</em>:&lt;password&gt;:<em>123456</em>        <span class="c"># or a recovery code: …:&lt;password&gt;:abcd-efgh</span></pre>
+        </div>
+        <p>or sign in as usual: evrd registers the client on no network and <span class="code">*status</span> asks for the code (or, with sign in by link on, offers to allow the sign-in on the website instead, which works without an authenticator app too). Nothing else works until it's in:</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">irssi · *status</span><button class="copy-btn" type="button" data-copy="/msg *status otp 123456" aria-label="Copy command" data-label="Copy command"><i data-icon="copy"></i></button></div>
+<pre class="snippet"><span class="c">&lt;*status&gt;</span> A second factor is needed before you're on libera: /msg *status otp &lt;code&gt;, …
+<b>/msg *status</b> otp 123456
+<span class="c">&lt;*status&gt;</span> Second factor accepted.</pre>
+        </div>
+        <p>You have two minutes and five tries; then the connection closes and you sign in again. Ten recovery codes, shown once when the app is set up, work instead of a code, once each. A client waiting for its code isn't kept through an evrd restart; a client the <a href="#holder">connection holder</a> kept through a restart isn't asked again.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Directive</th><th scope="col">Default</th><th scope="col">Does</th></tr></thead>
+            <tbody>
+              <tr><td><span class="code">irc_mfa</span></td><td><span class="code">optional</span></td><td><span class="code">off</span>, <span class="code">optional</span> (each user's choice on <em>Account → Security</em>) or <span class="code">required</span> (everyone; users can't turn it off)</td></tr>
+              <tr><td><span class="code">irc_mfa_client_passwords</span></td><td><span class="code">no</span></td><td>ask for the second factor with IRC client passwords too. They're random, per device and revocable, so by default they don't need one</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 id="irc-sign-in-trouble">When sign-in fails</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Reply</th><th scope="col">Means</th></tr></thead>
+            <tbody>
+              <tr><td><span class="code">464 :Invalid credentials</span> with an SSO account</td><td>An account that signs in with SSO has no evrd password, and unless the admin turned on <a href="#sso-irc-passwords">SSO passwords for IRC</a>, the provider's password doesn't work over IRC. Make an IRC client password on the <em>IRC clients</em> page, or sign in by link. evrd's reply says so</td></tr>
+              <tr><td><span class="code">464 :Can't check your SSO password right now</span></td><td>SSO passwords are on, but evrd couldn't reach the identity provider (or its management app is set up wrong; the server log says which). Use an IRC client password meanwhile</td></tr>
+              <tr><td><span class="code">464 :Too many failed sign-ins</span></td><td>Ten wrong passwords within 15 minutes, over IRC or on the web, lock the account out for a while. Wait and try again</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Every refused sign-in is logged on the server as <span class="code">irc sign-in failed</span> with the user, network, client address and reason, never the password.</p>
+      </section>
+
+      <section id="ircv3" aria-labelledby="h-ircv3">
+        <span class="eyebrow section-kicker">Use evrd</span>
+        <h2 id="h-ircv3">IRCv3 <a class="anchor" href="#ircv3" aria-label="Link to IRCv3">#</a></h2>
+        <p>A client that asks for no capabilities gets what IRC clients always got from evrd. A client that asks gets IRCv3: evrd's own capabilities, offered on every network, and the network's, passed through while the network has them. evrd asks the network for each one it passes through when the network offers it.</p>
+        <p>A client picks its network with PASS, SASL or BOUNCER BIND. Clients send <span class="code">CAP LS</span> first, usually with PASS, NICK and USER right behind, so evrd's answer waits for those (at most a second and a half) and then offers the network's capabilities too. When the network isn't known by then (SASL comes after <span class="code">CAP LS</span>), they follow as <span class="code">CAP NEW</span> once the client is attached. <span class="code">CAP NEW</span> and <span class="code">CAP DEL</span> also come when the link gains or loses one or the client jumps networks. A <span class="code">CAP REQ</span> is ACKed or NAKed whole: one that asks for a capability that isn't offered (yet) is NAKed. Lines a capability brings reach the clients that asked for it; the others get them translated, or not at all.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Capability</th><th scope="col">Kind</th><th scope="col">A client without it gets</th></tr></thead>
+            <tbody>
+              <tr><td><span class="code">batch</span>, <span class="code">server-time</span>, <span class="code">message-tags</span>, <span class="code">echo-message</span></td><td>evrd's</td><td>plain lines; timestamps in replayed text</td></tr>
+              <tr><td><span class="code">cap-notify</span></td><td>evrd's</td><td>the offer as it was at <span class="code">CAP LS</span></td></tr>
+              <tr><td><span class="code">sasl</span> (<span class="code">PLAIN</span>)</td><td>evrd's</td><td>sign in with PASS</td></tr>
+              <tr><td><span class="code">standard-replies</span></td><td>evrd's</td><td>the network's <span class="code">FAIL</span>/<span class="code">WARN</span>/<span class="code">NOTE</span> as notices</td></tr>
+              <tr><td><span class="code">draft/chathistory</span>, <span class="code">draft/event-playback</span></td><td>evrd's</td><td>backlog pushed on attach</td></tr>
+              <tr><td><span class="code">draft/read-marker</span></td><td>evrd's</td><td>—</td></tr>
+              <tr><td><span class="code">soju.im/bouncer-networks</span>, <span class="code">soju.im/bouncer-networks-notify</span></td><td>evrd's</td><td><span class="code">*status</span> network commands</td></tr>
+              <tr><td><span class="code">no-implicit-names</span></td><td>evrd's</td><td>every NAMES reply</td></tr>
+              <tr><td><span class="code">draft/pre-away</span></td><td>evrd's</td><td>—</td></tr>
+              <tr><td><span class="code">sts</span></td><td>evrd's, with a trusted certificate</td><td>—</td></tr>
+              <tr><td><span class="code">multi-prefix</span></td><td>the network's</td><td>the highest prefix only (NAMES, WHO)</td></tr>
+              <tr><td><span class="code">userhost-in-names</span></td><td>the network's</td><td>nicks only in NAMES</td></tr>
+              <tr><td><span class="code">extended-join</span></td><td>the network's</td><td>plain JOINs</td></tr>
+              <tr><td><span class="code">account-notify</span>, <span class="code">away-notify</span>, <span class="code">setname</span></td><td>the network's</td><td>no ACCOUNT, AWAY, SETNAME</td></tr>
+              <tr><td><span class="code">account-tag</span></td><td>the network's</td><td>no <span class="code">@account</span></td></tr>
+              <tr><td><span class="code">chghost</span></td><td>the network's</td><td>QUIT, then JOIN (and the modes back) in each shared channel</td></tr>
+              <tr><td><span class="code">invite-notify</span></td><td>the network's</td><td>only invitations for you</td></tr>
+              <tr><td><span class="code">draft/channel-rename</span></td><td>the network's</td><td>PART the old name, JOIN the new one</td></tr>
+              <tr><td><span class="code">draft/message-redaction</span></td><td>the network's</td><td>no REDACT</td></tr>
+              <tr><td><span class="code">extended-monitor</span></td><td>the network's</td><td>MONITOR replies only</td></tr>
+              <tr><td><span class="code">labeled-response</span></td><td>the network's (with <span class="code">batch</span>)</td><td>unlabeled replies</td></tr>
+              <tr><td><span class="code">draft/multiline</span></td><td>the network's (with <span class="code">batch</span>), with its limits</td><td>each line on its own</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 id="ircv3-backlog">Backlog and live lines</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Client asks for</th><th scope="col">On attach</th><th scope="col">Live lines</th></tr></thead>
+            <tbody>
+              <tr><td>nothing</td><td>backlog as plain lines, timestamps in the text, without channel events</td><td>as the server sent them, without its tags</td></tr>
+              <tr><td><span class="code">server-time</span></td><td>backlog tagged <span class="code">@time</span></td><td>your own lines and saved ones tagged <span class="code">@time</span></td></tr>
+              <tr><td><span class="code">batch</span> (+ <span class="code">server-time</span>)</td><td>each buffer's backlog in a <span class="code">BATCH +ref chathistory &lt;buffer&gt;</span></td><td>the network's batches (netsplits…)</td></tr>
+              <tr><td>… + <span class="code">draft/event-playback</span></td><td>events in the batch as <span class="code">JOIN</span>, <span class="code">PART</span>, <span class="code">QUIT</span>, <span class="code">KICK</span>, <span class="code">NICK</span>, <span class="code">TOPIC</span>, <span class="code">MODE</span></td><td></td></tr>
+              <tr><td><span class="code">message-tags</span></td><td>every replayed line tagged <span class="code">@msgid</span></td><td>every saved line tagged <span class="code">@msgid</span>: the same id it has in history, so a client can drop a line it fetched twice</td></tr>
+              <tr><td><span class="code">draft/chathistory</span></td><td><strong>no backlog</strong>: channels are joined (with names and topic) and the client fetches history itself</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><span class="code">echo-message</span> echoes your own lines, with their <span class="code">@msgid</span> too.</p>
+        <h3 id="chathistory">Scrollback (chathistory)</h3>
+        <p>Clients page through history with <span class="code">CHATHISTORY LATEST|BEFORE|AFTER|AROUND|BETWEEN &lt;buffer&gt; …</span> (by <span class="code">msgid=</span> or <span class="code">timestamp=</span>) and find the buffers with news since they were last here with <span class="code">CHATHISTORY TARGETS</span>. Replies come in a <span class="code">chathistory</span> (or <span class="code">draft/chathistory-targets</span>) batch, and mistakes as <span class="code">FAIL CHATHISTORY …</span> standard replies. A client sees the network it's attached to and nothing else. Without <span class="code">draft/event-playback</span>, only messages, notices and actions come back, and events don't count against the limit.</p>
+        <p>A <span class="code">timestamp=</span> stands for its whole millisecond (the precision of <span class="code">@time</span>); <span class="code">msgid=</span> is exact, so evrd lists it first. Clients that negotiate chathistory get <span class="code">CHATHISTORY=1000 MSGREFTYPES=msgid,timestamp</span> in ISUPPORT: at most 1,000 lines per request (more is capped, not refused). Replayed and fetched lines carry the nick only (evrd doesn't keep <span class="code">user@host</span>), so their prefix is <span class="code">nick!nick@&lt;network&gt;</span>. AWAY, ACCOUNT, CHGHOST and SETNAME aren't kept in history.</p>
+        <h3 id="bouncer-networks">Networks from the client</h3>
+        <p><strong>SASL.</strong> Instead of PASS, a client can sign in with SASL PLAIN: the user name (or <span class="code">user/network</span>) and the account password or an IRC client password. Accounts that sign in with SSO need a client password, as with PASS.</p>
+        <p><strong><span class="code">soju.im/bouncer-networks</span>.</strong> Goguma and gamja list, add, change and remove your networks from the client (<span class="code">BOUNCER LISTNETWORKS</span>, <span class="code">ADDNETWORK</span>, <span class="code">CHANGENETWORK</span>, <span class="code">DELNETWORK</span>, with soju's attributes <span class="code">name</span>, <span class="code">host</span>, <span class="code">port</span>, <span class="code">tls</span>, <span class="code">nickname</span>, <span class="code">username</span>, <span class="code">realname</span>, <span class="code">pass</span>, and read-only <span class="code">state</span> and <span class="code">error</span>), within your network limit. A client that asks for the capability and names no network gets a <em>bouncer connection</em> on no network; it opens one connection per network with <span class="code">BOUNCER BIND &lt;id&gt;</span> (ISUPPORT <span class="code">BOUNCER_NETID</span>). Each connection counts against your client limit. With <span class="code">soju.im/bouncer-networks-notify</span> it hears when networks come, change (their state too) and go, within a few seconds.</p>
+        <h3 id="read-markers">Read markers</h3>
+        <p><span class="code">MARKREAD</span> (<span class="code">draft/read-marker</span>) reads and moves how far a buffer is read. They're the same markers the web app uses, so reading on one client or in the web app shows as read on the others within a few seconds. A marker only moves forward. A client gets a channel's marker after its JOIN.</p>
+        <h3 id="ircv3-tags">Typing, tags and msgids</h3>
+        <p>Client-only tags (<span class="code">+typing</span>, <span class="code">+draft/reply</span>, <span class="code">+draft/react</span>…) pass both ways for clients with <span class="code">message-tags</span>, when the network has <span class="code">message-tags</span>: <span class="code">TAGMSG</span> lines (typing notifications, reactions) and the <span class="code">+</span> tags on messages and notices. Your typing also shows on your other attached clients; <span class="code">echo-message</span> sends a client's own back. <span class="code">TAGMSG</span>s are never saved. Of the network's own tags only <span class="code">@account</span> (with <span class="code">account-tag</span>) and <span class="code">@bot</span> pass; a client can't send anything but <span class="code">+</span> tags.</p>
+        <p>Clients know lines by evrd's msgids. evrd remembers the network's msgid for the last few thousand lines of each network, so replies, reactions and redactions (<span class="code">REDACT</span>) name the right line both ways. evrd doesn't learn the network's msgid for what you send, so redacting your own line works only where the network accepts it otherwise. A redaction doesn't remove the line from evrd's history.</p>
+        <p>Also passed through: the network's ISUPPORT (<span class="code">005</span>: <span class="code">PREFIX</span>, <span class="code">CHANTYPES</span>, <span class="code">MONITOR</span>, <span class="code">BOT</span>…) with evrd's own tokens; MONITOR itself (one list per network, shared by your clients); and bot mode (<span class="code">BOT=</span>, <span class="code">+B</span> and the <span class="code">@bot</span> tag, for clients with <span class="code">message-tags</span>). Not supported: <span class="code">draft/metadata-2</span>.</p>
+        <h3 id="labels-multiline-sts">Labels, multiline, STS</h3>
+        <p><strong><span class="code">labeled-response</span></strong> is offered only while the network has it. What evrd answers itself (<span class="code">*status</span>, CHATHISTORY, BOUNCER, MARKREAD, echoes) evrd labels; other commands go to the network with the label, and the network's labeled reply goes back to the client that sent it. Your other clients get the same lines without the label.</p>
+        <p><strong><span class="code">draft/multiline</span></strong> is offered while the network has it, with the network's <span class="code">max-bytes</span> and <span class="code">max-lines</span>. A multiline message goes to the network as one batch and is saved a line at a time; each saved line has its own msgid.</p>
+        <p><strong><span class="code">sts</span></strong> tells clients to use TLS only. It's offered only with a TLS listener and a certificate clients trust: see <a href="#sts">STS</a>. <strong><span class="code">no-implicit-names</span></strong> sends only the NAMES replies the client asked for. <strong><span class="code">draft/pre-away</span></strong>: an AWAY sent while registering is set once attached (<span class="code">AWAY *</span> is left to auto-away).</p>
+        <h3 id="ircv3-clients">Clients</h3>
+        <p>Goguma, gamja, Halloy and Senpai use chathistory, read markers and bouncer networks, as they do with soju. Recent WeeChat takes the batched backlog with <span class="code">server-time</span>. irssi, HexChat and mIRC take the backlog as plain lines.</p>
       </section>
 
       <section id="status" aria-labelledby="h-status">
         <span class="eyebrow section-kicker">Use evrd</span>
         <h2 id="h-status">*status commands <a class="anchor" href="#status" aria-label="Link to *status commands">#</a></h2>
-        <p><span class="code">/msg *status help</span> lists the bouncer's own commands. ZNC's names work too: <span class="code">listnetworks</span>, <span class="code">jumpnetwork</span>, <span class="code">addnet</span>, <span class="code">delnet</span>, <span class="code">listchans</span>, <span class="code">shownetwork</span>, <span class="code">setnetwork</span> and the <span class="code">…TrustedServerFingerprint</span> commands. So does ZNC's raw command: <span class="code">/znc ListNetworks</span> (or <span class="code">/quote znc …</span>) is <span class="code">/msg *status ListNetworks</span>.</p>
+        <p><span class="code">/msg *status help</span> lists the bouncer's own commands. ZNC's names work too (<span class="code">ListNetworks</span>, <span class="code">JumpNetwork</span>, <span class="code">AddNetwork</span>, the <span class="code">…TrustedServerFingerprint</span> commands…), and so does ZNC's raw command: <span class="code">/znc ListNetworks</span> (or <span class="code">/quote znc …</span>) is the same as <span class="code">/msg *status ListNetworks</span>. Commands are case-insensitive, and the web chat takes them too (<span class="code">/status help</span>, <span class="code">/znc …</span>). <span class="code">*status</span> answers in your account's <a href="#own-messages">language</a>; the command names stay the same in every language.</p>
         <div class="table-wrap">
           <table class="cmd-table">
             <thead><tr><th scope="col">Command</th><th scope="col">Does</th></tr></thead>
             <tbody>
               <tr><td><span class="code">networks</span></td><td>Your networks, their status, and which one this client is on</td></tr>
-              <tr><td><span class="code">jump &lt;network&gt;</span></td><td>Switch this client to another network</td></tr>
-              <tr><td><span class="code">connect [network]</span></td><td>Bring a network up (default: this one)</td></tr>
-              <tr><td><span class="code">disconnect [network]</span></td><td>Bring a network down and stop reconnecting it (default: this one)</td></tr>
+              <tr><td><span class="code">jumpnetwork &lt;network&gt;</span></td><td>Switch this client to another network</td></tr>
+              <tr><td><span class="code">jump [server]</span></td><td>Reconnect to the network's next server, or the one named (<span class="code">jump &lt;network&gt;</span> still switches network)</td></tr>
+              <tr><td><span class="code">connect [network]</span> / <span class="code">disconnect [network]</span></td><td>Bring a network up or down (default: this one)</td></tr>
               <tr><td><span class="code">addnetwork &lt;name&gt; &lt;host&gt; [[+]port] [nick]</span></td><td>Add a network; <span class="code">+port</span> is TLS (default <span class="code">+6697</span>)</td></tr>
               <tr><td><span class="code">addnetwork &lt;id&gt;</span> / <span class="code">directory [search]</span></td><td>Add a network from the <a href="#network-directory">network directory</a> by its id (<span class="code">addnetwork libera</span>); list or search it</td></tr>
-              <tr><td><span class="code">delnetwork &lt;network&gt;</span></td><td>Remove a network and its history (not the one this client is on)</td></tr>
-              <tr><td><span class="code">show [network]</span></td><td>A network's settings</td></tr>
-              <tr><td><span class="code">set [network] &lt;setting&gt; &lt;value&gt;</span></td><td>Change <span class="code">name</span>, <span class="code">nick</span>, <span class="code">host</span> / <span class="code">port</span> / <span class="code">tls</span> (of the first server), <span class="code">ident</span>, <span class="code">realname</span>, <span class="code">password</span> and the settings below; <span class="code">-</span> clears a text setting. Reconnects when needed</td></tr>
-              <tr><td><span class="code">channels</span></td><td>This network's saved channels</td></tr>
-              <tr><td><span class="code">playback &lt;channel|nick&gt; [lines]</span></td><td>Replay a buffer (default 50, up to 500)</td></tr>
+              <tr><td><span class="code">delnetwork &lt;network&gt;</span></td><td>Remove a network and its history</td></tr>
+              <tr><td><span class="code">show [network]</span></td><td>A network's settings (default: this one)</td></tr>
+              <tr><td><span class="code">set [network] &lt;setting&gt; &lt;value&gt;</span></td><td>Change a setting (<a href="#status-advanced">the list</a>); <span class="code">-</span> clears one. Reconnects when needed</td></tr>
+              <tr><td><span class="code">listservers</span> / <span class="code">addserver &lt;host&gt; [[+]port] [pass]</span> / <span class="code">delserver &lt;host&gt; [port]</span></td><td>The network's servers, tried in turn</td></tr>
+              <tr><td><span class="code">listfingerprints</span> / <span class="code">addfingerprint &lt;sha-256&gt;</span> / <span class="code">delfingerprint &lt;sha-256&gt;</span></td><td>Trusted server certificates</td></tr>
+              <tr><td><span class="code">detach &lt;#chan&gt;</span> / <span class="code">attach &lt;#chan&gt;</span></td><td>Hide a channel from IRC clients (still joined and logged) / show it again with what you missed (<span class="code">/join</span> does too)</td></tr>
+              <tr><td><span class="code">disablechan &lt;#chan&gt;</span> / <span class="code">enablechan &lt;#chan&gt;</span></td><td>Leave a channel but keep it saved, with its key / join it again</td></tr>
+              <tr><td><span class="code">channels</span> / <span class="code">showchan &lt;#chan&gt;</span></td><td>This network's saved channels / one channel's state, settings and buffer</td></tr>
+              <tr><td><span class="code">listnicks &lt;#chan&gt;</span> / <span class="code">topics</span></td><td>Who's in a channel / your channels' topics</td></tr>
+              <tr><td><span class="code">buffers</span></td><td>This network's buffers: lines played back, auto-clear, what's waiting</td></tr>
+              <tr><td><span class="code">setbuffer &lt;buffer|*&gt; [lines|-]</span></td><td>How many lines a buffer plays back (0–500; <span class="code">*</span> is the network's default)</td></tr>
+              <tr><td><span class="code">autoclear &lt;buffer&gt; on|off|-</span></td><td>Play back only what's new, or the last lines every time (<span class="code">-</span>: your account's setting)</td></tr>
+              <tr><td><span class="code">clearbuffer &lt;buffer&gt;</span> / <span class="code">clearallbuffers</span> / <span class="code">clearallchannelbuffers</span> / <span class="code">clearallquerybuffers</span></td><td>Start playback over from now (history keeps the lines)</td></tr>
+              <tr><td><span class="code">playbuffer &lt;buffer&gt;</span> / <span class="code">playback &lt;buffer&gt; [lines]</span></td><td>Play a buffer back as on attach / replay its last lines from history, cleared or not</td></tr>
+              <tr><td><span class="code">setbindhost &lt;host&gt;</span> / <span class="code">clearbindhost</span> / <span class="code">showbindhost</span> / <span class="code">setuserbindhost &lt;host&gt;</span> / <span class="code">clearuserbindhost</span></td><td>The network's and your account's <a href="#bind-hosts">bind host</a></td></tr>
+              <tr><td><span class="code">listclients</span> / <span class="code">uptime</span> / <span class="code">traffic</span></td><td>Attached clients / how long evrd has run / where the network's traffic is</td></tr>
+              <tr><td><span class="code">listusers</span> / <span class="code">listallusernetworks</span></td><td>Admins: every user / every user's networks</td></tr>
               <tr><td><span class="code">info</span> / <span class="code">version</span></td><td>Your account and limits / the evrd version</td></tr>
-              <tr><td><span class="code">listservers</span></td><td>This network's servers, in failover order</td></tr>
-              <tr><td><span class="code">addserver &lt;host&gt; [[+]port] [password]</span></td><td>Add a server, tried in turn when the link drops; <span class="code">+port</span> is TLS (default <span class="code">+6697</span>)</td></tr>
-              <tr><td><span class="code">delserver &lt;host&gt; [port]</span></td><td>Remove a server (not the only one)</td></tr>
-              <tr><td><span class="code">listfingerprints</span></td><td>Certificate fingerprints trusted for this network</td></tr>
-              <tr><td><span class="code">addfingerprint &lt;sha-256&gt;</span> / <span class="code">delfingerprint &lt;sha-256&gt;</span></td><td>Trust, or stop trusting, a server certificate</td></tr>
-              <tr><td><span class="code">detach &lt;#channel&gt;[,…]</span></td><td>Hide channels from IRC clients; evrd stays in them and keeps logging. <span class="code">/join</span> brings them back (clients can also send <span class="code">/detach #chan</span>)</td></tr>
             </tbody>
           </table>
         </div>
-        <h3 id="status-advanced">Servers, certificates and tuning</h3>
-        <p><span class="code">listservers</span>, <span class="code">addserver</span>, <span class="code">delserver</span>, <span class="code">listfingerprints</span>, <span class="code">addfingerprint</span>, <span class="code">delfingerprint</span> (and ZNC's <span class="code">AddTrustedServerFingerprint</span> names), <span class="code">detach</span>, and <span class="code">set</span> for <span class="code">altnick</span>, <span class="code">sasluser</span>, <span class="code">bindhost</span>, <span class="code">quitmsg</span>, <span class="code">encoding</span>, <span class="code">trustallcerts</span>, <span class="code">trustpki</span>, <span class="code">floodrate</span>, <span class="code">floodburst</span>, <span class="code">joindelay</span>.</p>
+        <p>Buffer names take wildcards (<span class="code">clearbuffer #evrd*</span>) and lists (<span class="code">#a,#b</span>). <a href="#modules">Modules</a> have their own commands: <span class="code">modules</span>, <span class="code">loadmod</span>, <span class="code">unloadmod</span>, <span class="code">modset</span>.</p>
+        <h3 id="status-advanced">Settings for <span class="code">set</span></h3>
+        <p><span class="code">name</span>, <span class="code">host</span>, <span class="code">port</span>, <span class="code">tls</span>, <span class="code">nick</span>, <span class="code">altnick</span>, <span class="code">ident</span>, <span class="code">realname</span>, <span class="code">password</span>, <span class="code">sasluser</span>, <span class="code">auth</span>, <span class="code">servicesnick</span>, <span class="code">identifyargs</span>, <span class="code">identifyon</span>, <span class="code">authcommand</span>, <span class="code">ghost</span>, <span class="code">joinafterauth</span>, <span class="code">authtimeout</span>, <span class="code">bindhost</span>, <span class="code">quitmsg</span>, <span class="code">encoding</span>, <span class="code">trustallcerts</span>, <span class="code">trustpki</span>, <span class="code">floodrate</span>, <span class="code">floodburst</span>, <span class="code">joindelay</span>. The services ones are explained under <a href="#services">Logging in to services</a>; <span class="code">port</span> takes <span class="code">+port</span> for TLS.</p>
+      </section>
+
+      <section id="playback" aria-labelledby="h-play">
+        <span class="eyebrow section-kicker">Use evrd</span>
+        <h2 id="h-play">Playback buffers <a class="anchor" href="#playback" aria-label="Link to Playback buffers">#</a></h2>
+        <p>Each channel and private message has a buffer, per network. When an IRC client attaches it gets each buffer's last lines: how many is set under <em>Account → Bouncer</em> (playback lines), with <span class="code">setbuffer</span> for one network or one buffer (0 to 500).</p>
+        <p>A buffer that <strong>auto-clears</strong> plays back only what came since an IRC client was last on that network, and nothing while another client is on it, as with ZNC's AutoClearChanBuffer and AutoClearQueryBuffer. Set it under <em>Account → Bouncer</em> for channels and for private messages, or with <span class="code">autoclear</span> for one buffer. <span class="code">clearbuffer</span> starts a buffer over, and <span class="code">playback &lt;buffer&gt; [lines]</span> replays its last lines from history whether it was cleared or not.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">irssi · *status</span><button class="copy-btn" type="button" data-copy-from="#play-cmd" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="play-cmd"><b>/msg *status</b> buffers                  <span class="c"># lines, auto-clear, what's waiting</span>
+<b>/msg *status</b> setbuffer #evrd 200
+<b>/msg *status</b> autoclear #evrd off
+<b>/msg *status</b> playback #evrd 50</pre>
+        </div>
+        <p>The network's page in the web app has the same settings under <strong>Playback</strong>: lines per buffer for the network, each buffer's lines and what it plays back, what's waiting, and clearing. The lines stay in history either way: the web chat, <span class="code">playback</span> and <span class="code">CHATHISTORY</span> still have them. A client with <span class="code">draft/chathistory</span> gets no playback; it asks for what it wants (see <a href="#chathistory">scrollback</a>).</p>
+        <p>Playback for clients without <span class="code">server-time</span> carries timestamps in the text (<span class="code">[12:34:56] hello</span>). Change the format (strftime), time zone and whether they're prepended or appended under <em>Account → Bouncer</em>.</p>
       </section>
 
       <section id="networks" aria-labelledby="h-net">
@@ -328,18 +527,113 @@
         <h2 id="h-net">Network settings <a class="anchor" href="#networks" aria-label="Link to Network settings">#</a></h2>
         <p>Each network has its own page in the web app (<span class="code">/networks/&lt;id&gt;</span>) with everything ZNC offers without modules.</p>
         <ul>
-          <li><strong>Servers</strong>: several, each with host, port, TLS and an optional server password. evrd connects to the first and moves on to the next with each reconnect attempt.</li>
+          <li><strong>Servers</strong>: several, each with host, port, TLS and an optional server password. evrd connects to the first and moves on to the next each time the link drops.</li>
           <li><strong>Identity</strong>: nick, alternate nick, ident, real name, quit message and bind host. Empty fields use the account defaults.</li>
-          <li><strong>Authentication</strong>: SASL PLAIN account and password, sent as <span class="code">PASS</span> if the network has no SASL.</li>
+          <li><strong>Authentication</strong>: how evrd logs in to services: SASL PLAIN, IDENTIFY to NickServ, a command of your own, or none, with presets for common networks. See <a href="#services">Logging in to services</a>.</li>
           <li><strong>Certificates</strong>: verify with system CAs (TrustPKI), trust everything (TrustAllCerts), or trusted SHA-256 fingerprints. When a certificate is refused, its fingerprint is shown with a button to trust it.</li>
           <li><strong>Channels</strong>: key, detached (joined and logged but hidden from IRC clients until they <span class="code">/join</span>), join-on-connect.</li>
-          <li><strong>Advanced</strong>: encoding for non-UTF-8 networks, flood protection (lines per second and burst), join delay.</li>
+          <li><strong>Advanced</strong>: encoding for non-UTF-8 networks (<span class="code">^charset</span>: only decode invalid UTF-8; <span class="code">charset</span>: decode and send in it), flood protection (lines per second and burst), join delay.</li>
+          <li><strong>Modules</strong>: optional behaviours per network; see <a href="#modules">Modules</a>.</li>
         </ul>
         <h3 id="network-directory">Network directory</h3>
         <p><em>Add network</em> starts with a searchable list of public networks — Libera.Chat, OFTC, EFnet, IRCnet, Undernet, DALnet, QuakeNet, Rizon and more. Picking one fills in its servers (TLS where the network's certificate checks out) and suggested channels; only your nickname is left. <em>Enter details manually</em> is there for anything else, and from an IRC client <span class="code">/msg *status directory [search]</span> lists it and <span class="code">addnetwork &lt;id&gt;</span> adds one.</p>
-        <p>evrd fetches the list from <a href="api/networks/v1.json"><span class="code">https://evrd.sh/api/networks/v1.json</span></a> (<a href="api/networks/v1.schema.json">schema</a>) at startup and twice a day, and keeps the last good copy in its database. <span class="code">network_directory</span> points it elsewhere — a URL or a file of your own — or <span class="code">off</span>. New networks and changed servers are welcome as pull requests to <a href="https://github.com/4evrd/4evrd.github.io/tree/main/api/networks">api/networks/</a>; the format is in <a href="https://github.com/4evrd/evrd/blob/main/docs/network-directory.md">docs/network-directory.md</a>. To know roughly how many evrd installs there are, evrd.sh counts these fetches: one per install per day, keeping only the day, the version and a salted hash of the address that changes daily (never the address), for 90 days. With <span class="code">network_directory off</span> or your own source, you aren't counted.</p>
+        <p>evrd fetches the list from <a href="api/networks/v1.json"><span class="code">https://evrd.sh/api/networks/v1.json</span></a> (<a href="api/networks/v1.schema.json">schema</a>) at startup and twice a day, and keeps the last good copy in its database. <span class="code">network_directory</span> points it elsewhere — a URL or a file of your own — or <span class="code">off</span>. New networks and changed servers are welcome as pull requests to <a href="https://github.com/4evrd/4evrd.github.io/tree/main/api/networks">api/networks/</a>; each entry needs an id, a name and its servers, as the <a href="api/networks/v1.schema.json">schema</a> describes. List a TLS server only when its certificate is publicly trusted and matches the host name, since evrd verifies it. To know roughly how many evrd installs there are, evrd.sh counts these fetches: one per install per day, keeping only the day, the version and a salted hash of the address that changes daily (never the address), for 90 days. With <span class="code">network_directory off</span> or your own source, you aren't counted.</p>
         <h3 id="user-settings">Per-user settings</h3>
-        <p>Under Account → Bouncer: default ident, quit message and bind host; how many lines to play back, and whether channels and private messages only replay what arrived since you were last attached; timestamps for clients without <span class="code">server-time</span>; fixed CTCP replies; and the addresses allowed to sign in.</p>
+        <p>Under Account → Bouncer: default ident, quit message and bind host; how many lines to <a href="#playback">play back</a>, and whether channels and private messages only replay what arrived since an IRC client was last on that network; timestamps for clients without <span class="code">server-time</span> (strftime format, time zone); fixed CTCP replies (an empty reply blocks the request; with no client attached evrd answers VERSION, PING and TIME itself); and the addresses allowed to sign in, on the web and over IRC. Under Account → Profile, <em>Mark me away when no client is attached</em> sets you away on every network while no IRC client or web app is attached.</p>
+      </section>
+
+      <section id="services" aria-labelledby="h-svc">
+        <span class="eyebrow section-kicker">Use evrd</span>
+        <h2 id="h-svc">Logging in to services <a class="anchor" href="#services" aria-label="Link to Logging in to services">#</a></h2>
+        <p>Most networks keep accounts in <em>services</em>: NickServ on Atheme and Anope networks (Libera.Chat, Rizon…), on DALnet a NickServ at <span class="code">NickServ@services.dal.net</span>, X on Undernet, Q on QuakeNet. evrd logs in to yours every time it connects. Set it up on the network's page under <strong>Authentication</strong>, or with <span class="code">*status set</span>.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Method</th><th scope="col">What evrd does</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Automatic</strong> (<span class="code">auto</span>, the default)</td><td>SASL PLAIN while connecting when the network offers it. Without SASL, or when SASL is refused, it sends the password as <span class="code">PASS</span> and, once connected, <span class="code">IDENTIFY</span>s to NickServ.</td></tr>
+              <tr><td><strong>SASL only</strong> (<span class="code">sasl</span>)</td><td>SASL PLAIN, nothing else. If the network has no SASL or refuses the login, the connection log says so and evrd stays logged out.</td></tr>
+              <tr><td><strong>IDENTIFY to NickServ</strong> (<span class="code">nickserv</span>)</td><td>No SASL: once connected, <span class="code">PRIVMSG NickServ :IDENTIFY …</span> to the services nick.</td></tr>
+              <tr><td><strong>A command of my own</strong> (<span class="code">command</span>)</td><td>Once connected, sends your line: raw IRC or <span class="code">/msg target text</span>, with <span class="code">%account%</span>, <span class="code">%password%</span> and <span class="code">%nick%</span> filled in. For services that aren't NickServ, like Undernet's X.</td></tr>
+              <tr><td><strong>Don't log in</strong> (<span class="code">none</span>)</td><td>Nothing, or the <a href="#modules">q module</a> logs in to QuakeNet's Q.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>SASL EXTERNAL (logging in with a client certificate) isn't offered: evrd doesn't present client certificates to networks. The <strong>account name</strong> is your services account (empty: your ident for SASL, your nick for NickServ). The <strong>password</strong> is stored <a href="#secrets">encrypted</a> and never sent back to the browser.</p>
+        <h3 id="services-options">Options</h3>
+        <ul>
+          <li><strong>Services nick</strong>: where <span class="code">IDENTIFY</span> goes: <span class="code">NickServ</span> (empty), or <span class="code">NickServ@services.dal.net</span> on DALnet. <span class="code">/NS</span> (or <span class="code">/NICKSERV</span>) sends the server's own command instead, for networks that only accept that.</li>
+          <li><strong>IDENTIFY sends</strong>: <span class="code">account</span> sends <span class="code">IDENTIFY account password</span> (Atheme, Anope 2); <span class="code">password</span> sends just <span class="code">IDENTIFY password</span>, for older services that identify you to the nick you're on; empty sends the account only when it isn't the nick in use.</li>
+          <li><strong>Identify</strong>: as soon as evrd is connected, or when NickServ asks ("This nickname is registered…"). When it never asks, evrd identifies after 10 seconds anyway.</li>
+          <li><strong>When the nick is taken</strong>: evrd connects on the alternate nick, logs in, then asks services to <span class="code">GHOST</span>, <span class="code">REGAIN</span> or <span class="code">RECOVER</span> the nick (with the password) and switches to it.</li>
+          <li><strong>Join channels after identifying</strong>: holds the channel joins until services confirm the login, so channels only logged-in users may join (<span class="code">+r</span>, <span class="code">+R</span>) let evrd in. If services don't answer within <strong>Wait for services</strong> seconds (default 15), evrd joins anyway.</li>
+        </ul>
+        <h3 id="services-presets">Presets, and did it work?</h3>
+        <p>The <em>Network services</em> menu fills the options in:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Preset</th><th scope="col">Method</th><th scope="col">Services nick</th><th scope="col">IDENTIFY sends</th><th scope="col">Nick taken</th></tr></thead>
+            <tbody>
+              <tr><td>Automatic</td><td>auto</td><td>NickServ</td><td>—</td><td>—</td></tr>
+              <tr><td>SASL only (Libera.Chat, ergo…)</td><td>sasl</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr><td>NickServ: Atheme or Anope</td><td>nickserv</td><td>NickServ</td><td>account and password</td><td>REGAIN</td></tr>
+              <tr><td>DALnet</td><td>nickserv</td><td><span class="code">NickServ@services.dal.net</span></td><td>just the password</td><td>GHOST</td></tr>
+              <tr><td>Undernet (X)</td><td>command: <span class="code">PRIVMSG X@channels.undernet.org :LOGIN %account% %password%</span></td><td>—</td><td>—</td><td>—</td></tr>
+              <tr><td>QuakeNet (Q)</td><td>none, and the q module on</td><td>—</td><td>—</td><td>—</td></tr>
+              <tr><td>Custom</td><td>whatever you set</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The network's connection log says what evrd did and what services answered (<em>Identified to services: You are now identified for alice</em>, or <em>Services refused the login: Invalid password for alice</em> with what to do about it). evrd reads the usual answers of Atheme, Anope, DALnet, Undernet's X, QuakeNet's Q and ergo, the <span class="code">900</span> numeric and SASL's <span class="code">903</span>/<span class="code">904</span>/<span class="code">905</span>. No answer within the wait is logged too, as is a services nick that doesn't exist and a channel that turned you away for not being logged in (<span class="code">477</span>). The network's status in the API carries the outcome as <span class="code">auth</span>: <span class="code">pending</span>, <span class="code">identified</span>, <span class="code">failed</span> or <span class="code">unconfirmed</span>. What evrd sends is never logged, and the password is blanked out of anything services repeat.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">irssi · *status</span><button class="copy-btn" type="button" data-copy-from="#svc-cmd" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="svc-cmd"><b>/msg *status</b> set auth nickserv
+<b>/msg *status</b> set servicesnick NickServ@services.dal.net
+<b>/msg *status</b> set identifyargs password       <span class="c"># account, password or auto</span>
+<b>/msg *status</b> set identifyon prompt           <span class="c"># connect or prompt</span>
+<b>/msg *status</b> set ghost ghost                 <span class="c"># ghost, regain, recover or off</span>
+<b>/msg *status</b> set joinafterauth on
+<b>/msg *status</b> set authtimeout 30
+<b>/msg *status</b> set authcommand PRIVMSG X@channels.undernet.org :LOGIN %account% %password%
+<b>/msg *status</b> set auth command                <span class="c"># set the command first</span>
+<b>/msg *status</b> set sasluser alice</pre>
+        </div>
+      </section>
+
+      <section id="modules" aria-labelledby="h-mod">
+        <span class="eyebrow section-kicker">Use evrd</span>
+        <h2 id="h-mod">Modules <a class="anchor" href="#modules" aria-label="Link to Modules">#</a></h2>
+        <p>Modules are optional behaviours you switch on per network, like ZNC's network modules. Switch them on and set them up on the network's page (Networks → the network → Modules), or from an IRC client with <span class="code">*status</span>. Changes apply when you save, without reconnecting; perform's commands run at the next sign-in. What modules do shows in the network's connection log.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">irssi · *status</span><button class="copy-btn" type="button" data-copy-from="#mod-cmd" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="mod-cmd"><b>/msg *status</b> modules                       <span class="c"># which are on, and what each does</span>
+<b>/msg *status</b> loadmod keepnick              <span class="c"># switch one on for this network</span>
+<b>/msg *status</b> unloadmod keepnick            <span class="c"># and off</span>
+<b>/msg *status</b> modset kickrejoin delay 5     <span class="c"># change a setting</span>
+<b>/msg *status</b> modset perform commands /mode %nick% +i | /msg NickServ ghost me</pre>
+        </div>
+        <p><span class="code">modset</span> separates the lines of a multi-line setting with <span class="code"> | </span>.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Module</th><th scope="col">What it does</th><th scope="col">Settings (default)</th></tr></thead>
+            <tbody>
+              <tr><td><span class="code">perform</span></td><td>Sends commands every time evrd signs in to the network.</td><td><strong>Commands</strong>, one per line, as typed in a client (<span class="code">/msg …</span>, <span class="code">/mode %nick% +x</span>) or raw IRC. <span class="code">%nick%</span> is your nick.</td></tr>
+              <tr><td><span class="code">keepnick</span></td><td>When your nick is taken, wins it back as soon as it's free, and tries every 30 seconds meanwhile.</td><td>—</td></tr>
+              <tr><td><span class="code">kickrejoin</span></td><td>Rejoins a channel you were kicked from.</td><td><strong>Delay</strong> in seconds (10).</td></tr>
+              <tr><td><span class="code">autocycle</span></td><td>When you're left alone in a channel without ops, leaves and rejoins it so you get ops.</td><td><strong>Channels</strong>: patterns with <span class="code">*</span> and <span class="code">?</span>, <span class="code">!</span> to leave one out (<span class="code">*</span>).</td></tr>
+              <tr><td><span class="code">autoop</span>, <span class="code">autovoice</span></td><td>Gives ops or voice to the people you list when they join a channel where you have ops.</td><td><strong>Who</strong>: one per line, a <span class="code">nick!user@host</span> mask (or a nick) and optionally channels: <span class="code">*!*@friend.example.org #home,#work</span>.</td></tr>
+              <tr><td><span class="code">alias</span></td><td>Your own commands for IRC clients: <span class="code">/op #chan nick</span> becomes what you define.</td><td><strong>Aliases</strong>: <span class="code">name = commands</span>, with <span class="code">%1</span>, <span class="code">%2</span>… (<span class="code">%1+</span> for the rest) and <span class="code">%nick%</span>; several commands separated by <span class="code">;</span>.</td></tr>
+              <tr><td><span class="code">ctcpflood</span></td><td>Stops answering CTCP requests, and passing them on, while too many arrive at once.</td><td><strong>Most CTCPs</strong> (4) <strong>in seconds</strong> (2).</td></tr>
+              <tr><td><span class="code">q</span></td><td>Logs in to QuakeNet's Q with the network's account and password (Authentication), instead of NickServ, and hides your host. The QuakeNet preset under Authentication switches it on.</td><td><strong>Hide my host</strong> (yes).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Each module stands in for the ZNC module of the same name. Logging in to NickServ and SASL (<a href="#services">services</a>), saving channels, away when nobody's attached, playback and logs aren't modules: evrd does them itself.</p>
+        <h3 id="modules-admin">For admins</h3>
+        <p><span class="code">modules_off</span> (or Admin → Settings → Modules) switches modules off for everyone, at once. Module settings are stored <a href="#secrets">encrypted</a>, since perform's commands can carry an <span class="code">OPER</span> or <span class="code">IDENTIFY</span> password.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">evrd.conf</span><button class="copy-btn" type="button" data-copy="modules_off autoop autovoice" aria-label="Copy directive" data-label="Copy directive"><i data-icon="copy"></i></button></div>
+<pre class="snippet"><b>modules_off</b> autoop autovoice</pre>
+        </div>
       </section>
 
       <section id="configuration" aria-labelledby="h-conf">
@@ -400,6 +694,12 @@
         </div>
         <p><strong>A proxy in front</strong> (nginx, Caddy, Traefik, relayd, a cloud load balancer): leave <span class="code">https_listen</span> unset. The proxy terminates TLS and forwards to <span class="code">api</span>, including the WebSocket, and evrd's certificate is then only for the IRC ports. This is how the Docker images run.</p>
         <p>The settings page says which of the two is in use, and shows each certificate's issuer, names and expiry, or why getting one failed. Saving a choice that can't work (Let's Encrypt for <span class="code">localhost</span>, say) is refused.</p>
+        <h3 id="sts">STS: TLS only for IRC clients</h3>
+        <p>With an <span class="code">ircs://</span> listener and a certificate clients trust for <span class="code">irc_host</span> (Let's Encrypt, or <span class="code">files</span> from a public CA, never <span class="code">selfsigned</span>), evrd offers IRC clients the IRCv3 <span class="code">sts</span> capability: a client on a plain port is told the TLS port, and one on TLS how long to keep to it (<span class="code">irc_sts</span>, <span class="code">24h</span> by default, or <span class="code">off</span>). Clients that support it (Goguma, gamja, Halloy, Senpai, WeeChat…) then connect with TLS only, and refuse a plain connection until that time runs out.</p>
+        <div class="callout warn"><i data-icon="alert"></i><p>That's a lock-in: once a client has seen it, taking TLS away (removing the <span class="code">ircs://</span> listener, or a certificate that expires or no longer matches) locks it out until the duration passes. Keep the duration modest, and set <span class="code">irc_sts off</span>, and wait that long, before removing TLS. evrd checks the certificate every few minutes and stops offering <span class="code">sts</span> as soon as it isn't one clients would trust.</p></div>
+        <h3 id="proxies">Proxies and the web app</h3>
+        <p><span class="code">trusted_proxies</span> (or <span class="code">EVRD_TRUSTED_PROXIES</span>; file or environment only) lists the proxies whose <span class="code">X-Forwarded-For</span> is believed: addresses or CIDR ranges, the local host by default. From anywhere else the connection's own address counts, and it's what each user's allowed addresses are checked against. Set it to the proxy's network when the proxy isn't on the same machine (Docker: <span class="code">172.16.0.0/12</span>).</p>
+        <p>The web app has no inline scripts, so a proxy that sets a strict Content-Security-Policy on every site (<span class="code">script-src 'self'</span>, no <span class="code">'unsafe-inline'</span>) doesn't break it; it only needs <span class="code">connect-src 'self'</span> for its API and WebSocket.</p>
       </section>
 
       <section id="accounts" aria-labelledby="h-acc">
@@ -417,8 +717,81 @@
 <b>oidc_label</b>         IRCforever account
 <b>oidc_auto_create</b>   yes
 <b>oidc_link_existing</b> no
-<b>oidc_admin_role</b>    evrd-admin</pre>
+<b>oidc_admin_role</b>    evrd-admin  <span class="c"># optional: provider role that makes an evrd admin</span>
+<b>oidc_roles_claim</b>   roles       <span class="c"># where those roles are in the ID token (a claim or a dotted path)</span>
+<span class="c"># oidc_scopes      groups     # extra scopes (default: roles when oidc_admin_role is set)</span></pre>
         </div>
+        <h3 id="oidc-providers">OIDC providers</h3>
+        <p>Any OpenID Connect provider works. The redirect URI is always <span class="code">&lt;public_url&gt;/auth/callback</span>, the client is a confidential web app (code flow with PKCE), and the ID token must be signed with an asymmetric key (RS256, ES256…). The roles claim may hold a list or one space-separated string; a missing one means no roles.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Provider</th><th scope="col"><span class="code">oidc_issuer</span></th><th scope="col">Scopes and roles</th><th scope="col">IRC passwords</th></tr></thead>
+            <tbody>
+              <tr><td>Logto</td><td><span class="code">https://id.example.org/oidc</span></td><td>roles come with the <span class="code">roles</span> scope (asked for when <span class="code">oidc_admin_role</span> is set), in <span class="code">roles</span></td><td><span class="code">logto</span></td></tr>
+              <tr><td>authentik</td><td><span class="code">https://auth.example.org/application/o/&lt;slug&gt;/</span></td><td>groups are in <span class="code">groups</span> (in the <span class="code">profile</span> scope): <span class="code">oidc_roles_claim groups</span>. Pick a <strong>signing key</strong> for the provider; without one it signs with HS256, which evrd doesn't accept</td><td><span class="code">ldap</span>, through an LDAP outpost (its password grant takes app passwords, not the user's)</td></tr>
+              <tr><td>Keycloak</td><td><span class="code">https://kc.example.org/realms/&lt;realm&gt;</span></td><td>realm roles: <span class="code">oidc_roles_claim realm_access.roles</span>, with <em>Add to ID token</em> on for the <em>realm roles</em> mapper; client roles: <span class="code">resource_access.&lt;client&gt;.roles</span></td><td><span class="code">password_grant</span> (turn on <em>Direct access grants</em>), or <span class="code">ldap</span> if it's backed by one</td></tr>
+              <tr><td>Others</td><td>the provider's issuer, as in its <span class="code">/.well-known/openid-configuration</span></td><td><span class="code">oidc_roles_claim</span> names the claim; <span class="code">oidc_scopes</span> asks for what puts it in the ID token</td><td><a href="#sso-irc-passwords">below</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3 id="sso-irc-passwords">SSO passwords in IRC clients</h3>
+        <p>An IRC client can't go through the provider's sign-in page, and OpenID Connect itself can't check a password. The recommended way for SSO accounts is <a href="#sign-in-by-link">signing in by link</a> (on by default with <span class="code">public_url</span>), which works with any provider and its MFA. IRC client passwords work too. <span class="code">sso_irc_password</span> (default <span class="code">off</span>) also lets SSO accounts use their provider password, checked one of three ways; all of them are in <em>Admin → Settings → SSO passwords in IRC</em> too, and apply at once.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th scope="col">Your identity provider</th><th scope="col"><span class="code">sso_irc_password</span></th><th scope="col">Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Keycloak</td><td><span class="code">password_grant</span></td><td>turn on <em>Direct access grants</em> for the client</td></tr>
+              <tr><td>Okta</td><td><span class="code">password_grant</span></td><td>allow the <em>Resource Owner Password</em> grant for the app</td></tr>
+              <tr><td>Auth0</td><td><span class="code">password_grant</span></td><td>allow the <em>Password</em> grant and set a default directory</td></tr>
+              <tr><td>Microsoft Entra ID</td><td><span class="code">password_grant</span></td><td>ROPC: cloud accounts only, not federated ones or ones MFA is enforced for</td></tr>
+              <tr><td>Dex</td><td><span class="code">password_grant</span></td><td><span class="code">oauth2.passwordConnector</span> set</td></tr>
+              <tr><td>Logto</td><td><span class="code">logto</span></td><td>no password grant: evrd asks its Management API</td></tr>
+              <tr><td>authentik</td><td><span class="code">ldap</span></td><td>its password grant only takes app passwords: use an LDAP outpost</td></tr>
+              <tr><td>FreeIPA, OpenLDAP, Active Directory, LLDAP (behind any OIDC provider)</td><td><span class="code">ldap</span></td><td>bind as the user</td></tr>
+              <tr><td>Google, GitHub, Zitadel, …</td><td>—</td><td>no way to check a password: IRC client passwords or sign in by link</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p><strong><span class="code">password_grant</span></strong>: OAuth2's resource-owner password grant at the provider's token endpoint (found from <span class="code">oidc_issuer</span>), with <span class="code">scope=openid</span>. The answer's ID token is checked like a web sign-in's, and its subject must be the account's.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">evrd.conf</span><button class="copy-btn" type="button" data-copy-from="#ssopw-grant" aria-label="Copy config" data-label="Copy config"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="ssopw-grant"><b>sso_irc_password</b>           password_grant
+<span class="c"># the sign-in client (oidc_client_id) by default; or one of its own:</span>
+<span class="c"># sso_password_client_id     evrd-irc</span>
+<span class="c"># sso_password_client_secret …   (or EVRD_SSO_PASSWORD_CLIENT_SECRET)</span>
+<b>sso_password_login</b>         username    <span class="c"># or email: what the provider knows the user by</span></pre>
+        </div>
+        <p><strong><span class="code">ldap</span></strong>: a bind to the directory as the user. TLS is required: <span class="code">ldaps://</span>, or <span class="code">ldap://</span> with StartTLS (<span class="code">ldap_insecure yes</span> sends passwords in the clear; only on a trusted local network). The user's DN comes from a template or a search. <span class="code">{username}</span> is escaped, and an empty password is refused before it reaches the directory. Active Directory's "account disabled" and "locked out" are told apart from a wrong password.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">evrd.conf</span><button class="copy-btn" type="button" data-copy-from="#ssopw-ldap" aria-label="Copy config" data-label="Copy config"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="ssopw-ldap"><b>sso_irc_password</b>   ldap
+<b>ldap_url</b>           ldaps://ldap.example.org
+<span class="c"># a template…</span>
+<b>ldap_user_dn</b>       uid={username},ou=people,dc=example,dc=org
+<span class="c"># …or a search (as ldap_bind_dn, or anonymous), which must find one entry</span>
+<span class="c"># ldap_bind_dn       cn=evrd,ou=services,dc=example,dc=org</span>
+<span class="c"># ldap_bind_password …   (or EVRD_LDAP_BIND_PASSWORD)</span>
+<span class="c"># ldap_base_dn       ou=people,dc=example,dc=org</span>
+<span class="c"># ldap_user_filter   (&amp;(objectClass=person)(uid={username}))   # AD: (sAMAccountName={username})</span>
+<b>ldap_login</b>         username   <span class="c"># or subject: {username} is the account's SSO subject</span></pre>
+        </div>
+        <p><strong><span class="code">logto</span></strong>: Logto has no password grant, so evrd asks its Management API as a machine-to-machine app. In Logto, create an application of type <strong>Machine-to-machine</strong> and give it a role with access to the <strong>Logto Management API</strong> (the <span class="code">all</span> permission). The resource defaults to <span class="code">https://&lt;tenant&gt;.logto.app/api</span> for Logto Cloud and <span class="code">https://default.logto.app/api</span> for your own Logto. A user suspended in Logto is refused, and one with no password there is told to set one or use a client password.</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">evrd.conf</span><button class="copy-btn" type="button" data-copy-from="#ssopw-logto" aria-label="Copy config" data-label="Copy config"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="ssopw-logto"><b>sso_irc_password</b>         logto
+<b>logto_m2m_client_id</b>      &lt;machine-to-machine app id&gt;
+<span class="c"># secret: logto_m2m_client_secret, or EVRD_LOGTO_M2M_CLIENT_SECRET</span>
+<span class="c"># logto_m2m_resource     https://default.logto.app/api   # only if the default is wrong</span></pre>
+        </div>
+        <p>However it's checked:</p>
+        <ul>
+          <li>The order is: IRC client password, then the evrd password, then the SSO password. A local account (not linked to SSO) is never sent to the provider.</li>
+          <li>A right password is remembered for 10 minutes (only a keyed hash of it, in memory), so a reconnecting client doesn't ask the provider each time. A wrong one is never remembered.</li>
+          <li>Failed sign-ins count toward the same lockout as the web sign-in: 10 within 15 minutes.</li>
+          <li>If the provider can't be reached, the sign-in is refused, never let through ("can't check your SSO password right now"); client passwords keep working, and it doesn't count toward the lockout.</li>
+          <li>The activity feed says a client signed in with the SSO password, and how it was checked.</li>
+        </ul>
+        <p>Keep the secrets (<span class="code">sso_password_client_secret</span>, <span class="code">ldap_bind_password</span>, <span class="code">logto_m2m_client_secret</span>; Logto's app can read and change every user) in environment variables or <em>Settings</em>, where they're stored encrypted, not in a world-readable file.</p>
         <h3 id="provisioning">Provisioning API</h3>
         <p>For tools that bring users in from elsewhere, such as moving ZNC users over, evrd can create an account and its networks before the owner ever signs in. It's off until <span class="code">provision_token</span> is set (or <span class="code">EVRD_PROVISION_TOKEN</span>), and every call sends that token:</p>
         <div class="codeblock">
@@ -430,7 +803,10 @@
                      "tls": true, "nick": "alice", "channels": ["#evrd"]}]}'</pre>
         </div>
         <p>Networks take the same fields as the web app's network editor. Each one comes back as <span class="code">created</span>, <span class="code">exists</span> (so a call can be repeated) or <span class="code">failed</span>. <span class="code">connect</span> connects every listed network, so a migration can create everything, take the old bouncer off IRC, then call again to connect. A new account has no password and is <strong>claimable</strong>: the first SSO sign-in with the same username <em>and</em> email links to it. Keep the token secret and the API on a local address.</p>
+        <h3 id="limits">Limits, suspension and passwords</h3>
+        <p>Server defaults, which admins override per user (0 = unlimited): <span class="code">max_networks 0</span>, <span class="code">max_clients 0</span> (attached IRC clients at once) and <span class="code">backlog_lines 2000</span> (kept per channel, pruned every 10 minutes).</p>
         <p><strong>Suspending</strong> a user signs them out everywhere, drops their IRC clients and disconnects their networks; lifting the suspension reconnects them. The last active admin can't be demoted, suspended or deleted.</p>
+        <p>Passwords need at least 10 characters. A password an admin sets, or the one-time password <strong>Reset</strong> generates on the Users page, is temporary: the user picks their own at next sign-in. Users can delete their own account under <em>Account</em>.</p>
       </section>
 
       <section id="server-settings" aria-labelledby="h-ss">
@@ -450,7 +826,7 @@
       <section id="secrets" aria-labelledby="h-sec">
         <span class="eyebrow section-kicker">Operate</span>
         <h2 id="h-sec">Saved passwords <a class="anchor" href="#secrets" aria-label="Link to Saved passwords">#</a></h2>
-        <p>Network passwords (the SASL password and server passwords) and the values set in Admin → Settings (such as the SSO client secret) are encrypted in the database with AES-256-GCM under a key that lives outside it. Account and client passwords are bcrypt hashes either way.</p>
+        <p>Network passwords (the SASL password and server passwords), a network's services login command, its <a href="#modules">module</a> settings, the values set in Admin → Settings (such as the SSO client secret) and the keys of the certificates evrd keeps are encrypted in the database with AES-256-GCM under a key that lives outside it. Without a key evrd still runs and warns that these are stored in plaintext. Account and client passwords are bcrypt hashes either way.</p>
         <div class="codeblock">
           <div class="cb-head"><span class="caps">evrd.conf</span><button class="copy-btn" type="button" data-copy="evrctl genkey" aria-label="Copy genkey command" data-label="Copy genkey command"><i data-icon="copy"></i></button></div>
 <pre class="snippet"><span class="c"># make one with: evrctl genkey</span>
@@ -458,7 +834,22 @@
 <b>secret_key_old</b>  &lt;previous key&gt;       <span class="c"># optional: still decrypts while rotating</span></pre>
         </div>
         <h3 id="rotate">Rotating the key</h3>
-        <p>Set the new <span class="code">secret_key</span>, move the old one to <span class="code">secret_key_old</span>, restart, then remove the old key. At startup evrd encrypts anything saved before a key was set and re-encrypts anything under an old key, network passwords and settings alike. Every node needs the same key; keep it out of database backups.</p>
+        <p>Set the new <span class="code">secret_key</span>, move the old one to <span class="code">secret_key_old</span>, restart, then remove the old key. At startup evrd encrypts anything saved before a key was set and re-encrypts anything under an old key: network passwords, module settings and settings alike. Every node needs the same key; keep it out of database backups.</p>
+      </section>
+
+      <section id="holder" aria-labelledby="h-hold">
+        <span class="eyebrow section-kicker">Operate</span>
+        <h2 id="h-hold">Connection holder <a class="anchor" href="#holder" aria-label="Link to Connection holder">#</a></h2>
+        <p><span class="code">evrd-links</span> keeps users' IRC connections open while evrd restarts. Run it first, as root, with the same chroot and user, and point evrd at its socket:</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">shell · evrd.conf</span><button class="copy-btn" type="button" data-copy-from="#hold-cmd" aria-label="Copy" data-label="Copy"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="hold-cmd"><b>evrd-links</b> -socket /var/evrd/run/links.sock -chroot /var/evrd -user _evrd
+
+<b>links_socket</b> /var/evrd/run/links.sock   <span class="c"># evrd.conf</span></pre>
+        </div>
+        <p>evrd opens each connection to an IRC network itself and hands the socket to the holder, which does TLS and passes lines both ways. When evrd stops (to upgrade, or for a setting that needs a restart) the holder keeps the connections: it answers the servers' pings and buffers what arrives (4 MB per network; <span class="code">-buffer</span> changes it). The next evrd takes each one back without registering or joining again, and replays the buffered lines into history. Switching a network off, or deleting it, still quits it.</p>
+        <p>The holder keeps evrd's <strong>IRC clients</strong> connected too (<span class="code">hold_clients yes</span>, the default). evrd hands it the IRC listeners, with the certificate for TLS ones, and the holder accepts the clients, so a restart is invisible to them: no disconnect, no second welcome, no rejoining. While evrd is away the holder answers their pings and keeps what they send (64 KiB each); the next evrd picks each one up where the last left it, and what the networks said meanwhile reaches them with its real time. Clients that connect while evrd is down wait for it; one evrd isn't back for within 2 minutes is told to reconnect. <span class="code">hold_clients no</span> turns this off. An older holder (protocol 1) holds no clients; evrd then listens itself, and restarting the holder brings it in (<span class="code">evrd-links -version</span> says which).</p>
+        <p>Without the holder, evrd connects directly. Restarting the holder itself drops the connections, so it's built to change rarely; the OpenBSD installer restarts it only when its program changed. In Docker, run evrd in the holder's network namespace (<span class="code">network_mode: "service:links"</span>) so the connections outlive evrd's container. The holder is for a single node: in a <a href="#clustering">cluster</a>, users move between nodes instead, and <span class="code">links_socket</span> is ignored. Diagrams are on the <a href="architecture.html#restarts">architecture page</a>.</p>
       </section>
 
       <section id="clustering" aria-labelledby="h-cl">
@@ -486,7 +877,7 @@
       <section id="upstream" aria-labelledby="h-up">
         <span class="eyebrow section-kicker">Operate</span>
         <h2 id="h-up">Connections to networks <a class="anchor" href="#upstream" aria-label="Link to Connections to networks">#</a></h2>
-        <p>Large networks throttle and cap connections per source address, and every user on a node would otherwise share the node's address.</p>
+        <p>Large networks throttle and cap connections per source address, and every user on a node would otherwise share the node's address. evrd connects to IRC servers over IPv6 first, falling back to IPv4 (<span class="code">prefer_ipv6 yes</span>; <span class="code">no</span> tries IPv4 first, and with only IPv4 <span class="code">upstream_bind</span> addresses IPv4 goes first either way). Connects to one server host are spaced to <span class="code">connect_rate</span> per second per node, and reconnect backoff is jittered, so a takeover or a netsplit recovery reconnects users gradually.</p>
         <div class="codeblock">
           <div class="cb-head"><span class="caps">evrd.conf</span><button class="copy-btn" type="button" data-copy-from="#up-conf" aria-label="Copy config" data-label="Copy config"><i data-icon="copy"></i></button></div>
 <pre class="snippet" id="up-conf"><b>connect_rate</b>     5                       <span class="c"># most connects/second to one server, per node</span>
@@ -494,7 +885,9 @@
 <b>upstream_prefix6</b> 2001:db8:42::/64        <span class="c"># each user's own IPv6 address (IPv6 servers)</span>
 <b>bindhost</b>         192.0.2.20 vhost.example.org</pre>
         </div>
-        <p>A prefix needs Linux and a local route: <span class="code">ip -6 route add local 2001:db8:42::/64 dev lo</span>. <span class="code">bindhost</span> lists addresses users may pick to connect from, like ZNC's BindHost. Admins can use any address and can lock a user's choice.</p>
+        <p><span class="code">upstream_bind</span> and <span class="code">upstream_prefix6</span> are per node (<span class="code">EVRD_UPSTREAM_BIND</span>, <span class="code">EVRD_UPSTREAM_PREFIX6</span>); either way a user always connects from the same address. A prefix needs Linux and a local route: <span class="code">ip -6 route add local 2001:db8:42::/64 dev lo</span>.</p>
+        <h3 id="bind-hosts">Bind hosts</h3>
+        <p><span class="code">bindhost</span> (repeatable) lists local addresses users may pick to connect from, like ZNC's BindHost, for their whole account or per network (<span class="code">setbindhost</span>, <span class="code">setuserbindhost</span> in <a href="#status">*status</a>). On Linux an IPv6 bind host may come from a routed prefix with only a local route for it, as with <span class="code">upstream_prefix6</span>: evrd binds it with <span class="code">IPV6_FREEBIND</span>, so nothing has to be added to an interface per address. Admins may use any address and can lock a user's choice (DenySetBindHost).</p>
         <h3 id="refusals">When a server refuses</h3>
         <p>A link that drops after working for a while reconnects at once. One cut off soon after connecting keeps backing off, up to five minutes. A server that refuses this address (a K-line, <em>banned</em>, <em>not authorised to use this server</em>) rests for half an hour, doubling to four hours while it keeps refusing, and one that says you reconnect too fast rests two minutes. Meanwhile evrd tries the network's other servers; only when every one is resting does it wait.</p>
         <h3 id="ident">Ident</h3>
@@ -504,7 +897,26 @@
 <pre class="snippet" id="ident-conf"><b>identd_listen</b>    :1113                   <span class="c"># evrd answers ident (map public port 113 here)</span>
 <b>ident_file</b>       /var/evrd/ident/.oidentd.conf   <span class="c"># or: an oidentd user config, kept up to date</span></pre>
         </div>
-        <p>In Docker, publish <span class="code">113:1113</span> on the container that owns evrd's network and forward TCP 113 to the host. On OpenBSD with oidentd, use <span class="code">ident_file</span> (the setup is in <a href="https://github.com/4evrd/evrd/blob/main/docs/openbsd.md">docs/openbsd.md</a>).</p>
+        <p>In Docker, publish <span class="code">113:1113</span> on the container that owns evrd's network and forward TCP 113 to the host. On a host where evrd runs natively, like the OpenBSD install, oidentd with <span class="code">ident_file</span> works instead.</p>
+        <h3 id="oidentd">oidentd</h3>
+        <p>With oidentd and nothing set up, networks get evrd's system user (<span class="code">_evrd</span>) as the ident, which some refuse. Give evrd an ident file and it answers for each user with a bind host of their own (the network's ident or the username) and hides the rest, so networks use the ident from USER. It's rewritten within a minute of a bind host changing. Addresses more than one user binds, and the host's own default addresses, are left out. On OpenBSD:</p>
+        <div class="codeblock">
+          <div class="cb-head"><span class="caps">shell · OpenBSD</span><button class="copy-btn" type="button" data-copy-from="#oidentd-cmd" aria-label="Copy commands" data-label="Copy commands"><i data-icon="copy"></i></button></div>
+<pre class="snippet" id="oidentd-cmd"><b>mkdir</b> -p /var/evrd/ident &amp;&amp; chown _evrd /var/evrd/ident
+<b>usermod</b> -d /var/evrd/ident _evrd         <span class="c"># oidentd reads ~_evrd/.oidentd.conf</span>
+<b>echo</b> 'ident_file /var/evrd/ident/.oidentd.conf' &gt;&gt; /etc/evrd/evrd.conf
+<b>cat</b> &gt;&gt; /etc/oidentd.conf &lt;&lt;'CONF'
+user _evrd {
+	default {
+		allow spoof
+		allow spoof_all
+		allow hide
+	}
+}
+CONF
+<b>pkill</b> -HUP -x oidentd; rcctl restart evrd</pre>
+        </div>
+        <p>The file must be inside the chroot; oidentd reads it as root.</p>
       </section>
 
       <section id="metrics" aria-labelledby="h-met">
@@ -519,6 +931,10 @@
         </div>
         <p>Run VictoriaMetrics with <span class="code">-opentelemetry.usePrometheusNaming</span> to get <span class="code">evrd_irc_lines_total</span>, <span class="code">evrd_upstream_up</span>, <span class="code">evrd_upstream_lag_seconds</span>, <span class="code">evrd_irc_clients</span>, <span class="code">evrd_cluster_users</span>, <span class="code">evrd_history_queue</span> and friends. Without <span class="code">metrics_url</span> the dashboard still works, and the chart says metrics are off.</p>
         <p>Behind a proxy with basic auth, put the credentials in both URLs (<span class="code">https://user:pass@vm.example.org</span>). evrd sends them as basic auth, and Admin → Settings shows the password masked.</p>
+        <h3 id="traces">Traces</h3>
+        <p><span class="code">otel_traces_endpoint</span> (or <span class="code">OTEL_EXPORTER_OTLP_TRACES_ENDPOINT</span>) is an OTLP/HTTP traces URL, such as <span class="code">http://jaeger:4318/v1/traces</span>. evrd sends spans for web API requests and the services behind them.</p>
+        <h3 id="grafana">Grafana and Admin → Metrics</h3>
+        <p>Admins see every metric under Admin → Metrics. For Grafana there's a ready-made dashboard in the evrd repository, <span class="code">deploy/grafana/evrd.json</span> (a VictoriaMetrics or Prometheus data source with uid <span class="code">victoriametrics</span>; change it on import): traffic, upstream links and lag, clients, sign-ins, users per node and the versions running.</p>
       </section>
 
       <section id="evrctl" aria-labelledby="h-ctl">
@@ -539,9 +955,12 @@
               <tr><td><span class="code">user unsuspend &lt;name&gt;</span></td><td>Lift a suspension</td></tr>
               <tr><td><span class="code">user delete &lt;name&gt;</span></td><td>Delete an account and everything it owns</td></tr>
               <tr><td><span class="code">history copy &lt;from&gt; &lt;to&gt;</span></td><td>Copy all chat history between stores (stop evrd first when copying from Pebble)</td></tr>
+              <tr><td><span class="code">history import-znc [-dry-run] [-tz zone] &lt;user&gt; &lt;znc-user-dir&gt;</span></td><td>Import a ZNC user's logs into <span class="code">&lt;user&gt;</span>'s networks of the same names (see below)</td></tr>
             </tbody>
           </table>
         </div>
+        <h3 id="import-znc">Importing ZNC logs</h3>
+        <p><span class="code">evrctl history import-znc</span> reads the files of ZNC's log module, per user (<span class="code">users/&lt;user&gt;/moddata/log/&lt;network&gt;/&lt;buffer&gt;/&lt;date&gt;.log</span>) or per network, and loads them into the evrd user's networks of the same names, messages and channel events alike, so people moving from ZNC keep their old conversations. Point it at the ZNC user's directory (for example <span class="code">~/.znc/users/admin</span>), with <span class="code">-tz</span> set to the time zone ZNC wrote its logs in (its user's Timezone setting; default <span class="code">UTC</span>). <span class="code">-dry-run</span> counts what would be imported and writes nothing. The imported networks keep everything from then on (backlog unlimited). With a Pebble store, stop evrd first, and run it once.</p>
       </section>
 
       <section id="releases" aria-labelledby="h-rel">
