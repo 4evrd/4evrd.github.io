@@ -36,7 +36,7 @@ One permanent upstream connection per network, shared by every client (irssi, We
 
 - Plain static HTML, CSS and JavaScript, no build step. Pages share header and footer from `assets/site.js`; styles are `assets/evrd.css` (the evrd web app's design system) and `assets/site.css`.
 - Hosted on GitHub Pages; pushes to `main` deploy via `.github/workflows/pages.yml`.
-- Pages: `index.html` (home), `download.html`, `docs.html`, `architecture.html`, `404.html`.
+- Pages: `index.html` (home), `features.html`, `download.html`, `docs.html`, `architecture.html`, `404.html`.
 - `api/networks/v1.json` must stay valid against `v1.schema.json` (checked on every pull request), served as `application/json` with an ETag. List a network's TLS servers only when the certificate matches the host name.
 - Sample UI on the site (lag figures, networks, channels, clients, chat lines) is illustrative and labelled as sample data.
 - Terminology: evrd (always lowercase), evrctl, `*status`, `*buffextras`, network, upstream, attach/detach, backlog, playback, connection holder.

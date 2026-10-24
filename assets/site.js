@@ -57,7 +57,7 @@ const REPO = 'https://github.com/4evrd/evrd'
 function shell() {
   const page = document.body.dataset.page
   const nav = [
-    { id: 'home', href: 'index.html#features', label: 'Features' },
+    { id: 'features', href: 'features.html', label: 'Features' },
     { id: 'architecture', href: 'architecture.html', label: 'Architecture' },
     { id: 'docs', href: 'docs.html', label: 'Docs' },
     { id: 'download', href: 'download.html', label: 'Download' },
@@ -85,7 +85,7 @@ function shell() {
         <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">#</span><span class="brand-text"><b>evrd</b><span>IRC bouncer</span></span></a>
         <p>Stay on IRC, forever. An independent, open-source bouncer written in Go, with a Svelte web client.</p>
       </div>
-      <div class="foot-col"><span class="caps">Product</span><a href="index.html#features">Features</a><a href="index.html#how">How it works</a><a href="architecture.html">Architecture</a><a href="download.html">Download</a></div>
+      <div class="foot-col"><span class="caps">Product</span><a href="features.html">Features</a><a href="index.html#how">How it works</a><a href="architecture.html">Architecture</a><a href="download.html">Download</a></div>
       <div class="foot-col"><span class="caps">Docs</span><a href="docs.html#quick-start">Quick start</a><a href="docs.html#native-clients">Native clients</a><a href="docs.html#status">*status commands</a><a href="docs.html#clustering">Clustering</a></div>
       <div class="foot-col"><span class="caps">Project</span><a href="${REPO}" rel="noopener">Source on GitHub</a><a href="${REPO}/releases" rel="noopener">Releases</a><a href="${REPO}/pkgs/container/evrd" rel="noopener">Container images</a><a href="${REPO}/blob/main/LICENSE" rel="noopener">License (MIT)</a></div>
       <div class="foot-base"><span>evrd · MIT licensed · github.com/4evrd/evrd</span><span>Released with semantic-release · versions follow Conventional Commits</span></div>

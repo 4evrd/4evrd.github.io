@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Features · evrd</title>
+<meta name="description" content="Everything evrd, the IRC bouncer, does today: backlog and playback, ZNC-style *status, IRCv3, a connection holder for restarts, single sign-on, modules, translations, clustering and metrics.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Features · evrd">
+<meta property="og:description" content="Everything evrd, the IRC bouncer, does today: backlog and playback, ZNC-style *status, IRCv3, a connection holder for restarts, single sign-on, modules, translations, clustering and metrics.">
+<meta property="og:image" content="assets/og-overview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f1a1e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Geist+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/evrd.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body class="site" data-page="features">
+<main id="main">
+
+  <section class="page-hero" aria-labelledby="feat-page-h" style="padding-bottom:var(--s5)">
+    <div class="wrap enter">
+      <h1 id="feat-page-h">Everything evrd does</h1>
+      <p class="lead">Every feature in the current release, grouped by what it's for. Where a feature has documentation its name links there, and the mono line under it is the setting or command that controls it.</p>
+      <div class="tele-row"><span>release <b>v0.37.0</b></span><span>groups <b>12</b></span><span>source <b>evrd/docs</b></span></div>
+      <svg class="ribbon" aria-hidden="true"></svg>
+    </div>
+  </section>
+
+  <nav class="arch-nav" aria-label="Feature groups">
+    <div class="wrap">
+      <a href="#bouncer">Bouncer <span class="n">12</span></a>
+      <a href="#networks">Networks <span class="n">10</span></a>
+      <a href="#znc">ZNC <span class="n">6</span></a>
+      <a href="#ircv3">IRCv3 <span class="n">14</span></a>
+      <a href="#connected">Staying connected <span class="n">10</span></a>
+      <a href="#security">Sign-in and security <span class="n">15</span></a>
+      <a href="#web">Web app <span class="n">11</span></a>
+      <a href="#hosting">Hosting others <span class="n">10</span></a>
+      <a href="#languages">Languages <span class="n">6</span></a>
+      <a href="#modules">Modules <span class="n">10</span></a>
+      <a href="#scale">Clustering and metrics <span class="n">11</span></a>
+      <a href="#deploy">Deployment <span class="n">9</span></a>
+    </div>
+  </nav>
+
+  <!-- ============================================================ bouncer -->
+  <section class="feat-section" id="bouncer" aria-labelledby="f-bouncer-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-bouncer-h">The bouncer</h2>
+        <p>One permanent connection per network, shared by every client you attach, with what you missed waiting for you.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt>Always connected</dt><dd>evrd stays on each network while no client is attached, and reconnects with jittered backoff when a link drops.</dd></div>
+        <div><dt><a href="docs.html#native-clients">One link, many clients</a></dt><dd>irssi, WeeChat, HexChat and the web app share one upstream connection. What you send shows on your other clients too.</dd><dd class="set">user/network:password</dd></div>
+        <div><dt><a href="docs.html#on-connect">Backlog with real timestamps</a></dt><dd>Messages and channel events (joins, parts, quits, kicks, nick changes, topics, modes) are saved per channel and replayed with their original times.</dd><dd class="set">backlog_lines 2000</dd></div>
+        <div><dt><a href="https://github.com/4evrd/evrd/blob/main/docs/irc-clients.md#playback-buffers" rel="noopener">Playback buffers</a></dt><dd>Each channel and private message has a buffer that plays back its last lines (0 to 500) when an IRC client attaches.</dd><dd class="set">setbuffer &lt;buffer|*&gt; [lines]</dd></div>
+        <div><dt>Auto-clear</dt><dd>A buffer can play back only what arrived since an IRC client was last on that network, as ZNC's AutoClearChanBuffer does.</dd><dd class="set">autoclear &lt;buffer&gt; on|off</dd></div>
+        <div><dt>Replay on demand</dt><dd>Play any buffer's last lines back from history, whether it was cleared or not.</dd><dd class="set">playback &lt;buffer&gt; [lines]</dd></div>
+        <div><dt>Plain backlog for plain clients</dt><dd>A client that asks for no IRCv3 capabilities gets just the chat, with timestamps in the text, so replay never confuses its nick list.</dd></div>
+        <div><dt>Detached channels</dt><dd>Stay joined and logged, hidden from IRC clients until you <span class="code">/join</span> again, then show what you missed.</dd><dd class="set">detach &lt;#chan&gt;</dd></div>
+        <div><dt>Disabled channels</dt><dd>Leave a channel but keep it saved, key included, to join it again later.</dd><dd class="set">disablechan &lt;#chan&gt;</dd></div>
+        <div><dt>Away when nobody's attached</dt><dd>Optionally marks you away on every network while no IRC client or web app is attached.</dd><dd class="set">Account → Profile</dd></div>
+        <div><dt>Timestamps for older clients</dt><dd>Clients without <span class="code">server-time</span> get the time in the replayed text, in your own strftime format and time zone.</dd><dd class="set">Account → Bouncer</dd></div>
+        <div><dt>CTCP replies</dt><dd>Fixed replies of your own, or an empty one to block a request. With no client attached, evrd answers VERSION, PING and TIME itself.</dd><dd class="set">Account → Bouncer</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ networks -->
+  <section class="feat-section" id="networks" aria-labelledby="f-networks-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-networks-h">Networks and services</h2>
+        <p>Every network gets its own settings page, with what ZNC offers without modules. All of it works from <span class="code">*status</span> too.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><a href="docs.html#network-directory">Network directory</a></dt><dd>Add network offers a searchable list of public networks; picking one fills in its servers and suggested channels.</dd><dd class="set">addnetwork libera · directory [search]</dd></div>
+        <div><dt><a href="docs.html#networks">Several servers per network</a></dt><dd>Each with its own port, TLS and server password. evrd moves to the next one each time the link drops.</dd><dd class="set">addserver &lt;host&gt; [[+]port] [pass]</dd></div>
+        <div><dt>Identity per network</dt><dd>Nick, alternate nick, ident, real name and quit message, falling back to your account's defaults.</dd><dd class="set">set altnick · set ident · set quitmsg</dd></div>
+        <div><dt><a href="https://github.com/4evrd/evrd/blob/main/docs/services.md" rel="noopener">Services login</a></dt><dd>SASL PLAIN, IDENTIFY to NickServ, a command of your own (Undernet's X) or QuakeNet's Q, with presets for common networks.</dd><dd class="set">set auth auto|sasl|nickserv|command|none</dd></div>
+        <div><dt>Nick recovery</dt><dd>When your nick is taken, evrd logs in on the alternate, asks services to GHOST, REGAIN or RECOVER it, and switches back.</dd><dd class="set">set ghost ghost|regain|recover|off</dd></div>
+        <div><dt>Join after identifying</dt><dd>Holds channel joins until services confirm the login, so registered-only channels let you in.</dd><dd class="set">set joinafterauth on · set authtimeout 15</dd></div>
+        <div><dt>Certificate trust</dt><dd>System CAs, trust everything, or pinned SHA-256 fingerprints. A refused certificate's fingerprint comes with a button to trust it.</dd><dd class="set">trustpki · trustallcerts · addfingerprint</dd></div>
+        <div><dt>Encodings</dt><dd>For networks that aren't UTF-8: decode only invalid UTF-8, or decode and send in a charset.</dd><dd class="set">set encoding &lt;charset&gt;</dd></div>
+        <div><dt>Flood protection</dt><dd>Lines per second and burst towards the network, and a delay before joining channels.</dd><dd class="set">floodrate · floodburst · joindelay</dd></div>
+        <div><dt>Connection log</dt><dd>Each network's page says why it can't connect, what services answered, and what to do about it.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ znc -->
+  <section class="feat-section" id="znc" aria-labelledby="f-znc-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-znc-h">Coming from ZNC</h2>
+        <p>The commands, setting names and modules you already know carry over.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><a href="docs.html#status"><span class="code">*status</span> from any client</a></dt><dd>Add, connect and remove networks; manage servers, fingerprints, channels, buffers and bind hosts without leaving your client.</dd><dd class="set">/msg *status help</dd></div>
+        <div><dt>ZNC's command names</dt><dd><span class="code">ListNetworks</span>, <span class="code">JumpNetwork</span>, <span class="code">AddNetwork</span>, <span class="code">AddTrustedServerFingerprint</span> and the rest of ZNC's <span class="code">*status</span> names work, case-insensitive.</dd></div>
+        <div><dt>The <span class="code">/znc</span> command</dt><dd>ZNC's raw command is the same as messaging <span class="code">*status</span>, from IRC clients and the web chat.</dd><dd class="set">/znc ListNetworks · /quote znc …</dd></div>
+        <div><dt>Switch networks in place</dt><dd>Move an attached client to another network without reconnecting it.</dd><dd class="set">jumpnetwork &lt;network&gt;</dd></div>
+        <div><dt>Import ZNC logs</dt><dd>Loads a ZNC user's log module files into evrd's history, so old conversations come along.</dd><dd class="set">evrctl history import-znc &lt;user&gt; &lt;znc-user-dir&gt;</dd></div>
+        <div><dt><a href="#modules">ZNC's modules</a></dt><dd>perform, keepnick, kickrejoin, autocycle, autoop, autovoice, alias, ctcpflood and q, switched on per network.</dd><dd class="set">loadmod · unloadmod · modset</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ ircv3 -->
+  <section class="feat-section" id="ircv3" aria-labelledby="f-ircv3-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-ircv3-h">IRCv3</h2>
+        <p>A client that asks for nothing gets plain IRC. One that asks gets evrd's own capabilities on every network, and the network's while its link has them. Clients without a capability get its lines translated or left out. <a href="https://github.com/4evrd/evrd/blob/main/docs/irc-clients.md#ircv3" rel="noopener">The full table</a>.</p>
+      </div>
+      <div class="feature-groups">
+        <section aria-labelledby="f-ircv3-own-h">
+          <h3 class="h3-site" id="f-ircv3-own-h">evrd's own</h3>
+          <dl class="specs">
+            <div><dt>Scrollback on demand</dt><dd>Clients page through history with LATEST, BEFORE, AFTER, AROUND, BETWEEN and TARGETS, by msgid or timestamp, up to 1,000 lines a request.</dd><dd class="set">draft/chathistory</dd></div>
+            <div><dt>Events in history</dt><dd>Replayed and fetched history carries JOIN, PART, QUIT, KICK, NICK, TOPIC and MODE as real lines.</dd><dd class="set">draft/event-playback</dd></div>
+            <div><dt>Read markers</dt><dd>How far each buffer is read is shared with your other clients and the web app within a few seconds.</dd><dd class="set">draft/read-marker</dd></div>
+            <div><dt>Networks from the client</dt><dd>Goguma and gamja list, add, change and remove your networks, with one connection per network.</dd><dd class="set">soju.im/bouncer-networks · soju.im/bouncer-networks-notify</dd></div>
+            <div><dt>Batched, tagged backlog</dt><dd>Each buffer's backlog in its own batch, with original <span class="code">@time</span> and a stable <span class="code">@msgid</span>.</dd><dd class="set">batch · server-time · message-tags</dd></div>
+            <div><dt>Your own lines echoed</dt><dd>With the same msgid they have in history.</dd><dd class="set">echo-message</dd></div>
+            <div><dt>SASL to evrd</dt><dd>Sign in with SASL PLAIN instead of a server password; <span class="code">user/network</span> picks the network.</dd><dd class="set">sasl=PLAIN</dd></div>
+            <div><dt>TLS only</dt><dd>Clients are told to keep to TLS, offered only with a certificate they trust.</dd><dd class="set">sts · irc_sts 24h</dd></div>
+            <div><dt>The rest</dt><dd>Capability changes as they happen, standard replies, NAMES only when asked, and AWAY sent during registration.</dd><dd class="set">cap-notify · standard-replies · no-implicit-names · draft/pre-away</dd></div>
+          </dl>
+        </section>
+        <section aria-labelledby="f-ircv3-net-h">
+          <h3 class="h3-site" id="f-ircv3-net-h">Passed through from the network</h3>
+          <dl class="specs">
+            <div><dt>Labeled responses</dt><dd>Offered while the network has it; each labeled reply goes back to the client that sent the command.</dd><dd class="set">labeled-response</dd></div>
+            <div><dt>Multiline messages</dt><dd>With the network's limits, sent as one batch and saved a line at a time.</dd><dd class="set">draft/multiline</dd></div>
+            <div><dt>Typing, replies and reactions</dt><dd>Client-only tags pass both ways, and your typing shows on your other clients. TAGMSG lines are never saved.</dd><dd class="set">+typing · +draft/reply · +draft/react</dd></div>
+            <div><dt>Network capabilities</dt><dd>Requested from the network when it offers them and passed through to the clients that ask.</dd><dd class="set">multi-prefix · userhost-in-names · extended-join · account-notify · account-tag · away-notify · chghost · invite-notify · setname · draft/channel-rename · draft/message-redaction · extended-monitor</dd></div>
+            <div><dt>ISUPPORT, MONITOR and bots</dt><dd>The network's <span class="code">005</span> tokens, one MONITOR list per network shared by your clients, and bot mode with the <span class="code">@bot</span> tag.</dd><dd class="set">PREFIX · CHANTYPES · MONITOR · BOT</dd></div>
+          </dl>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ connected -->
+  <section class="feat-section" id="connected" aria-labelledby="f-conn-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-conn-h">Staying connected</h2>
+        <p>Restarts, upgrades and refusing servers don't take anyone off IRC, and large networks see well-behaved connections.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><a href="architecture.html#restarts">Connection holder</a></dt><dd><span class="code">evrd-links</span> holds every network connection while evrd restarts, answers the servers' pings and buffers what arrives. The next evrd takes each one back without registering or rejoining.</dd><dd class="set">links_socket</dd></div>
+        <div><dt>IRC clients held too</dt><dd>The holder keeps the IRC listeners, so a restart is invisible to attached clients: no disconnect, no second welcome.</dd><dd class="set">hold_clients yes</dd></div>
+        <div><dt>The gap lands in history</dt><dd>What the networks said while evrd was away is replayed into history with its real time.</dd><dd class="set">evrd-links -buffer (4 MB per network)</dd></div>
+        <div><dt><a href="docs.html#refusals">Polite to refusing servers</a></dt><dd>No reconnect loop after a ban or kill. A server that refuses this address rests 30 minutes, doubling to 4 hours, while the network's others are tried.</dd></div>
+        <div><dt>Connect pacing</dt><dd>New connections to one server host are spaced out per node, so a failover or netsplit recovery reconnects users gradually.</dd><dd class="set">connect_rate 5</dd></div>
+        <div><dt><a href="docs.html#upstream">Source addresses</a></dt><dd>Spread users over several local addresses, each user always on the same one.</dd><dd class="set">upstream_bind</dd></div>
+        <div><dt>An IPv6 address per user</dt><dd>Each user connects from a stable address of their own out of a routed prefix (Linux).</dd><dd class="set">upstream_prefix6 2001:db8:42::/64</dd></div>
+        <div><dt>Bind hosts</dt><dd>Users pick an address to connect from, for their account or one network. Admins can use any address and lock a user's choice. IPv6 bind hosts need no per-address interface setup on Linux.</dd><dd class="set">bindhost · setbindhost</dd></div>
+        <div><dt>IPv6 first</dt><dd>Connects to IRC servers over IPv6 first and falls back to IPv4, or the other way round.</dd><dd class="set">prefer_ipv6 yes</dd></div>
+        <div><dt><a href="docs.html#ident">Ident</a></dt><dd>A built-in identd answers with each network's ident, or evrd keeps an oidentd file up to date.</dd><dd class="set">identd_listen :113 · ident_file</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ security -->
+  <section class="feat-section" id="security" aria-labelledby="f-sec-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-sec-h">Sign-in and security</h2>
+        <p>Passwords, single sign-on, or both, for the web app and for IRC clients.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><a href="docs.html#accounts">Passwords</a></dt><dd>At least 10 characters, stored as bcrypt hashes. A password an admin sets is temporary: the user picks their own at next sign-in.</dd><dd class="set">password_login yes</dd></div>
+        <div><dt><a href="docs.html#sso">Single sign-on</a></dt><dd>OpenID Connect with any provider (Logto, authentik, Keycloak…). Accounts are created on first sign-in, and a provider role can make an admin.</dd><dd class="set">oidc_issuer · oidc_admin_role · oidc_roles_claim</dd></div>
+        <div><dt>IRC client passwords</dt><dd>One per device, made on the IRC clients page and revoked one at a time.</dd></div>
+        <div><dt><a href="https://github.com/4evrd/evrd/blob/main/docs/irc-clients.md#signing-in-by-link" rel="noopener">Sign in by link</a></dt><dd>Connect without a password and <span class="code">*status</span> sends a one-time link. Allow the client on the website, through your identity provider and its MFA.</dd><dd class="set">irc_link_signin yes</dd></div>
+        <div><dt>Remembered devices</dt><dd>Allowing a client by link can remember it, listed and revocable on the IRC clients page.</dd><dd class="set">irc_remember_days 30</dd></div>
+        <div><dt><a href="https://github.com/4evrd/evrd/blob/main/docs/configuration.md#sso-passwords-in-irc-clients" rel="noopener">SSO password in IRC clients</a></dt><dd>Checked with the provider's password grant, an LDAP bind as the user, or Logto's Management API. A right password is remembered for 10 minutes.</dd><dd class="set">sso_irc_password password_grant|ldap|logto</dd></div>
+        <div><dt><a href="https://github.com/4evrd/evrd/blob/main/docs/irc-clients.md#a-second-factor" rel="noopener">Second factor for IRC</a></dt><dd>An authenticator app code after the password, or <span class="code">/msg *status otp</span>, with ten one-time recovery codes. Each user's choice, or required by the admin.</dd><dd class="set">irc_mfa off|optional|required</dd></div>
+        <div><dt>Lockout</dt><dd>Ten wrong passwords within 15 minutes, over IRC or on the web, lock the account out for a while.</dd></div>
+        <div><dt>Sessions you can see</dt><dd>Web sessions live in the database behind an HttpOnly cookie, survive restarts, and can be signed out from the Account page.</dd><dd class="set">session_ttl 720h</dd></div>
+        <div><dt>Allowed addresses</dt><dd>Each account can limit the addresses it may sign in from, on the web and over IRC.</dd><dd class="set">Account → Bouncer</dd></div>
+        <div><dt><a href="docs.html#secrets">Encrypted secrets</a></dt><dd>Network passwords, services commands, module settings, secret settings and certificate keys are AES-256-GCM encrypted under a key kept outside the database, and the key can be rotated.</dd><dd class="set">secret_key · secret_key_old</dd></div>
+        <div><dt><a href="docs.html#tls">Certificates</a></dt><dd>Let's Encrypt (got and renewed by evrd), self-signed, or your own files, re-read when they change or on SIGHUP. Switchable while evrd runs.</dd><dd class="set">tls acme|selfsigned|files</dd></div>
+        <div><dt>Trusted proxies only</dt><dd><span class="code">X-Forwarded-For</span> is believed only from the proxies you list.</dd><dd class="set">trusted_proxies</dd></div>
+        <div><dt>Strict Content-Security-Policy</dt><dd>The web app has no inline scripts, so <span class="code">script-src 'self'</span> doesn't break it.</dd></div>
+        <div><dt><a href="docs.html#openbsd">Confinement</a></dt><dd>Started as root, evrd binds its ports, then chroots and drops to its own user. On OpenBSD it also unveils only its data and pledges away exec.</dd><dd class="set">chroot · user</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ web -->
+  <section class="feat-section" id="web" aria-labelledby="f-web-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-web-h">The web app</h2>
+        <p>A Svelte app that is a full client and the place to manage your bouncer, kept in sync with your other clients.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><a href="docs.html#web-client">Chat</a></dt><dd>Unread counts, mentions, members, topics, a "missed while away" marker and typing indicators.</dd></div>
+        <div><dt>Slash commands</dt><dd>The usual IRC commands, plus <span class="code">*status</span> and <span class="code">/znc</span> straight from the chat input.</dd><dd class="set">/join · /part · /msg · /query · /me · /notice · /nick · /topic · /mode · /kick · /close · /quote · /help</dd></div>
+        <div><dt>Overview</dt><dd>A networks → channels map with unread and mention filters, pan, zoom and search, next to attached clients and the last day's messages.</dd></div>
+        <div><dt>Network health</dt><dd>A page per network: status, uptime, lag, messages and disconnects over 24 hours, 7 days or 30 days, with its connection log.</dd></div>
+        <div><dt>Reconnects</dt><dd>Which networks reconnected in the last day, and why.</dd></div>
+        <div><dt>Traffic charts</dt><dd>Lines per hour per network, read back from the metrics store.</dd><dd class="set">metrics_url</dd></div>
+        <div><dt>Activity feed</dt><dd>Events like a network dropping or a client attaching, as they happen.</dd></div>
+        <div><dt>Network editor</dt><dd>Servers, identity, services login, certificates, channels, modules and each buffer's playback, on one page.</dd></div>
+        <div><dt>IRC clients page</dt><dd>Client passwords and remembered devices, with copy-paste setup for HexChat, irssi and WeeChat.</dd></div>
+        <div><dt>Your account</dt><dd>Profile, bouncer defaults, language, authenticator app, sessions, and deleting your own account.</dd></div>
+        <div><dt>Search</dt><dd>Find any network or channel from the top bar.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ hosting -->
+  <section class="feat-section" id="hosting" aria-labelledby="f-host-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-host-h">Hosting others</h2>
+        <p>What an admin needs to run evrd for a community: accounts, limits and settings, from the web app or a shell.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><a href="docs.html#accounts">Roles</a></dt><dd>Every account is a user or an admin. The last active admin can't be demoted, suspended or deleted.</dd><dd class="set">evrctl user role &lt;name&gt; user|admin</dd></div>
+        <div><dt>Per-user limits</dt><dd>Networks, attached IRC clients and backlog lines, with server defaults and per-user overrides.</dd><dd class="set">max_networks · max_clients · backlog_lines</dd></div>
+        <div><dt>Suspension</dt><dd>Signs a user out everywhere, drops their IRC clients and disconnects their networks. Lifting it reconnects them.</dd><dd class="set">evrctl user suspend &lt;name&gt; [reason]</dd></div>
+        <div><dt>Password resets</dt><dd>Reset gives a one-time password; the user picks their own at next sign-in.</dd></div>
+        <div><dt><a href="docs.html#server-settings">Settings from the web app</a></dt><dd>Admin → Settings edits most of <span class="code">evrd.conf</span>, shows where each value comes from, and applies most of them live on every node.</dd><dd class="set">settings_write_conf</dd></div>
+        <div><dt>Admin overview</dt><dd>Totals across every user and node, what needs attention, and the versions of evrd and the connection holder.</dd></div>
+        <div><dt>A page per user</dt><dd>Their networks, why one can't connect, its health and its connection log.</dd></div>
+        <div><dt><a href="docs.html#provisioning">Provisioning API</a></dt><dd>Create accounts and their networks before the owner signs in, for migrating users from another bouncer. Repeatable; the first matching SSO sign-in claims the account.</dd><dd class="set">provision_token</dd></div>
+        <div><dt><a href="docs.html#network-directory">Your own network list</a></dt><dd>Offer evrd.sh's directory, a file of your own (private networks included), or none.</dd><dd class="set">network_directory</dd></div>
+        <div><dt><a href="docs.html#evrctl">evrctl</a></dt><dd>Accounts, secret keys and history from a shell, with the same config as evrd.</dd><dd class="set">evrctl user · genkey · history</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ languages -->
+  <section class="feat-section" id="languages" aria-labelledby="f-lang-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-lang-h">Languages</h2>
+        <p>The web app and evrd's own words, in each user's language. Anyone can add a language or change some of the text without touching the code.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><a href="docs.html#languages">Seven built in</a></dt><dd>English, Deutsch, Español, Italiano, Bahasa Indonesia, <span lang="ja">日本語</span> and Türkçe.</dd></div>
+        <div><dt><a href="https://github.com/4evrd/evrd/blob/main/docs/translations.md#evrds-own-messages" rel="noopener">evrd's own words</a></dt><dd><span class="code">*status</span> replies and help, connection logs, errors and the activity feed follow each user's language.</dd><dd class="set">Account → Profile → Language</dd></div>
+        <div><dt>Logs in the reader's language</dt><dd>Connection logs and events keep what evrd said, not the sentence, so an admin reads a user's log in their own language.</dd></div>
+        <div><dt><a href="https://github.com/4evrd/evrd/blob/main/docs/translations.md" rel="noopener">Upload a translation</a></dt><dd>Admins for everyone, any user for themselves; a partial one falls back to the built-in text, then English.</dd><dd class="set">Admin → Settings → Languages</dd></div>
+        <div><dt>Five file formats</dt><dd>JSON, CSV, gettext PO (Poedit), XLIFF 1.2 and 2.0, and YAML, with templates and current languages to download.</dd><dd class="set">.json · .csv · .po · .pot · .xlf · .yaml</dd></div>
+        <div><dt>Checked before saving</dt><dd>Placeholders must match English, plurals follow CLDR categories, and the upload shows what's still untranslated.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ modules -->
+  <section class="feat-section" id="modules" aria-labelledby="f-mod-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-mod-h">Modules</h2>
+        <p>Optional behaviours you switch on per network, like ZNC's network modules. Changes apply when you save, without reconnecting.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><span class="code">perform</span></dt><dd>Sends your commands every time evrd signs in to the network, with <span class="code">%nick%</span> filled in.</dd><dd class="set">modset perform commands /mode %nick% +i</dd></div>
+        <div><dt><span class="code">keepnick</span></dt><dd>Wins your nick back as soon as it's free, trying every 30 seconds meanwhile.</dd></div>
+        <div><dt><span class="code">kickrejoin</span></dt><dd>Rejoins a channel you were kicked from, after a delay.</dd><dd class="set">modset kickrejoin delay 10</dd></div>
+        <div><dt><span class="code">autocycle</span></dt><dd>Leaves and rejoins a channel where you're alone without ops, so you get them.</dd></div>
+        <div><dt><span class="code">autoop</span>, <span class="code">autovoice</span></dt><dd>Gives ops or voice to the masks you list when they join a channel where you have ops.</dd></div>
+        <div><dt><span class="code">alias</span></dt><dd>Your own commands for IRC clients, with <span class="code">%1</span>, <span class="code">%1+</span> and <span class="code">%nick%</span>.</dd><dd class="set">name = commands</dd></div>
+        <div><dt><span class="code">ctcpflood</span></dt><dd>Stops answering and passing on CTCP requests while too many arrive at once.</dd></div>
+        <div><dt><span class="code">q</span></dt><dd>Logs in to QuakeNet's Q and hides your host. The QuakeNet preset switches it on.</dd></div>
+        <div><dt><a href="https://github.com/4evrd/evrd/blob/main/docs/modules.md" rel="noopener">From any client</a></dt><dd>Switch modules on and set them up on the network's page or from <span class="code">*status</span>. Their settings are stored encrypted.</dd><dd class="set">modules · loadmod · unloadmod · modset</dd></div>
+        <div><dt>Off for everyone</dt><dd>Admins can switch modules off server-wide.</dd><dd class="set">modules_off autoop autovoice</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ scale -->
+  <section class="feat-section" id="scale" aria-labelledby="f-scale-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-scale-h">Clustering and metrics</h2>
+        <p>The same binary runs as a single node on SQLite and Pebble, or as a cluster against Postgres and ScyllaDB.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><a href="docs.html#clustering">Several nodes</a></dt><dd>Any number of nodes behind a plain round-robin load balancer. Each user is owned by one node; the others forward their IRC and web traffic to it.</dd><dd class="set">node_id · internal_listen · cluster_secret</dd></div>
+        <div><dt><a href="architecture.html#failover">Failover</a></dt><dd>When a node dies its users move to the others once their leases run out, about 20 seconds by default.</dd><dd class="set">cluster_lease 20s</dd></div>
+        <div><dt>Rolling deploys</dt><dd>A node stopped with SIGTERM hands its users over at once instead of waiting for its leases to expire.</dd></div>
+        <div><dt><a href="architecture.html#routing">No message bus</a></dt><dd>IRC clients are spliced to the owner node and web requests reverse-proxied to it; nothing else crosses nodes.</dd></div>
+        <div><dt><a href="docs.html#history-backends">Storage</a></dt><dd>SQLite or Postgres for accounts and settings; embedded Pebble or ScyllaDB for chat history.</dd><dd class="set">db sqlite:|postgres:// · history pebble:|scylla://</dd></div>
+        <div><dt>Copy history between stores</dt><dd>Move chat history from one store to another, for example when a single node grows into a cluster.</dd><dd class="set">evrctl history copy &lt;from&gt; &lt;to&gt;</dd></div>
+        <div><dt><a href="docs.html#metrics">OpenTelemetry metrics</a></dt><dd>Lines per network, link state, lag, disconnects, attached clients, web streams, users per node and more, over OTLP/HTTP.</dd><dd class="set">otel_endpoint · otel_interval 15s</dd></div>
+        <div><dt>Charts from VictoriaMetrics</dt><dd>The web app reads metrics back for its traffic charts and health pages; without a store the charts say metrics are off.</dd><dd class="set">metrics_url</dd></div>
+        <div><dt>Traces</dt><dd>Spans for web API requests and the services behind them, to any OTLP/HTTP collector.</dd><dd class="set">otel_traces_endpoint</dd></div>
+        <div><dt>Admin → Metrics</dt><dd>Every metric evrd exports, charted for admins.</dd></div>
+        <div><dt>Grafana dashboard</dt><dd>A ready-made dashboard: traffic, upstream links and lag, clients, sign-ins, users per node and the versions running.</dd><dd class="set">deploy/grafana/evrd.json</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============================================================ deploy -->
+  <section class="feat-section" id="deploy" aria-labelledby="f-deploy-h">
+    <div class="wrap">
+      <div class="section-intro">
+        <h2 class="h2-site" id="f-deploy-h">Deployment</h2>
+        <p>Every install method runs the same binary.</p>
+      </div>
+      <dl class="specs cols">
+        <div><dt><a href="download.html#install">Container images</a></dt><dd>The daemon with <span class="code">evrctl</span>, and the web app on nginx, for amd64 and arm64, with a Compose file and an optional metrics profile.</dd><dd class="set">ghcr.io/4evrd/evrd · ghcr.io/4evrd/evrd-web</dd></div>
+        <div><dt><a href="docs.html#openbsd">OpenBSD installer</a></dt><dd>One script installs evrd as a confined daemon with Let's Encrypt, optional SSO and the connection holder. <span class="code">-y</span> runs it without questions.</dd><dd class="set">ftp -o - …/install.sh | sh</dd></div>
+        <div><dt><a href="https://github.com/4evrd/evrd/releases" rel="noopener">Release archives</a></dt><dd>Linux, FreeBSD, macOS and OpenBSD, amd64 and arm64, each with <span class="code">evrd</span>, <span class="code">evrctl</span> and the built web app, checked against a SHA256 file.</dd></div>
+        <div><dt>No database server needed</dt><dd>A single node runs on SQLite and an embedded Pebble history store.</dd><dd class="set">db sqlite:… · history pebble:…</dd></div>
+        <div><dt><a href="docs.html#tls-who">HTTPS without a proxy</a></dt><dd>evrd can serve the web app over HTTPS itself and redirect plain HTTP, or sit behind nginx, Caddy, Traefik or relayd.</dd><dd class="set">https_listen :443 · http_listen :80 · web_root</dd></div>
+        <div><dt>Upgrades in place</dt><dd>Database changes apply at startup. Images are tagged per release; pin one or follow <span class="code">latest</span>.</dd><dd class="set">EVRD_VERSION</dd></div>
+        <div><dt>Restarts only when needed</dt><dd>Re-running the OpenBSD installer restarts evrd only if its program changed, and the holder only when it must.</dd></div>
+        <div><dt>Environment overrides</dt><dd>Startup settings and secrets can come from the environment, which wins over the file.</dd><dd class="set">EVRD_CONFIG · EVRD_DB · EVRD_HISTORY · EVRD_SECRET_KEY</dd></div>
+        <div><dt><a href="docs.html#from-source">Build from source</a></dt><dd>Pure Go with no cgo, and a Svelte web app built with pnpm.</dd><dd class="set">CGO_ENABLED=0 go build ./cmd/evrd ./cmd/evrctl</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="next-h">
+    <div class="wrap">
+      <div class="cta-band">
+        <div>
+          <h2 class="h2-site" id="next-h">Try it on one machine first.</h2>
+          <p>A single node needs no database server. Install it, create an admin with <span class="code">evrctl user add -admin</span>, and add a network.</p>
+        </div>
+        <div class="od-cluster">
+          <a class="btn btn-primary btn-lg" href="download.html#install"><i data-icon="download"></i>Get evrd</a>
+          <a class="btn btn-lg" href="docs.html#quick-start"><i data-icon="book"></i>Quick start</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+<script src="assets/site.js"></script>
+<script>
+  // group pills follow the reader
+  (() => {
+    const links = [...document.querySelectorAll('.arch-nav a')]
+    const spy = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return
+      links.forEach((l) => l.setAttribute('aria-current', String(l.hash === '#' + e.target.id)))
+    }), { rootMargin: '-30% 0px -60% 0px' })
+    document.querySelectorAll('.feat-section').forEach((s) => spy.observe(s))
+  })()
+</script>
+</body>
+</html>

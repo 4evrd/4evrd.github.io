@@ -611,3 +611,15 @@ pre.snippet .c { color: var(--faint); }
 .dg-files .row-f .od-field { min-width: 0; --od-gap: 2px; }
 .dg-files .row-f .lb { font-family: var(--font-ui); font-size: var(--fs-2xs); letter-spacing: var(--track-caps); text-transform: uppercase; color: var(--faint); }
 .dg-files .row-f .path { color: var(--fg); overflow-wrap: anywhere; }
+
+/* ---------------------------------------------------------------- features page */
+.feat-section { padding: var(--s9) 0; scroll-margin-top: calc(var(--head-h) + 56px); }
+.feat-section + .feat-section { border-top: 1px solid var(--line-soft); }
+.feat-section .section-intro { margin-bottom: var(--s6); }
+.specs.cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--s8); }
+.specs dt a { color: var(--fg); }
+.specs dt a::after { content: " →"; color: var(--primary); }
+.specs dt a:hover { color: var(--primary); }
+@media (max-width: 1024px) { .specs.cols { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 768px) { .feat-section { padding: var(--s8) 0; } }
+@media (prefers-reduced-transparency: reduce) { .arch-nav { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--bg-2); } }
